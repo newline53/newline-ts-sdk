@@ -1,0 +1,40 @@
+# CreateTransferWireRequest
+
+Wire-specific information. Only present if the Transfer is a wire.
+
+
+## Example Usage
+
+```typescript
+import { CreateTransferWireRequest } from "newline-ts-sdk/models/operations";
+
+let value: CreateTransferWireRequest = {
+  intermediaryBankAddress: {
+    line1: "345 Def Ave",
+    line2: "San Francisco",
+    line3: "CA 94016",
+    country: "US",
+  },
+  intermediaryBankName: "Fidelity Fiduciary Bank",
+  intermediaryBankRoutingNumber: "923456789",
+  wireInstructions: "Send ASAP",
+  wireTransmitter: {
+    name: "Marge's Roofing Inc",
+    transmitterIdentifier: "123456789012ABC",
+    line1: "123 Abc St.",
+    line2: "Boring, Oregon 97009",
+    line3: null,
+    country: "US",
+  },
+};
+```
+
+## Fields
+
+| Field                                                                                                                                                                                                     | Type                                                                                                                                                                                                      | Required                                                                                                                                                                                                  | Description                                                                                                                                                                                               | Example                                                                                                                                                                                                   |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `intermediaryBankAddress`                                                                                                                                                                                 | [operations.CreateTransferIntermediaryBankAddressRequest](../../models/operations/create-transfer-intermediary-bank-address-request.md)                                                                   | :heavy_minus_sign:                                                                                                                                                                                        | Address of the intermediary bank. To be populated if an intermediary bank is required to execute the wire transfer.<br/>                                                                                  | {<br/>"country": "US",<br/>"line1": "345 Def Ave",<br/>"line2": "San Francisco",<br/>"line3": "CA 94016"<br/>}                                                                                            |
+| `intermediaryBankName`                                                                                                                                                                                    | *string*                                                                                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                                                        | N/A                                                                                                                                                                                                       | Fidelity Fiduciary Bank                                                                                                                                                                                   |
+| `intermediaryBankRoutingNumber`                                                                                                                                                                           | *string*                                                                                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                                                        | The ABA routing number associated with the intermediary bank involved in the wire transfer. This value is required if intermediary_bank_name or intermediary_bank_address is present; optional otherwise<br/> | 923456789                                                                                                                                                                                                 |
+| `wireInstructions`                                                                                                                                                                                        | *string*                                                                                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                                                        | Additional details or instructions for the wire, issued to the recipient financial institution when the wire is executed.<br/>                                                                            | Send ASAP                                                                                                                                                                                                 |
+| `wireTransmitter`                                                                                                                                                                                         | [operations.CreateTransferWireTransmitterRequest](../../models/operations/create-transfer-wire-transmitter-request.md)                                                                                    | :heavy_minus_sign:                                                                                                                                                                                        | N/A                                                                                                                                                                                                       |                                                                                                                                                                                                           |

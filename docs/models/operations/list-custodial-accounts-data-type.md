@@ -1,0 +1,24 @@
+# ListCustodialAccountsDataType
+
+`dda` accounts are liability DDA accounts. Any asset movements in or out of the brick-and-mortar accounts will be journaled in the `dda` Custodial Accounts. Balances shown in the `dda` accounts are the balances the owner Customers have.
+
+`dda_cash_external` accounts are asset accounts, representing external accounts. When ODFI transfers, initiated by a Synthetic Transfer from or to external Synthetic Accounts, are settled, the `dda_cash_external` Custodial Accounts will be credited or debited.
+
+`dda_cash_received` accounts are asset cash accounts. When RDFI transfers, initiated outside of Newline from or to Custodial Accounts, are settled, the `dda_cash_received` Custodial Accounts will be credited or debited.
+
+
+## Example Usage
+
+```typescript
+import { ListCustodialAccountsDataType } from "newline-ts-sdk/models/operations";
+
+let value: ListCustodialAccountsDataType = "dda";
+
+// Open enum: unrecognized values are captured as Unrecognized<string>
+```
+
+## Values
+
+```typescript
+"dda" | "dda_cash_external" | "dda_cash_received" | Unrecognized<string>
+```

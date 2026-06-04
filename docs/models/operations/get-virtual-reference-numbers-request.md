@@ -1,0 +1,23 @@
+# GetVirtualReferenceNumbersRequest
+
+## Example Usage
+
+```typescript
+import { GetVirtualReferenceNumbersRequest } from "newline-ts-sdk/models/operations";
+
+let value: GetVirtualReferenceNumbersRequest = {
+  instantPaymentRailRegistrationStatus: "registered",
+  status: "active",
+  syntheticAccountUid: "Dg1EPao8XukUpHG8",
+  virtualReferenceNumber: "1234567890123456",
+};
+```
+
+## Fields
+
+| Field                                                                                                                                        | Type                                                                                                                                         | Required                                                                                                                                     | Description                                                                                                                                  | Example                                                                                                                                      |
+| -------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| `instantPaymentRailRegistrationStatus`                                                                                                       | [operations.QueryParamInstantPaymentRailRegistrationStatus](../../models/operations/query-param-instant-payment-rail-registration-status.md) | :heavy_minus_sign:                                                                                                                           | Registration status with Newline and Fifth Third, for RTP network acceptance.                                                                | registered                                                                                                                                   |
+| `status`                                                                                                                                     | [operations.GetVirtualReferenceNumbersQueryParamStatus](../../models/operations/get-virtual-reference-numbers-query-param-status.md)         | :heavy_minus_sign:                                                                                                                           | A value indicating the overall state of this VRN.                                                                                            | active                                                                                                                                       |
+| `syntheticAccountUid`                                                                                                                        | *string*                                                                                                                                     | :heavy_minus_sign:                                                                                                                           | N/A                                                                                                                                          | Dg1EPao8XukUpHG8                                                                                                                             |
+| `virtualReferenceNumber`                                                                                                                     | *string*                                                                                                                                     | :heavy_minus_sign:                                                                                                                           | N/A                                                                                                                                          | 1234567890123456                                                                                                                             |

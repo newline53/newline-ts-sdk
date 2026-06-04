@@ -1,0 +1,34 @@
+# PostReturnsRequest
+
+## Example Usage
+
+```typescript
+import { PostReturnsRequest } from "newline-ts-sdk/models/operations";
+
+let value: PostReturnsRequest = {
+  externalUid: "YrfDrfVRgpPgnhF5",
+  originalTransactionUid: "nwXnpBbX3A5sTki3",
+  requestingCustomerUid: "Trzqy9t6j6tFGoG3",
+  requestorType: "customer",
+  returnReason: "Insufficient Funds",
+  ach: {
+    achReturnCode: "R02",
+    addendaInfo: "TXN0055BADD1E cancelled",
+  },
+  wire: {
+    wireInstructions: "ORDER 5555555555",
+  },
+};
+```
+
+## Fields
+
+| Field                                                                                                                                  | Type                                                                                                                                   | Required                                                                                                                               | Description                                                                                                                            | Example                                                                                                                                |
+| -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `externalUid`                                                                                                                          | *string*                                                                                                                               | :heavy_minus_sign:                                                                                                                     | Client supplied unique identifier. It must be unique within the customer. If the same value is given, no new resource will be created. | YrfDrfVRgpPgnhF5                                                                                                                       |
+| `originalTransactionUid`                                                                                                               | *string*                                                                                                                               | :heavy_check_mark:                                                                                                                     | The transaction to be returned.                                                                                                        | nwXnpBbX3A5sTki3                                                                                                                       |
+| `requestingCustomerUid`                                                                                                                | *string*                                                                                                                               | :heavy_check_mark:                                                                                                                     | The UID of the customer requesting a return.                                                                                           | Trzqy9t6j6tFGoG3                                                                                                                       |
+| `requestorType`                                                                                                                        | [operations.RequestorTypeRequest](../../models/operations/requestor-type-request.md)                                                   | :heavy_check_mark:                                                                                                                     | Type of the customer requesting a return.                                                                                              | customer                                                                                                                               |
+| `returnReason`                                                                                                                         | *string*                                                                                                                               | :heavy_check_mark:                                                                                                                     | Freeform text (up to 140 characters) documenting the reason for return. For wire returns, this value will be sent to the other bank.<br/> | Insufficient Funds                                                                                                                     |
+| `ach`                                                                                                                                  | [operations.PostReturnsAchRequest](../../models/operations/post-returns-ach-request.md)                                                | :heavy_minus_sign:                                                                                                                     | N/A                                                                                                                                    |                                                                                                                                        |
+| `wire`                                                                                                                                 | [operations.PostReturnsWireRequest](../../models/operations/post-returns-wire-request.md)                                              | :heavy_minus_sign:                                                                                                                     | N/A                                                                                                                                    |                                                                                                                                        |

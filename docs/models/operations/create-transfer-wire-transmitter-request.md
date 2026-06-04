@@ -1,0 +1,30 @@
+# CreateTransferWireTransmitterRequest
+
+Address of the Transmitter. Must be provided if the `initiator_type` is `transmitter`.
+
+
+## Example Usage
+
+```typescript
+import { CreateTransferWireTransmitterRequest } from "newline-ts-sdk/models/operations";
+
+let value: CreateTransferWireTransmitterRequest = {
+  name: "Marge's Roofing Inc",
+  transmitterIdentifier: "123456789012ABC",
+  line1: "123 Abc St.",
+  line2: "Boring, Oregon 97009",
+  line3: null,
+  country: "US",
+};
+```
+
+## Fields
+
+| Field                                                                                                                                 | Type                                                                                                                                  | Required                                                                                                                              | Description                                                                                                                           | Example                                                                                                                               |
+| ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `name`                                                                                                                                | *string*                                                                                                                              | :heavy_check_mark:                                                                                                                    | Name of the Transmitter.<br/>                                                                                                         | Marge's Roofing Inc                                                                                                                   |
+| `transmitterIdentifier`                                                                                                               | *string*                                                                                                                              | :heavy_check_mark:                                                                                                                    | Up to 24 characters, and supplied by Transmitter. Alphanumeric only.                                                                  | 123456789012ABC                                                                                                                       |
+| `line1`                                                                                                                               | *string*                                                                                                                              | :heavy_check_mark:                                                                                                                    | Up to 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~                                                            | 123 Abc St.                                                                                                                           |
+| `line2`                                                                                                                               | *string*                                                                                                                              | :heavy_minus_sign:                                                                                                                    | Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~<br/>                                                    | Boring, Oregon 97009                                                                                                                  |
+| `line3`                                                                                                                               | *string*                                                                                                                              | :heavy_minus_sign:                                                                                                                    | Optional 32 characters. Note that this length is shorter than the other lines. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~<br/> | null                                                                                                                                  |
+| `country`                                                                                                                             | *string*                                                                                                                              | :heavy_check_mark:                                                                                                                    | N/A                                                                                                                                   | US                                                                                                                                    |
