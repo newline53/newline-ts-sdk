@@ -15,5 +15,5 @@ let value: GetSyntheticAccountTypeSyntheticAccountCategory = "wire_external";
 ## Values
 
 ```typescript
-"general" | "ach_external" | "instant_payments_external" | "wire_external" | Unrecognized<string>
+"general" | "ach_external" | "instant_payment_external" | "wire_external" | Unrecognized<string>
 ```

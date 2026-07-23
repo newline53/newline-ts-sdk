@@ -13,5 +13,5 @@ let value: QueryParamSyntheticAccountCategory = "wire_external";
 ## Values
 
 ```typescript
-"general" | "ach_external" | "wire_external" | "instant_payments_external"
+"general" | "ach_external" | "wire_external" | "instant_payment_external"
 ```

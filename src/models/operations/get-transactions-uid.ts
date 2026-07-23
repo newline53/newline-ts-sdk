@@ -361,7 +361,7 @@ export type GetTransactionsUidInstantPayment = {
     | null
     | undefined;
   /**
-   * A message transmitted to the recipient bank. Can contain letters and numbers as well as '-', '_', and spaces.
+   * A message transmitted to the recipient bank. Supports letters, numbers, and special characters: . !@#$%^&*',/:;<=>?~`|[]{})(+=_- (max 140 characters).
    *
    * @remarks
    */

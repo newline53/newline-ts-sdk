@@ -24,7 +24,7 @@ export type GetSyntheticAccountTypeRequest = {
 export const GetSyntheticAccountTypeSyntheticAccountCategory = {
   General: "general",
   AchExternal: "ach_external",
-  InstantPaymentsExternal: "instant_payments_external",
+  InstantPaymentExternal: "instant_payment_external",
   WireExternal: "wire_external",
 } as const;
 /**

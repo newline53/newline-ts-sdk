@@ -37,7 +37,7 @@ let value: CreateTransferResponseBody = {
     transferTraceId: "A1Z2b3y4c5x6DW78",
   },
   instantPayment: {
-    memo: "For the 6-5-23 shipment of pineapple popsicles",
+    memo: "Payment for invoice #123 @client",
   },
   wire: {
     intermediaryBankAddress: {

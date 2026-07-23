@@ -8,7 +8,7 @@ The name of the Synthetic Account Category associated with the Synthetic Account
 import { CreateSyntheticAccountSyntheticAccountCategory } from "newline-ts-sdk/models/operations";
 
 let value: CreateSyntheticAccountSyntheticAccountCategory =
-  "instant_payments_external";
+  "instant_payment_external";
 
 // Open enum: unrecognized values are captured as Unrecognized<string>
 ```
@@ -16,5 +16,5 @@ let value: CreateSyntheticAccountSyntheticAccountCategory =
 ## Values
 
 ```typescript
-"general" | "ach_external" | "instant_payments_external" | "wire_external" | Unrecognized<string>
+"general" | "ach_external" | "instant_payment_external" | "wire_external" | Unrecognized<string>
 ```

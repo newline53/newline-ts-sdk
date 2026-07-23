@@ -83,7 +83,7 @@ let value: GetTransactionsUidResponse = {
         postalCode: "60301",
         country: null,
       },
-      memo: "For the 6-5-23 shipment of pineapple popsicles",
+      memo: "Payment for invoice #123 @client",
       counterpartyAddress: {
         streetNumber: "123abc",
         street1: "Abc St.",

@@ -24,7 +24,7 @@ export type GetSyntheticAccountRequest = {
 export const GetSyntheticAccountSyntheticAccountCategory = {
   General: "general",
   AchExternal: "ach_external",
-  InstantPaymentsExternal: "instant_payments_external",
+  InstantPaymentExternal: "instant_payment_external",
   WireExternal: "wire_external",
 } as const;
 /**
@@ -291,23 +291,23 @@ export type GetSyntheticAccountResponseBody = {
    */
   liability?: boolean | undefined;
   /**
-   * The current settled balance of this account in US Dollars. This field will be null for synthetic_account_types in an external category (`ach_external`, `instant_payments_external`, `wire_external`).
+   * The current settled balance of this account in US Dollars. This field will be null for synthetic_account_types in an external category (`ach_external`, `instant_payment_external`, `wire_external`).
    */
   netUsdBalance?: string | null | undefined;
   /**
-   * The sum of all pending transactions for this account in US Dollars. This field will be null for Synthetic Account Types in an external category (`ach_external`, `instant_payments_external`, `wire_external`).
+   * The sum of all pending transactions for this account in US Dollars. This field will be null for Synthetic Account Types in an external category (`ach_external`, `instant_payment_external`, `wire_external`).
    */
   netUsdPendingBalance?: string | null | undefined;
   /**
-   * The balance available to spend calculated as the settled balance less any pending withdrawals. Pending deposits are not included. This field will be null for Synthetic Account Types in an external category (`ach_external`, `instant_payments_external`, `wire_external`).
+   * The balance available to spend calculated as the settled balance less any pending withdrawals. Pending deposits are not included. This field will be null for Synthetic Account Types in an external category (`ach_external`, `instant_payment_external`, `wire_external`).
    */
   netUsdAvailableBalance?: string | null | undefined;
   /**
-   * The settled balance for the account in US Dollars as of the date in net_usd_closing_balance_as_of. This field will be null for Synthetic Account Types in an external category (`ach_external`, `instant_payments_external`, `wire_external`).
+   * The settled balance for the account in US Dollars as of the date in net_usd_closing_balance_as_of. This field will be null for Synthetic Account Types in an external category (`ach_external`, `instant_payment_external`, `wire_external`).
    */
   netUsdClosingBalance?: string | null | undefined;
   /**
-   * The date that net_usd_closing_balance was last calculated. This field will be null for Synthetic Account Types in an external category (`ach_external`, `instant_payments_external`, `wire_external`).
+   * The date that net_usd_closing_balance was last calculated. This field will be null for Synthetic Account Types in an external category (`ach_external`, `instant_payment_external`, `wire_external`).
    */
   netUsdClosingBalanceAsOf?: string | undefined;
   /**

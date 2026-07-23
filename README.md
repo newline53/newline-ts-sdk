@@ -5,28 +5,25 @@ Developer-friendly and type-safe Typescript SDK built to leverage the Newline Pl
 <!-- No Summary [summary] -->
 
 <!-- Start Table of Contents [toc] -->
-
 ## Table of Contents
-
 <!-- $toc-max-depth=2 -->
-
-- [Newline Typescript SDK](#newline-typescript-sdk)
-  - [SDK Installation](#sdk-installation)
-  - [Requirements](#requirements)
-  - [SDK Example Usage](#sdk-example-usage)
-  - [Authentication](#authentication)
-  - [Available Resources and Operations](#available-resources-and-operations)
-  - [Standalone functions](#standalone-functions)
-  - [Retries](#retries)
-  - [Error Handling](#error-handling)
-  - [Server Selection](#server-selection)
-  - [Custom HTTP Client](#custom-http-client)
-  - [Debugging](#debugging)
-- [Development](#development)
-  - [Maturity](#maturity)
-  - [Contributions](#contributions)
-  - [License](#license)
-  - [See Also](#see-also)
+* [Newline Typescript SDK](#newline-typescript-sdk)
+  * [SDK Installation](#sdk-installation)
+  * [Requirements](#requirements)
+  * [SDK Example Usage](#sdk-example-usage)
+  * [Authentication](#authentication)
+  * [Available Resources and Operations](#available-resources-and-operations)
+  * [Standalone functions](#standalone-functions)
+  * [Retries](#retries)
+  * [Error Handling](#error-handling)
+  * [Server Selection](#server-selection)
+  * [Custom HTTP Client](#custom-http-client)
+  * [Debugging](#debugging)
+* [Development](#development)
+  * [Maturity](#maturity)
+  * [Contributions](#contributions)
+  * [License](#license)
+  * [See Also](#see-also)
 
 <!-- End Table of Contents [toc] -->
 
@@ -65,15 +62,12 @@ yarn add github:newline53/newline-ts-sdk
 <!-- No SDK Installation [installation] -->
 
 <!-- Start Requirements [requirements] -->
-
 ## Requirements
 
 For supported JavaScript runtimes, please consult [RUNTIMES.md](RUNTIMES.md).
-
 <!-- End Requirements [requirements] -->
 
 <!-- Start SDK Example Usage [usage] -->
-
 ## SDK Example Usage
 
 ### Example
@@ -95,12 +89,11 @@ async function run() {
 }
 
 run();
-```
 
+```
 <!-- End SDK Example Usage [usage] -->
 
 <!-- Start Authentication [security] -->
-
 ## Authentication
 
 ### Per-Client Security Schemes
@@ -112,7 +105,6 @@ This SDK supports the following security scheme globally:
 | `programUid`<br/>`hmacKey` | http | Custom HTTP | `NEWLINE_PROGRAM_UID`<br/>`NEWLINE_HMAC_KEY` |
 
 You can set the security parameters through the `security` optional parameter when initializing the SDK client instance. For example:
-
 ```typescript
 import { NewlineSDK } from "newline-ts-sdk";
 
@@ -130,12 +122,11 @@ async function run() {
 }
 
 run();
-```
 
+```
 <!-- End Authentication [security] -->
 
 <!-- Start Available Resources and Operations [operations] -->
-
 ## Available Resources and Operations
 
 <details open>
@@ -143,100 +134,99 @@ run();
 
 ### [Auth](docs/sdks/auth/README.md)
 
-- [generateToken](docs/sdks/auth/README.md#generatetoken) - Generate an authentication token
+* [generateToken](docs/sdks/auth/README.md#generatetoken) - Generate an authentication token
 
 ### [CombinedTransfers](docs/sdks/combinedtransfers/README.md)
 
-- [list](docs/sdks/combinedtransfers/README.md#list) - List Combined Transfers
-- [create](docs/sdks/combinedtransfers/README.md#create) - Create a new Combined Transfer
-- [get](docs/sdks/combinedtransfers/README.md#get) - Get a single Combined Transfer
+* [list](docs/sdks/combinedtransfers/README.md#list) - List Combined Transfers
+* [create](docs/sdks/combinedtransfers/README.md#create) - Create a new Combined Transfer
+* [get](docs/sdks/combinedtransfers/README.md#get) - Get a single Combined Transfer
 
 ### [CustodialAccountClosingBalances](docs/sdks/custodialaccountclosingbalances/README.md)
 
-- [list](docs/sdks/custodialaccountclosingbalances/README.md#list) - List Custodial Account Closing Balances
+* [list](docs/sdks/custodialaccountclosingbalances/README.md#list) - List Custodial Account Closing Balances
 
 ### [CustodialAccounts](docs/sdks/custodialaccounts/README.md)
 
-- [listAccounts](docs/sdks/custodialaccounts/README.md#listaccounts) - List Custodial Accounts
-- [getById](docs/sdks/custodialaccounts/README.md#getbyid) - Get a single Custodial Account
-- [getClosingBalance](docs/sdks/custodialaccounts/README.md#getclosingbalance) - Get a single Custodial Account Closing Balance
+* [listAccounts](docs/sdks/custodialaccounts/README.md#listaccounts) - List Custodial Accounts
+* [getById](docs/sdks/custodialaccounts/README.md#getbyid) - Get a single Custodial Account
+* [getClosingBalance](docs/sdks/custodialaccounts/README.md#getclosingbalance) - Get a single Custodial Account Closing Balance
 
 ### [CustomerProducts](docs/sdks/customerproducts/README.md)
 
-- [list](docs/sdks/customerproducts/README.md#list) - List Customer Products
-- [onboard](docs/sdks/customerproducts/README.md#onboard) - Onboard Customer onto a Product
-- [get](docs/sdks/customerproducts/README.md#get) - Get a single Customer Product
+* [list](docs/sdks/customerproducts/README.md#list) - List Customer Products
+* [onboard](docs/sdks/customerproducts/README.md#onboard) - Onboard Customer onto a Product
+* [get](docs/sdks/customerproducts/README.md#get) - Get a single Customer Product
 
 ### [Customers](docs/sdks/customers/README.md)
 
-- [list](docs/sdks/customers/README.md#list) - Get a list of Customers
-- [create](docs/sdks/customers/README.md#create) - Create a new Customer
-- [getById](docs/sdks/customers/README.md#getbyid) - Get a single Customer
-- [update](docs/sdks/customers/README.md#update) - Adjust Customer Data
-- [archive](docs/sdks/customers/README.md#archive) - Archive a Customer
+* [list](docs/sdks/customers/README.md#list) - Get a list of Customers
+* [create](docs/sdks/customers/README.md#create) - Create a new Customer
+* [getById](docs/sdks/customers/README.md#getbyid) - Get a single Customer
+* [update](docs/sdks/customers/README.md#update) - Adjust Customer Data
+* [archive](docs/sdks/customers/README.md#archive) - Archive a Customer
 
 ### [Pools](docs/sdks/pools/README.md)
 
-- [list](docs/sdks/pools/README.md#list) - List Pools
-- [getById](docs/sdks/pools/README.md#getbyid) - Get a single Pool
+* [list](docs/sdks/pools/README.md#list) - List Pools
+* [getById](docs/sdks/pools/README.md#getbyid) - Get a single Pool
 
 ### [Products](docs/sdks/products/README.md)
 
-- [list](docs/sdks/products/README.md#list) - List Products
-- [get](docs/sdks/products/README.md#get) - Get a single Product
+* [list](docs/sdks/products/README.md#list) - List Products
+* [get](docs/sdks/products/README.md#get) - Get a single Product
 
 ### [Returns](docs/sdks/returns/README.md)
 
-- [list](docs/sdks/returns/README.md#list) - List Returns
-- [create](docs/sdks/returns/README.md#create) - Create a new Return
-- [get](docs/sdks/returns/README.md#get) - Get a single Return
+* [list](docs/sdks/returns/README.md#list) - List Returns
+* [create](docs/sdks/returns/README.md#create) - Create a new Return
+* [get](docs/sdks/returns/README.md#get) - Get a single Return
 
 ### [SyntheticAccounts](docs/sdks/syntheticaccounts/README.md)
 
-- [listTypes](docs/sdks/syntheticaccounts/README.md#listtypes) - List Synthetic Account Types
-- [getAccountType](docs/sdks/syntheticaccounts/README.md#getaccounttype) - Get a Single Synthetic Account Type
-- [list](docs/sdks/syntheticaccounts/README.md#list) - List Synthetic Accounts
-- [create](docs/sdks/syntheticaccounts/README.md#create) - Create a New Synthetic Account
-- [get](docs/sdks/syntheticaccounts/README.md#get) - Get a single Synthetic Account
-- [update](docs/sdks/syntheticaccounts/README.md#update) - Update the Synthetic Account metadata
-- [archive](docs/sdks/syntheticaccounts/README.md#archive) - Archive a Synthetic Account
-- [listClosingBalances](docs/sdks/syntheticaccounts/README.md#listclosingbalances) - List Synthetic Account Closing Balances
-- [getClosingBalance](docs/sdks/syntheticaccounts/README.md#getclosingbalance) - Get a single Synthetic Account Closing Balance
+* [listTypes](docs/sdks/syntheticaccounts/README.md#listtypes) - List Synthetic Account Types
+* [getAccountType](docs/sdks/syntheticaccounts/README.md#getaccounttype) - Get a Single Synthetic Account Type
+* [list](docs/sdks/syntheticaccounts/README.md#list) - List Synthetic Accounts
+* [create](docs/sdks/syntheticaccounts/README.md#create) - Create a New Synthetic Account
+* [get](docs/sdks/syntheticaccounts/README.md#get) - Get a single Synthetic Account
+* [update](docs/sdks/syntheticaccounts/README.md#update) - Update the Synthetic Account metadata
+* [archive](docs/sdks/syntheticaccounts/README.md#archive) - Archive a Synthetic Account
+* [listClosingBalances](docs/sdks/syntheticaccounts/README.md#listclosingbalances) - List Synthetic Account Closing Balances
+* [getClosingBalance](docs/sdks/syntheticaccounts/README.md#getclosingbalance) - Get a single Synthetic Account Closing Balance
 
 ### [Transactions](docs/sdks/transactions/README.md)
 
-- [list](docs/sdks/transactions/README.md#list) - List Transactions
-- [get](docs/sdks/transactions/README.md#get) - Get a single Transaction
-- [authorize](docs/sdks/transactions/README.md#authorize) - Approve or deny a transaction
-- [listEvents](docs/sdks/transactions/README.md#listevents) - List Transaction Events
-- [getEvent](docs/sdks/transactions/README.md#getevent) - Get a single Transaction Event
-- [listSyntheticLineItems](docs/sdks/transactions/README.md#listsyntheticlineitems) - List Synthetic Line Items
-- [getSyntheticLineItem](docs/sdks/transactions/README.md#getsyntheticlineitem) - Get a single Synthetic Line Item
-- [listCustodialLineItems](docs/sdks/transactions/README.md#listcustodiallineitems) - List Custodial Line Items
-- [getCustodialLineItem](docs/sdks/transactions/README.md#getcustodiallineitem) - Get a single Custodial Line Item
+* [list](docs/sdks/transactions/README.md#list) - List Transactions
+* [get](docs/sdks/transactions/README.md#get) - Get a single Transaction
+* [authorize](docs/sdks/transactions/README.md#authorize) - Approve or deny a transaction
+* [listEvents](docs/sdks/transactions/README.md#listevents) - List Transaction Events
+* [getEvent](docs/sdks/transactions/README.md#getevent) - Get a single Transaction Event
+* [listSyntheticLineItems](docs/sdks/transactions/README.md#listsyntheticlineitems) - List Synthetic Line Items
+* [getSyntheticLineItem](docs/sdks/transactions/README.md#getsyntheticlineitem) - Get a single Synthetic Line Item
+* [listCustodialLineItems](docs/sdks/transactions/README.md#listcustodiallineitems) - List Custodial Line Items
+* [getCustodialLineItem](docs/sdks/transactions/README.md#getcustodiallineitem) - Get a single Custodial Line Item
 
 ### [Transfers](docs/sdks/transfers/README.md)
 
-- [list](docs/sdks/transfers/README.md#list) - List Transfers
-- [initiate](docs/sdks/transfers/README.md#initiate) - Initiate a Transfer
-- [get](docs/sdks/transfers/README.md#get) - Get a single Transfer
-- [cancel](docs/sdks/transfers/README.md#cancel) - Cancel a Transfer
+* [list](docs/sdks/transfers/README.md#list) - List Transfers
+* [initiate](docs/sdks/transfers/README.md#initiate) - Initiate a Transfer
+* [get](docs/sdks/transfers/README.md#get) - Get a single Transfer
+* [cancel](docs/sdks/transfers/README.md#cancel) - Cancel a Transfer
 
 ### [VirtualReferenceNumbers](docs/sdks/virtualreferencenumbers/README.md)
 
-- [list](docs/sdks/virtualreferencenumbers/README.md#list) - List Virtual Reference Numbers
-- [create](docs/sdks/virtualreferencenumbers/README.md#create) - Create a new Virtual Reference Number
-- [getById](docs/sdks/virtualreferencenumbers/README.md#getbyid) - Get a single Virtual Reference Number
-- [edit](docs/sdks/virtualreferencenumbers/README.md#edit) - Edit a Virtual Reference Number
-- [archive](docs/sdks/virtualreferencenumbers/README.md#archive) - Archive a single Virtual Reference Number
-- [lock](docs/sdks/virtualreferencenumbers/README.md#lock) - Lock a single Virtual Reference Number
-- [unlock](docs/sdks/virtualreferencenumbers/README.md#unlock) - Unlock a single Virtual Reference Number
+* [list](docs/sdks/virtualreferencenumbers/README.md#list) - List Virtual Reference Numbers
+* [create](docs/sdks/virtualreferencenumbers/README.md#create) - Create a new Virtual Reference Number
+* [getById](docs/sdks/virtualreferencenumbers/README.md#getbyid) - Get a single Virtual Reference Number
+* [edit](docs/sdks/virtualreferencenumbers/README.md#edit) - Edit a Virtual Reference Number
+* [archive](docs/sdks/virtualreferencenumbers/README.md#archive) - Archive a single Virtual Reference Number
+* [lock](docs/sdks/virtualreferencenumbers/README.md#lock) - Lock a single Virtual Reference Number
+* [unlock](docs/sdks/virtualreferencenumbers/README.md#unlock) - Unlock a single Virtual Reference Number
 
 </details>
 <!-- End Available Resources and Operations [operations] -->
 
 <!-- Start Standalone functions [standalone-funcs] -->
-
 ## Standalone functions
 
 All the methods listed above are available as standalone functions. These
@@ -308,13 +298,11 @@ To read more about standalone functions, check [FUNCTIONS.md](./FUNCTIONS.md).
 <!-- End Standalone functions [standalone-funcs] -->
 
 <!-- Start Retries [retries] -->
-
 ## Retries
 
-Some of the endpoints in this SDK support retries. If you use the SDK without any configuration, it will fall back to the default retry strategy provided by the API. However, the default retry strategy can be overridden on a per-operation basis, or across the entire SDK.
+Some of the endpoints in this SDK support retries.  If you use the SDK without any configuration, it will fall back to the default retry strategy provided by the API.  However, the default retry strategy can be overridden on a per-operation basis, or across the entire SDK.
 
 To change the default retry strategy for a single API call, simply provide a retryConfig object to the call:
-
 ```typescript
 import { NewlineSDK } from "newline-ts-sdk";
 
@@ -343,10 +331,10 @@ async function run() {
 }
 
 run();
+
 ```
 
 If you'd like to override the default retry strategy for all operations that support retries, you can provide a retryConfig at SDK initialization:
-
 ```typescript
 import { NewlineSDK } from "newline-ts-sdk";
 
@@ -374,12 +362,11 @@ async function run() {
 }
 
 run();
-```
 
+```
 <!-- End Retries [retries] -->
 
 <!-- Start Error Handling [errors] -->
-
 ## Error Handling
 
 [`NewlineError`](./src/models/errors/newline-error.ts) is the base class for all HTTP error responses. It has the following properties:
@@ -394,7 +381,6 @@ run();
 | `error.data$`       |            | Optional. Some errors may contain structured data. [See Error Classes](#error-classes). |
 
 ### Example
-
 ```typescript
 import { NewlineSDK } from "newline-ts-sdk";
 import * as errors from "newline-ts-sdk/models/errors";
@@ -434,70 +420,66 @@ async function run() {
 }
 
 run();
+
 ```
 
 ### Error Classes
-
 **Primary error:**
-
-- [`NewlineError`](./src/models/errors/newline-error.ts): The base class for HTTP error responses.
+* [`NewlineError`](./src/models/errors/newline-error.ts): The base class for HTTP error responses.
 
 <details><summary>Less common errors (38)</summary>
 
 <br />
 
 **Network errors:**
+* [`ConnectionError`](./src/models/errors/http-client-errors.ts): HTTP client was unable to make a request to a server.
+* [`RequestTimeoutError`](./src/models/errors/http-client-errors.ts): HTTP request timed out due to an AbortSignal signal.
+* [`RequestAbortedError`](./src/models/errors/http-client-errors.ts): HTTP request was aborted by the client.
+* [`InvalidRequestError`](./src/models/errors/http-client-errors.ts): Any input used to create a request is invalid.
+* [`UnexpectedClientError`](./src/models/errors/http-client-errors.ts): Unrecognised or unexpected error.
 
-- [`ConnectionError`](./src/models/errors/http-client-errors.ts): HTTP client was unable to make a request to a server.
-- [`RequestTimeoutError`](./src/models/errors/http-client-errors.ts): HTTP request timed out due to an AbortSignal signal.
-- [`RequestAbortedError`](./src/models/errors/http-client-errors.ts): HTTP request was aborted by the client.
-- [`InvalidRequestError`](./src/models/errors/http-client-errors.ts): Any input used to create a request is invalid.
-- [`UnexpectedClientError`](./src/models/errors/http-client-errors.ts): Unrecognised or unexpected error.
 
 **Inherit from [`NewlineError`](./src/models/errors/newline-error.ts)**:
-
-- [`UpdateSyntheticAccountBadRequestError`](./src/models/errors/update-synthetic-account-bad-request-error.ts): A Synthetic Account is not updated if a required parameter is missing. Status code `400`. Applicable to 1 of 52 methods.\*
-- [`PutTransfersUidCancelBadRequestError`](./src/models/errors/put-transfers-uid-cancel-bad-request-error.ts): The transfer is not eligible for cancellation. Status code `400`. Applicable to 1 of 52 methods.\*
-- [`PutTransactionsUidAuthorizeBadRequestError`](./src/models/errors/put-transactions-uid-authorize-bad-request-error.ts): Bad authorization request. Status code `400`. Applicable to 1 of 52 methods.\*
-- [`PostReturnsBadRequestError`](./src/models/errors/post-returns-bad-request-error.ts): Creation Error. Status code `400`. Applicable to 1 of 52 methods.\*
-- [`PutTransactionsUidAuthorizeForbiddenError`](./src/models/errors/put-transactions-uid-authorize-forbidden-error.ts): Client authorization disabled. (The Program is not configured for Client Authorization). Status code `403`. Applicable to 1 of 52 methods.\*
-- [`GetReturnsForbiddenError`](./src/models/errors/get-returns-forbidden-error.ts): Denied access to Returns. Status code `403`. Applicable to 1 of 52 methods.\*
-- [`PostReturnsForbiddenError`](./src/models/errors/post-returns-forbidden-error.ts): Denied access to Returns. Status code `403`. Applicable to 1 of 52 methods.\*
-- [`GetReturnsUidForbiddenError`](./src/models/errors/get-returns-uid-forbidden-error.ts): Denied access to Returns. Status code `403`. Applicable to 1 of 52 methods.\*
-- [`GetCombinedTransfersForbiddenError`](./src/models/errors/get-combined-transfers-forbidden-error.ts): Denied access to Combined Transfers. Status code `403`. Applicable to 1 of 52 methods.\*
-- [`PostCombinedTransfersForbiddenError`](./src/models/errors/post-combined-transfers-forbidden-error.ts): Denied access to Combined Transfers. Status code `403`. Applicable to 1 of 52 methods.\*
-- [`GetCombinedTransfersUidForbiddenError`](./src/models/errors/get-combined-transfers-uid-forbidden-error.ts): Denied access to Combined Transfers. Status code `403`. Applicable to 1 of 52 methods.\*
-- [`GetVirtualReferenceNumbersUidNotFoundError`](./src/models/errors/get-virtual-reference-numbers-uid-not-found-error.ts): The Virtual Reference Number is not found. Status code `404`. Applicable to 1 of 52 methods.\*
-- [`PutVirtualReferenceNumbersUidNotFoundError`](./src/models/errors/put-virtual-reference-numbers-uid-not-found-error.ts): The Virtual Reference Number is not found. Status code `404`. Applicable to 1 of 52 methods.\*
-- [`DeleteVirtualReferenceNumbersUidNotFoundError`](./src/models/errors/delete-virtual-reference-numbers-uid-not-found-error.ts): The Virtual Reference Number is not found. Status code `404`. Applicable to 1 of 52 methods.\*
-- [`PutVirtualReferenceNumbersUidLockNotFoundError`](./src/models/errors/put-virtual-reference-numbers-uid-lock-not-found-error.ts): The Virtual Reference Number is not found. Status code `404`. Applicable to 1 of 52 methods.\*
-- [`PutVirtualReferenceNumbersUidUnlockNotFoundError`](./src/models/errors/put-virtual-reference-numbers-uid-unlock-not-found-error.ts): The Virtual Reference Number is not found. Status code `404`. Applicable to 1 of 52 methods.\*
-- [`GetReturnsUidNotFoundError`](./src/models/errors/get-returns-uid-not-found-error.ts): Unknown Return. Status code `404`. Applicable to 1 of 52 methods.\*
-- [`GetCombinedTransfersUidNotFoundError`](./src/models/errors/get-combined-transfers-uid-not-found-error.ts): The Combined Transfer is not found. Status code `404`. Applicable to 1 of 52 methods.\*
-- [`ConflictError`](./src/models/errors/conflict-error.ts): A new Synthetic Account is NOT created if the external_uid given is present but not unique. Status code `409`. Applicable to 1 of 52 methods.\*
-- [`OnboardCustomerProductUnprocessableEntityError`](./src/models/errors/onboard-customer-product-unprocessable-entity-error.ts): There was a problem with the request body. Status code `422`. Applicable to 1 of 52 methods.\*
-- [`DeleteSyntheticAccountUnprocessableEntityError`](./src/models/errors/delete-synthetic-account-unprocessable-entity-error.ts): A Synthetic Account is not archived. Status code `422`. Applicable to 1 of 52 methods.\*
-- [`PutTransfersUidCancelUnprocessableEntityError`](./src/models/errors/put-transfers-uid-cancel-unprocessable-entity-error.ts): The transfer could not be canceled. Status code `422`. Applicable to 1 of 52 methods.\*
-- [`PutTransactionsUidAuthorizeUnprocessableEntityError`](./src/models/errors/put-transactions-uid-authorize-unprocessable-entity-error.ts): An exception occurred while authorizing transaction. Status code `422`. Applicable to 1 of 52 methods.\*
-- [`GetVirtualReferenceNumbersUnprocessableEntityError`](./src/models/errors/get-virtual-reference-numbers-unprocessable-entity-error.ts): Failed to retrieve Virtual Reference Numbers. Status code `422`. Applicable to 1 of 52 methods.\*
-- [`PostVirtualReferenceNumbersUnprocessableEntityError`](./src/models/errors/post-virtual-reference-numbers-unprocessable-entity-error.ts): Creation Error. Status code `422`. Applicable to 1 of 52 methods.\*
-- [`PutVirtualReferenceNumbersUidUnprocessableEntityError`](./src/models/errors/put-virtual-reference-numbers-uid-unprocessable-entity-error.ts): Failed to update Virtual Reference Number. Status code `422`. Applicable to 1 of 52 methods.\*
-- [`PutVirtualReferenceNumbersUidLockUnprocessableEntityError`](./src/models/errors/put-virtual-reference-numbers-uid-lock-unprocessable-entity-error.ts): The Virtual Reference Number could not be locked. Status code `422`. Applicable to 1 of 52 methods.\*
-- [`PutVirtualReferenceNumbersUidUnlockUnprocessableEntityError`](./src/models/errors/put-virtual-reference-numbers-uid-unlock-unprocessable-entity-error.ts): The Virtual Reference Number could not be unlocked. Status code `422`. Applicable to 1 of 52 methods.\*
-- [`GetReturnsUnprocessableEntityError`](./src/models/errors/get-returns-unprocessable-entity-error.ts): Failed to retrieve Returns. Status code `422`. Applicable to 1 of 52 methods.\*
-- [`PostReturnsUnprocessableEntityError`](./src/models/errors/post-returns-unprocessable-entity-error.ts): Creation Error. Status code `422`. Applicable to 1 of 52 methods.\*
-- [`GetCombinedTransfersUnprocessableEntityError`](./src/models/errors/get-combined-transfers-unprocessable-entity-error.ts): Failed to retrieve Combined Transfers. Status code `422`. Applicable to 1 of 52 methods.\*
-- [`PostCombinedTransfersUnprocessableEntityError`](./src/models/errors/post-combined-transfers-unprocessable-entity-error.ts): Creation Error. Status code `422`. Applicable to 1 of 52 methods.\*
-- [`ResponseValidationError`](./src/models/errors/response-validation-error.ts): Type mismatch between the data returned from the server and the structure expected by the SDK. See `error.rawValue` for the raw value and `error.pretty()` for a nicely formatted multi-line string.
+* [`UpdateSyntheticAccountBadRequestError`](./src/models/errors/update-synthetic-account-bad-request-error.ts): A Synthetic Account is not updated if a required parameter is missing. Status code `400`. Applicable to 1 of 52 methods.*
+* [`PutTransfersUidCancelBadRequestError`](./src/models/errors/put-transfers-uid-cancel-bad-request-error.ts): The transfer is not eligible for cancellation. Status code `400`. Applicable to 1 of 52 methods.*
+* [`PutTransactionsUidAuthorizeBadRequestError`](./src/models/errors/put-transactions-uid-authorize-bad-request-error.ts): Bad authorization request. Status code `400`. Applicable to 1 of 52 methods.*
+* [`PostReturnsBadRequestError`](./src/models/errors/post-returns-bad-request-error.ts): Creation Error. Status code `400`. Applicable to 1 of 52 methods.*
+* [`PutTransactionsUidAuthorizeForbiddenError`](./src/models/errors/put-transactions-uid-authorize-forbidden-error.ts): Client authorization disabled. (The Program is not configured for Client Authorization). Status code `403`. Applicable to 1 of 52 methods.*
+* [`GetReturnsForbiddenError`](./src/models/errors/get-returns-forbidden-error.ts): Denied access to Returns. Status code `403`. Applicable to 1 of 52 methods.*
+* [`PostReturnsForbiddenError`](./src/models/errors/post-returns-forbidden-error.ts): Denied access to Returns. Status code `403`. Applicable to 1 of 52 methods.*
+* [`GetReturnsUidForbiddenError`](./src/models/errors/get-returns-uid-forbidden-error.ts): Denied access to Returns. Status code `403`. Applicable to 1 of 52 methods.*
+* [`GetCombinedTransfersForbiddenError`](./src/models/errors/get-combined-transfers-forbidden-error.ts): Denied access to Combined Transfers. Status code `403`. Applicable to 1 of 52 methods.*
+* [`PostCombinedTransfersForbiddenError`](./src/models/errors/post-combined-transfers-forbidden-error.ts): Denied access to Combined Transfers. Status code `403`. Applicable to 1 of 52 methods.*
+* [`GetCombinedTransfersUidForbiddenError`](./src/models/errors/get-combined-transfers-uid-forbidden-error.ts): Denied access to Combined Transfers. Status code `403`. Applicable to 1 of 52 methods.*
+* [`GetVirtualReferenceNumbersUidNotFoundError`](./src/models/errors/get-virtual-reference-numbers-uid-not-found-error.ts): The Virtual Reference Number is not found. Status code `404`. Applicable to 1 of 52 methods.*
+* [`PutVirtualReferenceNumbersUidNotFoundError`](./src/models/errors/put-virtual-reference-numbers-uid-not-found-error.ts): The Virtual Reference Number is not found. Status code `404`. Applicable to 1 of 52 methods.*
+* [`DeleteVirtualReferenceNumbersUidNotFoundError`](./src/models/errors/delete-virtual-reference-numbers-uid-not-found-error.ts): The Virtual Reference Number is not found. Status code `404`. Applicable to 1 of 52 methods.*
+* [`PutVirtualReferenceNumbersUidLockNotFoundError`](./src/models/errors/put-virtual-reference-numbers-uid-lock-not-found-error.ts): The Virtual Reference Number is not found. Status code `404`. Applicable to 1 of 52 methods.*
+* [`PutVirtualReferenceNumbersUidUnlockNotFoundError`](./src/models/errors/put-virtual-reference-numbers-uid-unlock-not-found-error.ts): The Virtual Reference Number is not found. Status code `404`. Applicable to 1 of 52 methods.*
+* [`GetReturnsUidNotFoundError`](./src/models/errors/get-returns-uid-not-found-error.ts): Unknown Return. Status code `404`. Applicable to 1 of 52 methods.*
+* [`GetCombinedTransfersUidNotFoundError`](./src/models/errors/get-combined-transfers-uid-not-found-error.ts): The Combined Transfer is not found. Status code `404`. Applicable to 1 of 52 methods.*
+* [`ConflictError`](./src/models/errors/conflict-error.ts): A new Synthetic Account is NOT created if the external_uid given is present but not unique. Status code `409`. Applicable to 1 of 52 methods.*
+* [`OnboardCustomerProductUnprocessableEntityError`](./src/models/errors/onboard-customer-product-unprocessable-entity-error.ts): There was a problem with the request body. Status code `422`. Applicable to 1 of 52 methods.*
+* [`DeleteSyntheticAccountUnprocessableEntityError`](./src/models/errors/delete-synthetic-account-unprocessable-entity-error.ts): A Synthetic Account is not archived. Status code `422`. Applicable to 1 of 52 methods.*
+* [`PutTransfersUidCancelUnprocessableEntityError`](./src/models/errors/put-transfers-uid-cancel-unprocessable-entity-error.ts): The transfer could not be canceled. Status code `422`. Applicable to 1 of 52 methods.*
+* [`PutTransactionsUidAuthorizeUnprocessableEntityError`](./src/models/errors/put-transactions-uid-authorize-unprocessable-entity-error.ts): An exception occurred while authorizing transaction. Status code `422`. Applicable to 1 of 52 methods.*
+* [`GetVirtualReferenceNumbersUnprocessableEntityError`](./src/models/errors/get-virtual-reference-numbers-unprocessable-entity-error.ts): Failed to retrieve Virtual Reference Numbers. Status code `422`. Applicable to 1 of 52 methods.*
+* [`PostVirtualReferenceNumbersUnprocessableEntityError`](./src/models/errors/post-virtual-reference-numbers-unprocessable-entity-error.ts): Creation Error. Status code `422`. Applicable to 1 of 52 methods.*
+* [`PutVirtualReferenceNumbersUidUnprocessableEntityError`](./src/models/errors/put-virtual-reference-numbers-uid-unprocessable-entity-error.ts): Failed to update Virtual Reference Number. Status code `422`. Applicable to 1 of 52 methods.*
+* [`PutVirtualReferenceNumbersUidLockUnprocessableEntityError`](./src/models/errors/put-virtual-reference-numbers-uid-lock-unprocessable-entity-error.ts): The Virtual Reference Number could not be locked. Status code `422`. Applicable to 1 of 52 methods.*
+* [`PutVirtualReferenceNumbersUidUnlockUnprocessableEntityError`](./src/models/errors/put-virtual-reference-numbers-uid-unlock-unprocessable-entity-error.ts): The Virtual Reference Number could not be unlocked. Status code `422`. Applicable to 1 of 52 methods.*
+* [`GetReturnsUnprocessableEntityError`](./src/models/errors/get-returns-unprocessable-entity-error.ts): Failed to retrieve Returns. Status code `422`. Applicable to 1 of 52 methods.*
+* [`PostReturnsUnprocessableEntityError`](./src/models/errors/post-returns-unprocessable-entity-error.ts): Creation Error. Status code `422`. Applicable to 1 of 52 methods.*
+* [`GetCombinedTransfersUnprocessableEntityError`](./src/models/errors/get-combined-transfers-unprocessable-entity-error.ts): Failed to retrieve Combined Transfers. Status code `422`. Applicable to 1 of 52 methods.*
+* [`PostCombinedTransfersUnprocessableEntityError`](./src/models/errors/post-combined-transfers-unprocessable-entity-error.ts): Creation Error. Status code `422`. Applicable to 1 of 52 methods.*
+* [`ResponseValidationError`](./src/models/errors/response-validation-error.ts): Type mismatch between the data returned from the server and the structure expected by the SDK. See `error.rawValue` for the raw value and `error.pretty()` for a nicely formatted multi-line string.
 
 </details>
 
 \* Check [the method documentation](#available-resources-and-operations) to see if the error is applicable.
-
 <!-- End Error Handling [errors] -->
 
 <!-- Start Server Selection [server] -->
-
 ## Server Selection
 
 ### Select Server by Name
@@ -529,12 +511,12 @@ async function run() {
 }
 
 run();
+
 ```
 
 ### Override Server URL Per-Client
 
 The default server can also be overridden globally by passing a URL to the `serverURL: string` optional parameter when initializing the SDK client instance. For example:
-
 ```typescript
 import { NewlineSDK } from "newline-ts-sdk";
 
@@ -553,12 +535,11 @@ async function run() {
 }
 
 run();
-```
 
+```
 <!-- End Server Selection [server] -->
 
 <!-- Start Custom HTTP Client [http-client] -->
-
 ## Custom HTTP Client
 
 The TypeScript SDK makes API calls using an `HTTPClient` that wraps the native
@@ -572,7 +553,6 @@ used to integrate a third-party HTTP client or when writing tests to mock out
 the HTTP client and feed in fixtures.
 
 The following example shows how to:
-
 - route requests through a proxy server using [undici](https://www.npmjs.com/package/undici)'s ProxyAgent
 - use the `"beforeRequest"` hook to add a custom header and a timeout to requests
 - use the `"requestError"` hook to log errors
@@ -593,7 +573,7 @@ const httpClient = new HTTPClient({
 
 httpClient.addHook("beforeRequest", (request) => {
   const nextRequest = new Request(request, {
-    signal: request.signal || AbortSignal.timeout(5000),
+    signal: request.signal || AbortSignal.timeout(5000)
   });
 
   nextRequest.headers.set("x-custom-header", "custom value");
@@ -610,11 +590,9 @@ httpClient.addHook("requestError", (error, request) => {
 
 const sdk = new NewlineSDK({ httpClient: httpClient });
 ```
-
 <!-- End Custom HTTP Client [http-client] -->
 
 <!-- Start Debugging [debug] -->
-
 ## Debugging
 
 You can setup your SDK to emit debug logs for SDK requests and responses.
@@ -631,7 +609,6 @@ const sdk = new NewlineSDK({ debugLogger: console });
 ```
 
 You can also enable a default debug logger by setting an environment variable `NEWLINE_DEBUG` to true.
-
 <!-- End Debugging [debug] -->
 
 <!-- Placeholder for Future Speakeasy SDK Sections -->

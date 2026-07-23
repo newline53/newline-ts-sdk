@@ -72,7 +72,7 @@ export type PostCombinedTransfersInstantPaymentCounterpartyAddress = {
 };
 
 /**
- * Contains Instant Payment-specific information. Only populated if the Synthetic Account is in the `instant_payments_external` category.
+ * Contains Instant Payment-specific information. Only populated if the Synthetic Account is in the `instant_payment_external` category.
  *
  * @remarks
  */
@@ -236,7 +236,7 @@ export type SyntheticAccountRequest = {
    */
   ach?: SyntheticAccountAch | undefined;
   /**
-   * Contains Instant Payment-specific information. Only populated if the Synthetic Account is in the `instant_payments_external` category.
+   * Contains Instant Payment-specific information. Only populated if the Synthetic Account is in the `instant_payment_external` category.
    *
    * @remarks
    */
@@ -448,7 +448,7 @@ export type TransferInstantPayment = {
     | PostCombinedTransfersInstantPaymentTransmitter
     | undefined;
   /**
-   * A message transmitted to the recipient bank. Can contain letters and numbers as well as '-', '_', and spaces.
+   * A message transmitted to the recipient bank. Supports letters, numbers, and special characters: . !@#$%^&*',/:;<=>?~`|[]{})(+=_- (max 140 characters).
    *
    * @remarks
    */
