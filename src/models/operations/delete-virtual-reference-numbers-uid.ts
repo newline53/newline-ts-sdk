@@ -88,6 +88,20 @@ export type DeleteVirtualReferenceNumbersUidStatus = OpenEnum<
 >;
 
 /**
+ * The type of VRN.
+ */
+export const DeleteVirtualReferenceNumbersUidType = {
+  Business: "business",
+  Consumer: "consumer",
+} as const;
+/**
+ * The type of VRN.
+ */
+export type DeleteVirtualReferenceNumbersUidType = OpenEnum<
+  typeof DeleteVirtualReferenceNumbersUidType
+>;
+
+/**
  * Virtual Reference Number is archived successfully
  */
 export type DeleteVirtualReferenceNumbersUidResponseBody = {
@@ -147,6 +161,10 @@ export type DeleteVirtualReferenceNumbersUidResponseBody = {
    * Last 4 digits of the VRN
    */
   virtualReferenceNumberLastFour?: string | undefined;
+  /**
+   * The type of VRN.
+   */
+  type?: DeleteVirtualReferenceNumbersUidType | undefined;
   /**
    * The VRN
    */
@@ -233,6 +251,12 @@ export const DeleteVirtualReferenceNumbersUidStatus$inboundSchema:
     .inboundSchema(DeleteVirtualReferenceNumbersUidStatus);
 
 /** @internal */
+export const DeleteVirtualReferenceNumbersUidType$inboundSchema: z.ZodMiniType<
+  DeleteVirtualReferenceNumbersUidType,
+  unknown
+> = openEnums.inboundSchema(DeleteVirtualReferenceNumbersUidType);
+
+/** @internal */
 export const DeleteVirtualReferenceNumbersUidResponseBody$inboundSchema:
   z.ZodMiniType<DeleteVirtualReferenceNumbersUidResponseBody, unknown> = z.pipe(
     z.object({
@@ -255,6 +279,7 @@ export const DeleteVirtualReferenceNumbersUidResponseBody$inboundSchema:
       synthetic_account_uid: types.optional(types.string()),
       uid: types.optional(types.string()),
       virtual_reference_number_last_four: types.optional(types.string()),
+      type: types.optional(DeleteVirtualReferenceNumbersUidType$inboundSchema),
       virtual_reference_number: types.optional(types.string()),
     }),
     z.transform((v) => {

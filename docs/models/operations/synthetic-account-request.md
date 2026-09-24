@@ -37,9 +37,13 @@ let value: SyntheticAccountRequest = {
   },
   wire: {
     counterpartyAddress: {
-      line1: "234 Xyz Rd",
-      line2: "APT 5",
-      line3: "Boston, MA 02110",
+      line1: "123 Main St",
+      line2: "Suite 400",
+      buildingNumber: "123",
+      streetName: "Main St",
+      city: "Cincinnati",
+      state: "OH",
+      postalCode: "45202",
       country: "US",
     },
     counterpartyName: "Marge's Roofing Inc",

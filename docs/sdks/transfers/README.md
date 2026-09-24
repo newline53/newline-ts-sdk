@@ -272,6 +272,7 @@ async function run() {
         country: null,
       },
       memo: "For the 6-5-23 shipment of pineapple popsicles",
+      purposeOfPayment: "PAYR",
     },
     wire: {
       intermediaryBankAddress: {
@@ -284,12 +285,12 @@ async function run() {
       intermediaryBankRoutingNumber: "923456789",
       wireInstructions: "Send ASAP",
       wireTransmitter: {
-        name: "Marge's Roofing Inc",
-        transmitterIdentifier: "123456789012ABC",
         line1: "123 Abc St.",
         line2: "Boring, Oregon 97009",
         line3: null,
         country: "US",
+        name: "Marge's Roofing Inc",
+        transmitterIdentifier: "123456789012ABC",
       },
     },
   });
@@ -350,6 +351,7 @@ async function run() {
         country: null,
       },
       memo: "For the 6-5-23 shipment of pineapple popsicles",
+      purposeOfPayment: "PAYR",
     },
     wire: {
       intermediaryBankAddress: {
@@ -362,12 +364,12 @@ async function run() {
       intermediaryBankRoutingNumber: "923456789",
       wireInstructions: "Send ASAP",
       wireTransmitter: {
-        name: "Marge's Roofing Inc",
-        transmitterIdentifier: "123456789012ABC",
         line1: "123 Abc St.",
         line2: "Boring, Oregon 97009",
         line3: null,
         country: "US",
+        name: "Marge's Roofing Inc",
+        transmitterIdentifier: "123456789012ABC",
       },
     },
   });
@@ -415,6 +417,7 @@ async function run() {
         country: null,
       },
       memo: "To unfreeze the prince's assets",
+      purposeOfPayment: "PAYR",
     },
   });
 
@@ -462,6 +465,7 @@ async function run() {
         country: null,
       },
       memo: "To unfreeze the prince's assets",
+      purposeOfPayment: "PAYR",
     },
   });
   if (res.ok) {
@@ -520,6 +524,7 @@ async function run() {
         country: null,
       },
       memo: "For the 6-5-23 shipment of pineapple popsicles",
+      purposeOfPayment: "PAYR",
     },
     wire: {
       intermediaryBankAddress: {
@@ -532,12 +537,12 @@ async function run() {
       intermediaryBankRoutingNumber: "923456789",
       wireInstructions: "Send ASAP",
       wireTransmitter: {
-        name: "Marge's Roofing Inc",
-        transmitterIdentifier: "123456789012ABC",
         line1: "123 Abc St.",
         line2: "Boring, Oregon 97009",
         line3: null,
         country: "US",
+        name: "Marge's Roofing Inc",
+        transmitterIdentifier: "123456789012ABC",
       },
     },
   });
@@ -598,6 +603,7 @@ async function run() {
         country: null,
       },
       memo: "For the 6-5-23 shipment of pineapple popsicles",
+      purposeOfPayment: "PAYR",
     },
     wire: {
       intermediaryBankAddress: {
@@ -610,12 +616,12 @@ async function run() {
       intermediaryBankRoutingNumber: "923456789",
       wireInstructions: "Send ASAP",
       wireTransmitter: {
-        name: "Marge's Roofing Inc",
-        transmitterIdentifier: "123456789012ABC",
         line1: "123 Abc St.",
         line2: "Boring, Oregon 97009",
         line3: null,
         country: "US",
+        name: "Marge's Roofing Inc",
+        transmitterIdentifier: "123456789012ABC",
       },
     },
   });
@@ -662,10 +668,10 @@ async function run() {
       intermediaryBankRoutingNumber: "923456789",
       wireInstructions: "Please send ASAP",
       wireTransmitter: {
-        name: "Top Tier Tacos",
-        transmitterIdentifier: "123456789",
         line1: "123 Abc St.",
         country: "US",
+        name: "Top Tier Tacos",
+        transmitterIdentifier: "123456789",
       },
     },
   });
@@ -713,10 +719,10 @@ async function run() {
       intermediaryBankRoutingNumber: "923456789",
       wireInstructions: "Please send ASAP",
       wireTransmitter: {
-        name: "Top Tier Tacos",
-        transmitterIdentifier: "123456789",
         line1: "123 Abc St.",
         country: "US",
+        name: "Top Tier Tacos",
+        transmitterIdentifier: "123456789",
       },
     },
   });
@@ -776,6 +782,7 @@ async function run() {
         country: null,
       },
       memo: "For the 6-5-23 shipment of pineapple popsicles",
+      purposeOfPayment: "PAYR",
     },
     wire: {
       intermediaryBankAddress: {
@@ -788,12 +795,12 @@ async function run() {
       intermediaryBankRoutingNumber: "923456789",
       wireInstructions: "Send ASAP",
       wireTransmitter: {
-        name: "Marge's Roofing Inc",
-        transmitterIdentifier: "123456789012ABC",
         line1: "123 Abc St.",
         line2: "Boring, Oregon 97009",
         line3: null,
         country: "US",
+        name: "Marge's Roofing Inc",
+        transmitterIdentifier: "123456789012ABC",
       },
     },
   });
@@ -854,6 +861,7 @@ async function run() {
         country: null,
       },
       memo: "For the 6-5-23 shipment of pineapple popsicles",
+      purposeOfPayment: "PAYR",
     },
     wire: {
       intermediaryBankAddress: {
@@ -866,12 +874,169 @@ async function run() {
       intermediaryBankRoutingNumber: "923456789",
       wireInstructions: "Send ASAP",
       wireTransmitter: {
-        name: "Marge's Roofing Inc",
-        transmitterIdentifier: "123456789012ABC",
         line1: "123 Abc St.",
         line2: "Boring, Oregon 97009",
         line3: null,
         country: "US",
+        name: "Marge's Roofing Inc",
+        transmitterIdentifier: "123456789012ABC",
+      },
+    },
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("transfersInitiate failed:", res.error);
+  }
+}
+
+run();
+```
+### Example Usage: wire_transfer_structured
+
+<!-- UsageSnippet language="typescript" operationID="createTransfer" method="post" path="/transfers" example="wire_transfer_structured" -->
+```typescript
+import { NewlineSDK } from "newline-ts-sdk";
+
+const newlineSDK = new NewlineSDK({
+  security: {
+    programUid: process.env["NEWLINE_PROGRAM_UID"] ?? "",
+    hmacKey: process.env["NEWLINE_HMAC_KEY"] ?? "",
+  },
+});
+
+async function run() {
+  const result = await newlineSDK.transfers.initiate({
+    externalUid: "partner-generated-id",
+    sourceSyntheticAccountUid: "4XkJnsfHsuqrxmeX",
+    destinationSyntheticAccountUid: "exMDShw6yM3NHLYV",
+    initiatingCustomerUid: "iDtmSA52zRhgN4iy",
+    destinationCustomerUid: "iDtmSA52zRhgN4iy",
+    initiatorType: "customer",
+    usdTransferAmount: "12.34",
+    ach: {
+      originatorName: "J. Fred Muggs",
+      companyId: "ABC-123456",
+      companyDiscretionaryData: "ABC.123",
+      prenote: false,
+      secCode: "CIE",
+      paymentType: "ST",
+      entryDescription: "ACH Entry",
+      serviceProcessing: "SAMEDAY",
+      effectiveEntryDate: "2023-12-01",
+      idNumber: "4270465600",
+    },
+    instantPayment: {
+      instantPaymentTransmitter: {
+        name: "Marge's Roofing Inc",
+        transmitterIdentifier: "123456789012ABC",
+        streetNumber: "123abc",
+        street1: "Abc St.",
+        city: "Chicago",
+        state: "IL",
+        postalCode: "60301",
+        country: null,
+      },
+      memo: "For the 6-5-23 shipment of pineapple popsicles",
+      purposeOfPayment: "PAYR",
+    },
+    wire: {
+      intermediaryBankAddress: {
+        line1: "345 Def Ave",
+        line2: "San Francisco",
+        line3: "CA 94016",
+        country: "US",
+      },
+      intermediaryBankName: "Fidelity Fiduciary Bank",
+      intermediaryBankRoutingNumber: "923456789",
+      wireInstructions: "Send ASAP",
+      wireTransmitter: {
+        line1: "123 Abc St.",
+        line2: "Boring, Oregon 97009",
+        line3: null,
+        country: "US",
+        name: "Marge's Roofing Inc",
+        transmitterIdentifier: "123456789012ABC",
+      },
+    },
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { NewlineSDKCore } from "newline-ts-sdk/core.js";
+import { transfersInitiate } from "newline-ts-sdk/funcs/transfers-initiate.js";
+
+// Use `NewlineSDKCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const newlineSDK = new NewlineSDKCore({
+  security: {
+    programUid: process.env["NEWLINE_PROGRAM_UID"] ?? "",
+    hmacKey: process.env["NEWLINE_HMAC_KEY"] ?? "",
+  },
+});
+
+async function run() {
+  const res = await transfersInitiate(newlineSDK, {
+    externalUid: "partner-generated-id",
+    sourceSyntheticAccountUid: "4XkJnsfHsuqrxmeX",
+    destinationSyntheticAccountUid: "exMDShw6yM3NHLYV",
+    initiatingCustomerUid: "iDtmSA52zRhgN4iy",
+    destinationCustomerUid: "iDtmSA52zRhgN4iy",
+    initiatorType: "customer",
+    usdTransferAmount: "12.34",
+    ach: {
+      originatorName: "J. Fred Muggs",
+      companyId: "ABC-123456",
+      companyDiscretionaryData: "ABC.123",
+      prenote: false,
+      secCode: "CIE",
+      paymentType: "ST",
+      entryDescription: "ACH Entry",
+      serviceProcessing: "SAMEDAY",
+      effectiveEntryDate: "2023-12-01",
+      idNumber: "4270465600",
+    },
+    instantPayment: {
+      instantPaymentTransmitter: {
+        name: "Marge's Roofing Inc",
+        transmitterIdentifier: "123456789012ABC",
+        streetNumber: "123abc",
+        street1: "Abc St.",
+        city: "Chicago",
+        state: "IL",
+        postalCode: "60301",
+        country: null,
+      },
+      memo: "For the 6-5-23 shipment of pineapple popsicles",
+      purposeOfPayment: "PAYR",
+    },
+    wire: {
+      intermediaryBankAddress: {
+        line1: "345 Def Ave",
+        line2: "San Francisco",
+        line3: "CA 94016",
+        country: "US",
+      },
+      intermediaryBankName: "Fidelity Fiduciary Bank",
+      intermediaryBankRoutingNumber: "923456789",
+      wireInstructions: "Send ASAP",
+      wireTransmitter: {
+        line1: "123 Abc St.",
+        line2: "Boring, Oregon 97009",
+        line3: null,
+        country: "US",
+        name: "Marge's Roofing Inc",
+        transmitterIdentifier: "123456789012ABC",
       },
     },
   });
@@ -1079,6 +1244,61 @@ run();
 ### Example Usage: wire_transfer
 
 <!-- UsageSnippet language="typescript" operationID="getTransfer" method="get" path="/transfers/{uid}" example="wire_transfer" -->
+```typescript
+import { NewlineSDK } from "newline-ts-sdk";
+
+const newlineSDK = new NewlineSDK({
+  security: {
+    programUid: process.env["NEWLINE_PROGRAM_UID"] ?? "",
+    hmacKey: process.env["NEWLINE_HMAC_KEY"] ?? "",
+  },
+});
+
+async function run() {
+  const result = await newlineSDK.transfers.get({
+    uid: "<id>",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { NewlineSDKCore } from "newline-ts-sdk/core.js";
+import { transfersGet } from "newline-ts-sdk/funcs/transfers-get.js";
+
+// Use `NewlineSDKCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const newlineSDK = new NewlineSDKCore({
+  security: {
+    programUid: process.env["NEWLINE_PROGRAM_UID"] ?? "",
+    hmacKey: process.env["NEWLINE_HMAC_KEY"] ?? "",
+  },
+});
+
+async function run() {
+  const res = await transfersGet(newlineSDK, {
+    uid: "<id>",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("transfersGet failed:", res.error);
+  }
+}
+
+run();
+```
+### Example Usage: wire_transfer_structured
+
+<!-- UsageSnippet language="typescript" operationID="getTransfer" method="get" path="/transfers/{uid}" example="wire_transfer_structured" -->
 ```typescript
 import { NewlineSDK } from "newline-ts-sdk";
 

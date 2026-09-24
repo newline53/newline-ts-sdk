@@ -27,6 +27,7 @@ let value: GetVirtualReferenceNumbersResponse = {
         status: "active",
         syntheticAccountUid: "Dg1EPao8XukUpHG8",
         virtualReferenceNumberLastFour: "3456",
+        type: "business",
       },
     ],
   },

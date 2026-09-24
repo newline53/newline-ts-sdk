@@ -111,6 +111,20 @@ export type PutVirtualReferenceNumbersUidUnlockStatus = OpenEnum<
 >;
 
 /**
+ * The type of VRN.
+ */
+export const PutVirtualReferenceNumbersUidUnlockType = {
+  Business: "business",
+  Consumer: "consumer",
+} as const;
+/**
+ * The type of VRN.
+ */
+export type PutVirtualReferenceNumbersUidUnlockType = OpenEnum<
+  typeof PutVirtualReferenceNumbersUidUnlockType
+>;
+
+/**
  * The locked Virtual Reference Number resource is returned
  */
 export type PutVirtualReferenceNumbersUidUnlockResponseBody = {
@@ -170,6 +184,10 @@ export type PutVirtualReferenceNumbersUidUnlockResponseBody = {
    * Last 4 digits of the VRN
    */
   virtualReferenceNumberLastFour?: string | undefined;
+  /**
+   * The type of VRN.
+   */
+  type?: PutVirtualReferenceNumbersUidUnlockType | undefined;
   /**
    * The VRN
    */
@@ -295,6 +313,11 @@ export const PutVirtualReferenceNumbersUidUnlockStatus$inboundSchema:
     .inboundSchema(PutVirtualReferenceNumbersUidUnlockStatus);
 
 /** @internal */
+export const PutVirtualReferenceNumbersUidUnlockType$inboundSchema:
+  z.ZodMiniType<PutVirtualReferenceNumbersUidUnlockType, unknown> = openEnums
+    .inboundSchema(PutVirtualReferenceNumbersUidUnlockType);
+
+/** @internal */
 export const PutVirtualReferenceNumbersUidUnlockResponseBody$inboundSchema:
   z.ZodMiniType<PutVirtualReferenceNumbersUidUnlockResponseBody, unknown> = z
     .pipe(
@@ -318,6 +341,9 @@ export const PutVirtualReferenceNumbersUidUnlockResponseBody$inboundSchema:
         synthetic_account_uid: types.optional(types.string()),
         uid: types.optional(types.string()),
         virtual_reference_number_last_four: types.optional(types.string()),
+        type: types.optional(
+          PutVirtualReferenceNumbersUidUnlockType$inboundSchema,
+        ),
         virtual_reference_number: types.optional(types.string()),
       }),
       z.transform((v) => {

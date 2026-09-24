@@ -269,7 +269,7 @@ export type ListTransfersInstantPayment = {
  *
  * @remarks
  */
-export type ListTransfersIntermediaryBankAddress = {
+export type ListTransfersUnstructuredAddress = {
   /**
    * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
    *
@@ -292,7 +292,7 @@ export type ListTransfersIntermediaryBankAddress = {
 };
 
 /**
- * Address of the Transmitter. Must be provided if the `initiator_type` is `transmitter`.
+ * Information about the Transmitter. Must be provided if the `initiator_type` is `transmitter`. Includes the transmitter's name, identifier, and address. The address format on requests depends on your program's wire address configuration. Responses always return all address fields; fields not applicable to the stored format are `null`.
  *
  * @remarks
  */
@@ -304,13 +304,15 @@ export type ListTransfersWireTransmitter = {
    */
   name: string;
   /**
-   * Up to 24 characters, and supplied by Transmitter. Alphanumeric only.
+   * Up to 24 digits, supplied by Transmitter. Numeric only.
    */
   transmitterIdentifier: string;
   /**
-   * Up to 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
    */
-  line1: string | null;
+  line1?: string | null | undefined;
   /**
    * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
    *
@@ -323,7 +325,27 @@ export type ListTransfersWireTransmitter = {
    * @remarks
    */
   line3?: string | null | undefined;
-  country: string;
+  /**
+   * Parsed building or house number. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  buildingNumber?: string | null | undefined;
+  /**
+   * Parsed street name. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  streetName?: string | null | undefined;
+  /**
+   * City. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  city?: string | null | undefined;
+  /**
+   * State or province. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  state?: string | null | undefined;
+  /**
+   * US ZIP code (5-digit) or ZIP+4.
+   */
+  postalCode?: string | null | undefined;
+  country?: string | null | undefined;
 };
 
 export type ListTransfersWire = {
@@ -332,7 +354,7 @@ export type ListTransfersWire = {
    *
    * @remarks
    */
-  intermediaryBankAddress?: ListTransfersIntermediaryBankAddress | undefined;
+  intermediaryBankAddress?: ListTransfersUnstructuredAddress | undefined;
   /**
    * Name of the intermediary bank, when applicable. For wires only. Maximum 35 characters.
    *
@@ -345,6 +367,11 @@ export type ListTransfersWire = {
    * @remarks
    */
   intermediaryBankRoutingNumber?: string | undefined;
+  /**
+   * Information about the Transmitter. Must be provided if the `initiator_type` is `transmitter`. Includes the transmitter's name, identifier, and address. The address format on requests depends on your program's wire address configuration. Responses always return all address fields; fields not applicable to the stored format are `null`.
+   *
+   * @remarks
+   */
   wireTransmitter?: ListTransfersWireTransmitter | undefined;
 };
 
@@ -690,8 +717,8 @@ export function listTransfersInstantPaymentFromJSON(
 }
 
 /** @internal */
-export const ListTransfersIntermediaryBankAddress$inboundSchema: z.ZodMiniType<
-  ListTransfersIntermediaryBankAddress,
+export const ListTransfersUnstructuredAddress$inboundSchema: z.ZodMiniType<
+  ListTransfersUnstructuredAddress,
   unknown
 > = z.object({
   line1: z.optional(z.nullable(types.string())),
@@ -700,14 +727,13 @@ export const ListTransfersIntermediaryBankAddress$inboundSchema: z.ZodMiniType<
   country: z.optional(z.nullable(types.string())),
 });
 
-export function listTransfersIntermediaryBankAddressFromJSON(
+export function listTransfersUnstructuredAddressFromJSON(
   jsonString: string,
-): SafeParseResult<ListTransfersIntermediaryBankAddress, SDKValidationError> {
+): SafeParseResult<ListTransfersUnstructuredAddress, SDKValidationError> {
   return safeParse(
     jsonString,
-    (x) =>
-      ListTransfersIntermediaryBankAddress$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'ListTransfersIntermediaryBankAddress' from JSON`,
+    (x) => ListTransfersUnstructuredAddress$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'ListTransfersUnstructuredAddress' from JSON`,
   );
 }
 
@@ -719,14 +745,22 @@ export const ListTransfersWireTransmitter$inboundSchema: z.ZodMiniType<
   z.object({
     name: types.string(),
     transmitter_identifier: types.string(),
-    line1: types.nullable(types.string()),
+    line1: z.optional(z.nullable(types.string())),
     line2: z.optional(z.nullable(types.string())),
     line3: z.optional(z.nullable(types.string())),
-    country: types.string(),
+    building_number: z.optional(z.nullable(types.string())),
+    street_name: z.optional(z.nullable(types.string())),
+    city: z.optional(z.nullable(types.string())),
+    state: z.optional(z.nullable(types.string())),
+    postal_code: z.optional(z.nullable(types.string())),
+    country: z.optional(z.nullable(types.string())),
   }),
   z.transform((v) => {
     return remap$(v, {
       "transmitter_identifier": "transmitterIdentifier",
+      "building_number": "buildingNumber",
+      "street_name": "streetName",
+      "postal_code": "postalCode",
     });
   }),
 );
@@ -748,7 +782,7 @@ export const ListTransfersWire$inboundSchema: z.ZodMiniType<
 > = z.pipe(
   z.object({
     intermediary_bank_address: types.optional(
-      z.lazy(() => ListTransfersIntermediaryBankAddress$inboundSchema),
+      z.lazy(() => ListTransfersUnstructuredAddress$inboundSchema),
     ),
     intermediary_bank_name: types.optional(types.string()),
     intermediary_bank_routing_number: types.optional(types.string()),

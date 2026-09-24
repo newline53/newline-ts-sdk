@@ -41,10 +41,10 @@ let value: PutTransfersUidCancelResponse = {
       serviceProcessing: "SAMEDAY",
       effectiveEntryDate: "2023-12-01",
       idNumber: "4270465600",
-      transferTraceId: "A1Z2b3y4c5x6DW78",
     },
     instantPayment: {
       memo: "Payment for invoice #123 @client",
+      purposeOfPayment: "PAYR",
     },
     wire: {
       intermediaryBankAddress: {
@@ -57,11 +57,16 @@ let value: PutTransfersUidCancelResponse = {
       intermediaryBankRoutingNumber: "923456789",
       wireTransmitter: {
         name: "Marge's Roofing Inc",
-        transmitterIdentifier: "123456789012ABC",
+        transmitterIdentifier: "123456789012345",
         line1: "123 Abc St.",
         line2: "Boring, Oregon 97009",
         line3: null,
-        country: "US",
+        buildingNumber: "123",
+        streetName: "Main St",
+        city: "Cincinnati",
+        state: "OH",
+        postalCode: "45202",
+        country: null,
       },
       wireInstructions: "Send ASAP",
     },

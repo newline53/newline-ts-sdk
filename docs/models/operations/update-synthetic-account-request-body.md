@@ -32,10 +32,10 @@ let value: UpdateSyntheticAccountRequestBody = {
   },
   wire: {
     counterpartyAddress: {
-      line1: "234 Xyz Rd",
-      line2: "APT 5",
-      line3: "Boston, MA 02110",
-      country: "US",
+      line1: "123 Abc St.",
+      line2: "Boring, Oregon 97009",
+      line3: null,
+      country: null,
     },
     counterpartyName: "Marge's Roofing Inc",
     counterpartyBankAddress: {

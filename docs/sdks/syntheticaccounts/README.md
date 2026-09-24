@@ -1004,6 +1004,141 @@ async function run() {
 
 run();
 ```
+### Example Usage: wire_synthetic_account_structured
+
+<!-- UsageSnippet language="typescript" operationID="createSyntheticAccount" method="post" path="/synthetic_accounts" example="wire_synthetic_account_structured" -->
+```typescript
+import { NewlineSDK } from "newline-ts-sdk";
+
+const newlineSDK = new NewlineSDK({
+  security: {
+    programUid: process.env["NEWLINE_PROGRAM_UID"] ?? "",
+    hmacKey: process.env["NEWLINE_HMAC_KEY"] ?? "",
+  },
+});
+
+async function run() {
+  const result = await newlineSDK.syntheticAccounts.create({
+    externalUid: "partner-generated-id",
+    name: "New Resource Name",
+    poolUid: "kaxHFJnWvJxRJZxq",
+    syntheticAccountTypeUid: "fRMwt6H14ovFUz1s",
+    routingNumber: "123456789",
+    accountNumber: "123456789012",
+    externalProcessorToken: "processor-sandbox-96d86f35-ef58-4e4a-826f-4870b5d677f2",
+    ach: {
+      accountType: "checking",
+      counterpartyName: "Thelma's Flooring LLC",
+    },
+    instantPayment: {
+      counterpartyAddress: {
+        streetNumber: "123abc",
+        street1: "Abc St.",
+        street2: "Suite 4A",
+        city: "Chicago",
+        state: "IL",
+        postalCode: "60301",
+        country: null,
+      },
+      counterpartyName: "Marge's Roofing Inc",
+      email: "payments@veryexcellentbusiness.com",
+      phone: "5555551212",
+    },
+    wire: {
+      counterpartyAddress: {
+        line1: "234 Xyz Rd",
+        line2: "APT 5",
+        line3: "Boston, MA 02110",
+        country: "US",
+      },
+      counterpartyName: "Marge's Roofing Inc",
+      counterpartyBankAddress: {
+        line1: "123 Abc St.",
+        line2: "Boring, Oregon 97009",
+        line3: null,
+        country: null,
+      },
+      counterpartyBankName: "East West Regional Bank",
+    },
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { NewlineSDKCore } from "newline-ts-sdk/core.js";
+import { syntheticAccountsCreate } from "newline-ts-sdk/funcs/synthetic-accounts-create.js";
+
+// Use `NewlineSDKCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const newlineSDK = new NewlineSDKCore({
+  security: {
+    programUid: process.env["NEWLINE_PROGRAM_UID"] ?? "",
+    hmacKey: process.env["NEWLINE_HMAC_KEY"] ?? "",
+  },
+});
+
+async function run() {
+  const res = await syntheticAccountsCreate(newlineSDK, {
+    externalUid: "partner-generated-id",
+    name: "New Resource Name",
+    poolUid: "kaxHFJnWvJxRJZxq",
+    syntheticAccountTypeUid: "fRMwt6H14ovFUz1s",
+    routingNumber: "123456789",
+    accountNumber: "123456789012",
+    externalProcessorToken: "processor-sandbox-96d86f35-ef58-4e4a-826f-4870b5d677f2",
+    ach: {
+      accountType: "checking",
+      counterpartyName: "Thelma's Flooring LLC",
+    },
+    instantPayment: {
+      counterpartyAddress: {
+        streetNumber: "123abc",
+        street1: "Abc St.",
+        street2: "Suite 4A",
+        city: "Chicago",
+        state: "IL",
+        postalCode: "60301",
+        country: null,
+      },
+      counterpartyName: "Marge's Roofing Inc",
+      email: "payments@veryexcellentbusiness.com",
+      phone: "5555551212",
+    },
+    wire: {
+      counterpartyAddress: {
+        line1: "234 Xyz Rd",
+        line2: "APT 5",
+        line3: "Boston, MA 02110",
+        country: "US",
+      },
+      counterpartyName: "Marge's Roofing Inc",
+      counterpartyBankAddress: {
+        line1: "123 Abc St.",
+        line2: "Boring, Oregon 97009",
+        line3: null,
+        country: null,
+      },
+      counterpartyBankName: "East West Regional Bank",
+    },
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("syntheticAccountsCreate failed:", res.error);
+  }
+}
+
+run();
+```
 
 ### Parameters
 
@@ -1199,6 +1334,61 @@ run();
 ### Example Usage: wire_synthetic_account
 
 <!-- UsageSnippet language="typescript" operationID="getSyntheticAccount" method="get" path="/synthetic_accounts/{uid}" example="wire_synthetic_account" -->
+```typescript
+import { NewlineSDK } from "newline-ts-sdk";
+
+const newlineSDK = new NewlineSDK({
+  security: {
+    programUid: process.env["NEWLINE_PROGRAM_UID"] ?? "",
+    hmacKey: process.env["NEWLINE_HMAC_KEY"] ?? "",
+  },
+});
+
+async function run() {
+  const result = await newlineSDK.syntheticAccounts.get({
+    uid: "<id>",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { NewlineSDKCore } from "newline-ts-sdk/core.js";
+import { syntheticAccountsGet } from "newline-ts-sdk/funcs/synthetic-accounts-get.js";
+
+// Use `NewlineSDKCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const newlineSDK = new NewlineSDKCore({
+  security: {
+    programUid: process.env["NEWLINE_PROGRAM_UID"] ?? "",
+    hmacKey: process.env["NEWLINE_HMAC_KEY"] ?? "",
+  },
+});
+
+async function run() {
+  const res = await syntheticAccountsGet(newlineSDK, {
+    uid: "<id>",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("syntheticAccountsGet failed:", res.error);
+  }
+}
+
+run();
+```
+### Example Usage: wire_synthetic_account_structured
+
+<!-- UsageSnippet language="typescript" operationID="getSyntheticAccount" method="get" path="/synthetic_accounts/{uid}" example="wire_synthetic_account_structured" -->
 ```typescript
 import { NewlineSDK } from "newline-ts-sdk";
 
@@ -1834,6 +2024,145 @@ run();
 ### Example Usage: wire_synthetic_account
 
 <!-- UsageSnippet language="typescript" operationID="updateSyntheticAccount" method="put" path="/synthetic_accounts/{uid}" example="wire_synthetic_account" -->
+```typescript
+import { NewlineSDK } from "newline-ts-sdk";
+
+const newlineSDK = new NewlineSDK({
+  security: {
+    programUid: process.env["NEWLINE_PROGRAM_UID"] ?? "",
+    hmacKey: process.env["NEWLINE_HMAC_KEY"] ?? "",
+  },
+});
+
+async function run() {
+  const result = await newlineSDK.syntheticAccounts.update({
+    uid: "<id>",
+    body: {
+      externalUid: "partner-generated-id",
+      name: "New Resource Name",
+      poolUid: "kaxHFJnWvJxRJZxq",
+      syntheticAccountTypeUid: "fRMwt6H14ovFUz1s",
+      routingNumber: "123456789",
+      accountNumber: "123456789012",
+      ach: {
+        accountType: "checking",
+        counterpartyName: "Thelma's Flooring LLC",
+      },
+      instantPayment: {
+        counterpartyAddress: {
+          streetNumber: "123abc",
+          street1: "Abc St.",
+          street2: "Suite 4A",
+          city: "Chicago",
+          state: "IL",
+          postalCode: "60301",
+          country: null,
+        },
+        counterpartyName: "Marge's Roofing Inc",
+        email: "payments@veryexcellentbusiness.com",
+        phone: "5555551212",
+      },
+      wire: {
+        counterpartyAddress: {
+          line1: "234 Xyz Rd",
+          line2: "APT 5",
+          line3: "Boston, MA 02110",
+          country: "US",
+        },
+        counterpartyName: "Marge's Roofing Inc",
+        counterpartyBankAddress: {
+          line1: "123 Abc St.",
+          line2: "Boring, Oregon 97009",
+          line3: null,
+          country: null,
+        },
+        counterpartyBankName: "East West Regional Bank",
+      },
+    },
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { NewlineSDKCore } from "newline-ts-sdk/core.js";
+import { syntheticAccountsUpdate } from "newline-ts-sdk/funcs/synthetic-accounts-update.js";
+
+// Use `NewlineSDKCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const newlineSDK = new NewlineSDKCore({
+  security: {
+    programUid: process.env["NEWLINE_PROGRAM_UID"] ?? "",
+    hmacKey: process.env["NEWLINE_HMAC_KEY"] ?? "",
+  },
+});
+
+async function run() {
+  const res = await syntheticAccountsUpdate(newlineSDK, {
+    uid: "<id>",
+    body: {
+      externalUid: "partner-generated-id",
+      name: "New Resource Name",
+      poolUid: "kaxHFJnWvJxRJZxq",
+      syntheticAccountTypeUid: "fRMwt6H14ovFUz1s",
+      routingNumber: "123456789",
+      accountNumber: "123456789012",
+      ach: {
+        accountType: "checking",
+        counterpartyName: "Thelma's Flooring LLC",
+      },
+      instantPayment: {
+        counterpartyAddress: {
+          streetNumber: "123abc",
+          street1: "Abc St.",
+          street2: "Suite 4A",
+          city: "Chicago",
+          state: "IL",
+          postalCode: "60301",
+          country: null,
+        },
+        counterpartyName: "Marge's Roofing Inc",
+        email: "payments@veryexcellentbusiness.com",
+        phone: "5555551212",
+      },
+      wire: {
+        counterpartyAddress: {
+          line1: "234 Xyz Rd",
+          line2: "APT 5",
+          line3: "Boston, MA 02110",
+          country: "US",
+        },
+        counterpartyName: "Marge's Roofing Inc",
+        counterpartyBankAddress: {
+          line1: "123 Abc St.",
+          line2: "Boring, Oregon 97009",
+          line3: null,
+          country: null,
+        },
+        counterpartyBankName: "East West Regional Bank",
+      },
+    },
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("syntheticAccountsUpdate failed:", res.error);
+  }
+}
+
+run();
+```
+### Example Usage: wire_synthetic_account_structured
+
+<!-- UsageSnippet language="typescript" operationID="updateSyntheticAccount" method="put" path="/synthetic_accounts/{uid}" example="wire_synthetic_account_structured" -->
 ```typescript
 import { NewlineSDK } from "newline-ts-sdk";
 

@@ -63,8 +63,13 @@ let value: GetSyntheticAccountResponse = {
     wire: {
       counterpartyAddress: {
         line1: "234 Xyz Rd",
-        line2: "APT 5",
-        line3: "Boston, MA 02110",
+        line2: null,
+        line3: null,
+        buildingNumber: null,
+        streetName: null,
+        city: null,
+        state: null,
+        postalCode: null,
         country: "US",
       },
       counterpartyName: "Marge's Roofing Inc",

@@ -9,6 +9,7 @@ import * as openEnums from "../../types/enums.js";
 import { ClosedEnum, OpenEnum } from "../../types/enums.js";
 import { Result as SafeParseResult } from "../../types/fp.js";
 import * as types from "../../types/primitives.js";
+import { smartUnion } from "../../types/smart-union.js";
 import { SDKValidationError } from "../errors/sdk-validation-error.js";
 
 /**
@@ -100,11 +101,43 @@ export type SyntheticAccountInstantPayment = {
 };
 
 /**
- * Address of the business or individual who owns the external account.
+ * Structured wire address using ISO-style parsed fields. Accepted when your program's wire address configuration is set to `structured` or `both`. Required fields: `city` and `country`.
  *
  * @remarks
  */
-export type PostCombinedTransfersWireCounterpartyAddress = {
+export type SyntheticAccountStructuredAddress = {
+  /**
+   * Full street line (alternative to `building_number` + `street_name`). Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  line1?: string | null | undefined;
+  /**
+   * Optional continuation, unit, or suite. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  line2?: string | null | undefined;
+  /**
+   * Parsed building or house number. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  buildingNumber?: string | null | undefined;
+  /**
+   * Parsed street name. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  streetName?: string | null | undefined;
+  /**
+   * Required. 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  city: string;
+  /**
+   * State or province. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  state?: string | null | undefined;
+  /**
+   * US ZIP code (5-digit) or ZIP+4.
+   */
+  postalCode?: string | null | undefined;
+  country: string;
+};
+
+export type CounterpartyAddressSyntheticAccountUnstructuredAddress = {
   /**
    * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
    *
@@ -127,11 +160,20 @@ export type PostCombinedTransfersWireCounterpartyAddress = {
 };
 
 /**
+ * Address of the business or individual who owns the external account. The accepted format depends on your program's wire address configuration (`unstructured`, `structured`, or `both`). Unstructured format uses `line1`/`line2`/`line3`/`country`. Structured format uses `building_number`/`street_name`/`city`/`postal_code`/`state`/`country` (with `city` and `country` required).
+ *
+ * @remarks
+ */
+export type PostCombinedTransfersCounterpartyAddressUnion =
+  | SyntheticAccountStructuredAddress
+  | CounterpartyAddressSyntheticAccountUnstructuredAddress;
+
+/**
  * Address of the financial institution where the external account is held.
  *
  * @remarks
  */
-export type PostCombinedTransfersCounterpartyBankAddress = {
+export type SyntheticAccountCounterpartyBankAddressUnstructuredAddress = {
   /**
    * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
    *
@@ -160,12 +202,13 @@ export type PostCombinedTransfersCounterpartyBankAddress = {
  */
 export type SyntheticAccountWire = {
   /**
-   * Address of the business or individual who owns the external account.
+   * Address of the business or individual who owns the external account. The accepted format depends on your program's wire address configuration (`unstructured`, `structured`, or `both`). Unstructured format uses `line1`/`line2`/`line3`/`country`. Structured format uses `building_number`/`street_name`/`city`/`postal_code`/`state`/`country` (with `city` and `country` required).
    *
    * @remarks
    */
   counterpartyAddress?:
-    | PostCombinedTransfersWireCounterpartyAddress
+    | SyntheticAccountStructuredAddress
+    | CounterpartyAddressSyntheticAccountUnstructuredAddress
     | null
     | undefined;
   /**
@@ -180,7 +223,7 @@ export type SyntheticAccountWire = {
    * @remarks
    */
   counterpartyBankAddress?:
-    | PostCombinedTransfersCounterpartyBankAddress
+    | SyntheticAccountCounterpartyBankAddressUnstructuredAddress
     | null
     | undefined;
   /**
@@ -439,6 +482,34 @@ export type PostCombinedTransfersInstantPaymentTransmitter = {
 };
 
 /**
+ * An optional code supplied when an instant payment Transfer is initiated, indicating the kind of transaction being sent. If supplied, it must be one of the approved codes listed below, otherwise the Transfer is rejected. Omit the field or send an empty string to leave it unset; when unset it is returned as an empty string. Only applies to Newline initiated instant payments; it is not populated for received instant payments.
+ *
+ * @remarks
+ */
+export const PostCombinedTransfersPurposeOfPayment = {
+  Nows: "NOWS",
+  Gdds: "GDDS",
+  Scve: "SCVE",
+  Insc: "INSC",
+  Insm: "INSM",
+  Invs: "INVS",
+  Payr: "PAYR",
+  Ubil: "UBIL",
+  Pdep: "PDEP",
+  Acct: "ACCT",
+  Cblk: "CBLK",
+  Mp2P: "MP2P",
+} as const;
+/**
+ * An optional code supplied when an instant payment Transfer is initiated, indicating the kind of transaction being sent. If supplied, it must be one of the approved codes listed below, otherwise the Transfer is rejected. Omit the field or send an empty string to leave it unset; when unset it is returned as an empty string. Only applies to Newline initiated instant payments; it is not populated for received instant payments.
+ *
+ * @remarks
+ */
+export type PostCombinedTransfersPurposeOfPayment = ClosedEnum<
+  typeof PostCombinedTransfersPurposeOfPayment
+>;
+
+/**
  * Instant payment information. Only present if the Transfer is an instant payment.
  *
  * @remarks
@@ -453,9 +524,15 @@ export type TransferInstantPayment = {
    * @remarks
    */
   memo?: string | null | undefined;
+  /**
+   * An optional code supplied when an instant payment Transfer is initiated, indicating the kind of transaction being sent. If supplied, it must be one of the approved codes listed below, otherwise the Transfer is rejected. Omit the field or send an empty string to leave it unset; when unset it is returned as an empty string. Only applies to Newline initiated instant payments; it is not populated for received instant payments.
+   *
+   * @remarks
+   */
+  purposeOfPayment?: PostCombinedTransfersPurposeOfPayment | null | undefined;
 };
 
-export type PostCombinedTransfersIntermediaryBankAddress = {
+export type TransferIntermediaryBankAddressUnstructuredAddress = {
   /**
    * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
    *
@@ -478,11 +555,40 @@ export type PostCombinedTransfersIntermediaryBankAddress = {
 };
 
 /**
- * Address of the Transmitter. Must be provided if the `initiator_type` is `transmitter`.
+ * Structured wire address using ISO-style parsed fields. Accepted when your program's wire address configuration is set to `structured` or `both`. Required fields: `city` and `country`.
  *
  * @remarks
  */
-export type PostCombinedTransfersWireTransmitter = {
+export type TransferStructuredAddress = {
+  /**
+   * Full street line (alternative to `building_number` + `street_name`). Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  line1?: string | null | undefined;
+  /**
+   * Optional continuation, unit, or suite. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  line2?: string | null | undefined;
+  /**
+   * Parsed building or house number. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  buildingNumber?: string | null | undefined;
+  /**
+   * Parsed street name. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  streetName?: string | null | undefined;
+  /**
+   * Required. 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  city: string;
+  /**
+   * State or province. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  state?: string | null | undefined;
+  /**
+   * US ZIP code (5-digit) or ZIP+4.
+   */
+  postalCode?: string | null | undefined;
+  country: string;
   /**
    * Name of the Transmitter.
    *
@@ -490,13 +596,16 @@ export type PostCombinedTransfersWireTransmitter = {
    */
   name: string;
   /**
-   * Up to 24 characters, and supplied by Transmitter. Alphanumeric only.
+   * Up to 24 digits, supplied by Transmitter. Numeric only.
    */
   transmitterIdentifier: string;
+};
+
+export type WireTransmitterTransferUnstructuredAddress = {
   /**
    * Up to 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
    */
-  line1: string | null;
+  line1?: string | null | undefined;
   /**
    * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
    *
@@ -509,8 +618,27 @@ export type PostCombinedTransfersWireTransmitter = {
    * @remarks
    */
   line3?: string | null | undefined;
-  country: string;
+  country?: string | undefined;
+  /**
+   * Name of the Transmitter.
+   *
+   * @remarks
+   */
+  name: string;
+  /**
+   * Up to 24 digits, supplied by Transmitter. Numeric only.
+   */
+  transmitterIdentifier: string;
 };
+
+/**
+ * Information about the Transmitter. Must be provided if the `initiator_type` is `transmitter`. Includes the transmitter's name, identifier, and address. The accepted address format depends on your program's wire address configuration. For `unstructured` format: `line1` and `country` are required. For `structured` format: `city` and `country` are required.
+ *
+ * @remarks
+ */
+export type PostCombinedTransfersWireTransmitter =
+  | TransferStructuredAddress
+  | WireTransmitterTransferUnstructuredAddress;
 
 /**
  * Wire-specific information. Only present if the Transfer is a wire.
@@ -524,7 +652,7 @@ export type TransferWire = {
    * @remarks
    */
   intermediaryBankAddress?:
-    | PostCombinedTransfersIntermediaryBankAddress
+    | TransferIntermediaryBankAddressUnstructuredAddress
     | undefined;
   intermediaryBankName?: string | undefined;
   /**
@@ -539,7 +667,15 @@ export type TransferWire = {
    * @remarks
    */
   wireInstructions?: string | undefined;
-  wireTransmitter?: PostCombinedTransfersWireTransmitter | undefined;
+  /**
+   * Information about the Transmitter. Must be provided if the `initiator_type` is `transmitter`. Includes the transmitter's name, identifier, and address. The accepted address format depends on your program's wire address configuration. For `unstructured` format: `line1` and `country` are required. For `structured` format: `city` and `country` are required.
+   *
+   * @remarks
+   */
+  wireTransmitter?:
+    | TransferStructuredAddress
+    | WireTransmitterTransferUnstructuredAddress
+    | undefined;
 };
 
 /**
@@ -875,38 +1011,53 @@ export function syntheticAccountInstantPaymentToJSON(
 }
 
 /** @internal */
-export type PostCombinedTransfersWireCounterpartyAddress$Outbound = {
+export type SyntheticAccountStructuredAddress$Outbound = {
   line1?: string | null | undefined;
   line2?: string | null | undefined;
-  line3?: string | null | undefined;
-  country?: string | null | undefined;
+  building_number?: string | null | undefined;
+  street_name?: string | null | undefined;
+  city: string;
+  state?: string | null | undefined;
+  postal_code?: string | null | undefined;
+  country: string;
 };
 
 /** @internal */
-export const PostCombinedTransfersWireCounterpartyAddress$outboundSchema:
-  z.ZodMiniType<
-    PostCombinedTransfersWireCounterpartyAddress$Outbound,
-    PostCombinedTransfersWireCounterpartyAddress
-  > = z.object({
+export const SyntheticAccountStructuredAddress$outboundSchema: z.ZodMiniType<
+  SyntheticAccountStructuredAddress$Outbound,
+  SyntheticAccountStructuredAddress
+> = z.pipe(
+  z.object({
     line1: z.optional(z.nullable(z.string())),
     line2: z.optional(z.nullable(z.string())),
-    line3: z.optional(z.nullable(z.string())),
-    country: z.optional(z.nullable(z.string())),
-  });
+    buildingNumber: z.optional(z.nullable(z.string())),
+    streetName: z.optional(z.nullable(z.string())),
+    city: z.string(),
+    state: z.optional(z.nullable(z.string())),
+    postalCode: z.optional(z.nullable(z.string())),
+    country: z.string(),
+  }),
+  z.transform((v) => {
+    return remap$(v, {
+      buildingNumber: "building_number",
+      streetName: "street_name",
+      postalCode: "postal_code",
+    });
+  }),
+);
 
-export function postCombinedTransfersWireCounterpartyAddressToJSON(
-  postCombinedTransfersWireCounterpartyAddress:
-    PostCombinedTransfersWireCounterpartyAddress,
+export function syntheticAccountStructuredAddressToJSON(
+  syntheticAccountStructuredAddress: SyntheticAccountStructuredAddress,
 ): string {
   return JSON.stringify(
-    PostCombinedTransfersWireCounterpartyAddress$outboundSchema.parse(
-      postCombinedTransfersWireCounterpartyAddress,
+    SyntheticAccountStructuredAddress$outboundSchema.parse(
+      syntheticAccountStructuredAddress,
     ),
   );
 }
 
 /** @internal */
-export type PostCombinedTransfersCounterpartyBankAddress$Outbound = {
+export type CounterpartyAddressSyntheticAccountUnstructuredAddress$Outbound = {
   line1?: string | null | undefined;
   line2?: string | null | undefined;
   line3?: string | null | undefined;
@@ -914,10 +1065,10 @@ export type PostCombinedTransfersCounterpartyBankAddress$Outbound = {
 };
 
 /** @internal */
-export const PostCombinedTransfersCounterpartyBankAddress$outboundSchema:
+export const CounterpartyAddressSyntheticAccountUnstructuredAddress$outboundSchema:
   z.ZodMiniType<
-    PostCombinedTransfersCounterpartyBankAddress$Outbound,
-    PostCombinedTransfersCounterpartyBankAddress
+    CounterpartyAddressSyntheticAccountUnstructuredAddress$Outbound,
+    CounterpartyAddressSyntheticAccountUnstructuredAddress
   > = z.object({
     line1: z.optional(z.nullable(z.string())),
     line2: z.optional(z.nullable(z.string())),
@@ -925,26 +1076,86 @@ export const PostCombinedTransfersCounterpartyBankAddress$outboundSchema:
     country: z.optional(z.nullable(z.string())),
   });
 
-export function postCombinedTransfersCounterpartyBankAddressToJSON(
-  postCombinedTransfersCounterpartyBankAddress:
-    PostCombinedTransfersCounterpartyBankAddress,
+export function counterpartyAddressSyntheticAccountUnstructuredAddressToJSON(
+  counterpartyAddressSyntheticAccountUnstructuredAddress:
+    CounterpartyAddressSyntheticAccountUnstructuredAddress,
 ): string {
   return JSON.stringify(
-    PostCombinedTransfersCounterpartyBankAddress$outboundSchema.parse(
-      postCombinedTransfersCounterpartyBankAddress,
+    CounterpartyAddressSyntheticAccountUnstructuredAddress$outboundSchema.parse(
+      counterpartyAddressSyntheticAccountUnstructuredAddress,
     ),
+  );
+}
+
+/** @internal */
+export type PostCombinedTransfersCounterpartyAddressUnion$Outbound =
+  | SyntheticAccountStructuredAddress$Outbound
+  | CounterpartyAddressSyntheticAccountUnstructuredAddress$Outbound;
+
+/** @internal */
+export const PostCombinedTransfersCounterpartyAddressUnion$outboundSchema:
+  z.ZodMiniType<
+    PostCombinedTransfersCounterpartyAddressUnion$Outbound,
+    PostCombinedTransfersCounterpartyAddressUnion
+  > = smartUnion([
+    z.lazy(() => SyntheticAccountStructuredAddress$outboundSchema),
+    z.lazy(() =>
+      CounterpartyAddressSyntheticAccountUnstructuredAddress$outboundSchema
+    ),
+  ]);
+
+export function postCombinedTransfersCounterpartyAddressUnionToJSON(
+  postCombinedTransfersCounterpartyAddressUnion:
+    PostCombinedTransfersCounterpartyAddressUnion,
+): string {
+  return JSON.stringify(
+    PostCombinedTransfersCounterpartyAddressUnion$outboundSchema.parse(
+      postCombinedTransfersCounterpartyAddressUnion,
+    ),
+  );
+}
+
+/** @internal */
+export type SyntheticAccountCounterpartyBankAddressUnstructuredAddress$Outbound =
+  {
+    line1?: string | null | undefined;
+    line2?: string | null | undefined;
+    line3?: string | null | undefined;
+    country?: string | null | undefined;
+  };
+
+/** @internal */
+export const SyntheticAccountCounterpartyBankAddressUnstructuredAddress$outboundSchema:
+  z.ZodMiniType<
+    SyntheticAccountCounterpartyBankAddressUnstructuredAddress$Outbound,
+    SyntheticAccountCounterpartyBankAddressUnstructuredAddress
+  > = z.object({
+    line1: z.optional(z.nullable(z.string())),
+    line2: z.optional(z.nullable(z.string())),
+    line3: z.optional(z.nullable(z.string())),
+    country: z.optional(z.nullable(z.string())),
+  });
+
+export function syntheticAccountCounterpartyBankAddressUnstructuredAddressToJSON(
+  syntheticAccountCounterpartyBankAddressUnstructuredAddress:
+    SyntheticAccountCounterpartyBankAddressUnstructuredAddress,
+): string {
+  return JSON.stringify(
+    SyntheticAccountCounterpartyBankAddressUnstructuredAddress$outboundSchema
+      .parse(syntheticAccountCounterpartyBankAddressUnstructuredAddress),
   );
 }
 
 /** @internal */
 export type SyntheticAccountWire$Outbound = {
   counterparty_address?:
-    | PostCombinedTransfersWireCounterpartyAddress$Outbound
+    | SyntheticAccountStructuredAddress$Outbound
+    | CounterpartyAddressSyntheticAccountUnstructuredAddress$Outbound
     | null
     | undefined;
   counterparty_name: string;
   counterparty_bank_address?:
-    | PostCombinedTransfersCounterpartyBankAddress$Outbound
+    | SyntheticAccountCounterpartyBankAddressUnstructuredAddress$Outbound
     | null
     | undefined;
   counterparty_bank_name?: string | null | undefined;
@@ -956,12 +1167,15 @@ export const SyntheticAccountWire$outboundSchema: z.ZodMiniType<
   SyntheticAccountWire
 > = z.pipe(
   z.object({
-    counterpartyAddress: z.optional(z.nullable(z.lazy(() =>
-      PostCombinedTransfersWireCounterpartyAddress$outboundSchema
-    ))),
+    counterpartyAddress: z.optional(z.nullable(smartUnion([
+      z.lazy(() => SyntheticAccountStructuredAddress$outboundSchema),
+      z.lazy(() =>
+        CounterpartyAddressSyntheticAccountUnstructuredAddress$outboundSchema
+      ),
+    ]))),
     counterpartyName: z.string(),
     counterpartyBankAddress: z.optional(z.nullable(z.lazy(() =>
-      PostCombinedTransfersCounterpartyBankAddress$outboundSchema
+      SyntheticAccountCounterpartyBankAddressUnstructuredAddress$outboundSchema
     ))),
     counterpartyBankName: z.optional(z.nullable(z.string())),
   }),
@@ -1159,11 +1373,18 @@ export function postCombinedTransfersInstantPaymentTransmitterToJSON(
 }
 
 /** @internal */
+export const PostCombinedTransfersPurposeOfPayment$outboundSchema:
+  z.ZodMiniEnum<typeof PostCombinedTransfersPurposeOfPayment> = z.enum(
+    PostCombinedTransfersPurposeOfPayment,
+  );
+
+/** @internal */
 export type TransferInstantPayment$Outbound = {
   instant_payment_transmitter?:
     | PostCombinedTransfersInstantPaymentTransmitter$Outbound
     | undefined;
   memo?: string | null | undefined;
+  purpose_of_payment?: string | null | undefined;
 };
 
 /** @internal */
@@ -1178,10 +1399,14 @@ export const TransferInstantPayment$outboundSchema: z.ZodMiniType<
       ),
     ),
     memo: z.optional(z.nullable(z.string())),
+    purposeOfPayment: z.optional(
+      z.nullable(PostCombinedTransfersPurposeOfPayment$outboundSchema),
+    ),
   }),
   z.transform((v) => {
     return remap$(v, {
       instantPaymentTransmitter: "instant_payment_transmitter",
+      purposeOfPayment: "purpose_of_payment",
     });
   }),
 );
@@ -1195,7 +1420,7 @@ export function transferInstantPaymentToJSON(
 }
 
 /** @internal */
-export type PostCombinedTransfersIntermediaryBankAddress$Outbound = {
+export type TransferIntermediaryBankAddressUnstructuredAddress$Outbound = {
   line1?: string | null | undefined;
   line2?: string | null | undefined;
   line3?: string | null | undefined;
@@ -1203,10 +1428,10 @@ export type PostCombinedTransfersIntermediaryBankAddress$Outbound = {
 };
 
 /** @internal */
-export const PostCombinedTransfersIntermediaryBankAddress$outboundSchema:
+export const TransferIntermediaryBankAddressUnstructuredAddress$outboundSchema:
   z.ZodMiniType<
-    PostCombinedTransfersIntermediaryBankAddress$Outbound,
-    PostCombinedTransfersIntermediaryBankAddress
+    TransferIntermediaryBankAddressUnstructuredAddress$Outbound,
+    TransferIntermediaryBankAddressUnstructuredAddress
   > = z.object({
     line1: z.optional(z.nullable(z.string())),
     line2: z.optional(z.nullable(z.string())),
@@ -1214,46 +1439,121 @@ export const PostCombinedTransfersIntermediaryBankAddress$outboundSchema:
     country: z.optional(z.nullable(z.string())),
   });
 
-export function postCombinedTransfersIntermediaryBankAddressToJSON(
-  postCombinedTransfersIntermediaryBankAddress:
-    PostCombinedTransfersIntermediaryBankAddress,
+export function transferIntermediaryBankAddressUnstructuredAddressToJSON(
+  transferIntermediaryBankAddressUnstructuredAddress:
+    TransferIntermediaryBankAddressUnstructuredAddress,
 ): string {
   return JSON.stringify(
-    PostCombinedTransfersIntermediaryBankAddress$outboundSchema.parse(
-      postCombinedTransfersIntermediaryBankAddress,
+    TransferIntermediaryBankAddressUnstructuredAddress$outboundSchema.parse(
+      transferIntermediaryBankAddressUnstructuredAddress,
     ),
   );
 }
 
 /** @internal */
-export type PostCombinedTransfersWireTransmitter$Outbound = {
+export type TransferStructuredAddress$Outbound = {
+  line1?: string | null | undefined;
+  line2?: string | null | undefined;
+  building_number?: string | null | undefined;
+  street_name?: string | null | undefined;
+  city: string;
+  state?: string | null | undefined;
+  postal_code?: string | null | undefined;
+  country: string;
   name: string;
   transmitter_identifier: string;
-  line1: string | null;
+};
+
+/** @internal */
+export const TransferStructuredAddress$outboundSchema: z.ZodMiniType<
+  TransferStructuredAddress$Outbound,
+  TransferStructuredAddress
+> = z.pipe(
+  z.object({
+    line1: z.optional(z.nullable(z.string())),
+    line2: z.optional(z.nullable(z.string())),
+    buildingNumber: z.optional(z.nullable(z.string())),
+    streetName: z.optional(z.nullable(z.string())),
+    city: z.string(),
+    state: z.optional(z.nullable(z.string())),
+    postalCode: z.optional(z.nullable(z.string())),
+    country: z.string(),
+    name: z.string(),
+    transmitterIdentifier: z.string(),
+  }),
+  z.transform((v) => {
+    return remap$(v, {
+      buildingNumber: "building_number",
+      streetName: "street_name",
+      postalCode: "postal_code",
+      transmitterIdentifier: "transmitter_identifier",
+    });
+  }),
+);
+
+export function transferStructuredAddressToJSON(
+  transferStructuredAddress: TransferStructuredAddress,
+): string {
+  return JSON.stringify(
+    TransferStructuredAddress$outboundSchema.parse(transferStructuredAddress),
+  );
+}
+
+/** @internal */
+export type WireTransmitterTransferUnstructuredAddress$Outbound = {
+  line1?: string | null | undefined;
   line2?: string | null | undefined;
   line3?: string | null | undefined;
-  country: string;
+  country?: string | undefined;
+  name: string;
+  transmitter_identifier: string;
 };
+
+/** @internal */
+export const WireTransmitterTransferUnstructuredAddress$outboundSchema:
+  z.ZodMiniType<
+    WireTransmitterTransferUnstructuredAddress$Outbound,
+    WireTransmitterTransferUnstructuredAddress
+  > = z.pipe(
+    z.object({
+      line1: z.optional(z.nullable(z.string())),
+      line2: z.optional(z.nullable(z.string())),
+      line3: z.optional(z.nullable(z.string())),
+      country: z.optional(z.string()),
+      name: z.string(),
+      transmitterIdentifier: z.string(),
+    }),
+    z.transform((v) => {
+      return remap$(v, {
+        transmitterIdentifier: "transmitter_identifier",
+      });
+    }),
+  );
+
+export function wireTransmitterTransferUnstructuredAddressToJSON(
+  wireTransmitterTransferUnstructuredAddress:
+    WireTransmitterTransferUnstructuredAddress,
+): string {
+  return JSON.stringify(
+    WireTransmitterTransferUnstructuredAddress$outboundSchema.parse(
+      wireTransmitterTransferUnstructuredAddress,
+    ),
+  );
+}
+
+/** @internal */
+export type PostCombinedTransfersWireTransmitter$Outbound =
+  | TransferStructuredAddress$Outbound
+  | WireTransmitterTransferUnstructuredAddress$Outbound;
 
 /** @internal */
 export const PostCombinedTransfersWireTransmitter$outboundSchema: z.ZodMiniType<
   PostCombinedTransfersWireTransmitter$Outbound,
   PostCombinedTransfersWireTransmitter
-> = z.pipe(
-  z.object({
-    name: z.string(),
-    transmitterIdentifier: z.string(),
-    line1: z.nullable(z.string()),
-    line2: z.optional(z.nullable(z.string())),
-    line3: z.optional(z.nullable(z.string())),
-    country: z.string(),
-  }),
-  z.transform((v) => {
-    return remap$(v, {
-      transmitterIdentifier: "transmitter_identifier",
-    });
-  }),
-);
+> = smartUnion([
+  z.lazy(() => TransferStructuredAddress$outboundSchema),
+  z.lazy(() => WireTransmitterTransferUnstructuredAddress$outboundSchema),
+]);
 
 export function postCombinedTransfersWireTransmitterToJSON(
   postCombinedTransfersWireTransmitter: PostCombinedTransfersWireTransmitter,
@@ -1268,12 +1568,15 @@ export function postCombinedTransfersWireTransmitterToJSON(
 /** @internal */
 export type TransferWire$Outbound = {
   intermediary_bank_address?:
-    | PostCombinedTransfersIntermediaryBankAddress$Outbound
+    | TransferIntermediaryBankAddressUnstructuredAddress$Outbound
     | undefined;
   intermediary_bank_name?: string | undefined;
   intermediary_bank_routing_number?: string | undefined;
   wire_instructions?: string | undefined;
-  wire_transmitter?: PostCombinedTransfersWireTransmitter$Outbound | undefined;
+  wire_transmitter?:
+    | TransferStructuredAddress$Outbound
+    | WireTransmitterTransferUnstructuredAddress$Outbound
+    | undefined;
 };
 
 /** @internal */
@@ -1282,15 +1585,18 @@ export const TransferWire$outboundSchema: z.ZodMiniType<
   TransferWire
 > = z.pipe(
   z.object({
-    intermediaryBankAddress: z.optional(
-      z.lazy(() => PostCombinedTransfersIntermediaryBankAddress$outboundSchema),
-    ),
+    intermediaryBankAddress: z.optional(z.lazy(() =>
+      TransferIntermediaryBankAddressUnstructuredAddress$outboundSchema
+    )),
     intermediaryBankName: z.optional(z.string()),
     intermediaryBankRoutingNumber: z.optional(z.string()),
     wireInstructions: z.optional(z.string()),
-    wireTransmitter: z.optional(
-      z.lazy(() => PostCombinedTransfersWireTransmitter$outboundSchema),
-    ),
+    wireTransmitter: z.optional(smartUnion([
+      z.lazy(() => TransferStructuredAddress$outboundSchema),
+      z.lazy(() =>
+        WireTransmitterTransferUnstructuredAddress$outboundSchema
+      ),
+    ])),
   }),
   z.transform((v) => {
     return remap$(v, {

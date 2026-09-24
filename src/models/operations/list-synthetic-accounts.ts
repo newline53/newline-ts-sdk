@@ -213,7 +213,7 @@ export type ListSyntheticAccountsInstantPayment = {
  *
  * @remarks
  */
-export type ListSyntheticAccountsCounterpartyBankAddress = {
+export type ListSyntheticAccountsUnstructuredAddress = {
   /**
    * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
    *
@@ -253,7 +253,7 @@ export type ListSyntheticAccountsWire = {
    * @remarks
    */
   counterpartyBankAddress?:
-    | ListSyntheticAccountsCounterpartyBankAddress
+    | ListSyntheticAccountsUnstructuredAddress
     | null
     | undefined;
   /**
@@ -588,28 +588,27 @@ export function listSyntheticAccountsInstantPaymentFromJSON(
 }
 
 /** @internal */
-export const ListSyntheticAccountsCounterpartyBankAddress$inboundSchema:
-  z.ZodMiniType<ListSyntheticAccountsCounterpartyBankAddress, unknown> = z
-    .object({
-      line1: z.optional(z.nullable(types.string())),
-      line2: z.optional(z.nullable(types.string())),
-      line3: z.optional(z.nullable(types.string())),
-      country: z.optional(z.nullable(types.string())),
-    });
+export const ListSyntheticAccountsUnstructuredAddress$inboundSchema:
+  z.ZodMiniType<ListSyntheticAccountsUnstructuredAddress, unknown> = z.object({
+    line1: z.optional(z.nullable(types.string())),
+    line2: z.optional(z.nullable(types.string())),
+    line3: z.optional(z.nullable(types.string())),
+    country: z.optional(z.nullable(types.string())),
+  });
 
-export function listSyntheticAccountsCounterpartyBankAddressFromJSON(
+export function listSyntheticAccountsUnstructuredAddressFromJSON(
   jsonString: string,
 ): SafeParseResult<
-  ListSyntheticAccountsCounterpartyBankAddress,
+  ListSyntheticAccountsUnstructuredAddress,
   SDKValidationError
 > {
   return safeParse(
     jsonString,
     (x) =>
-      ListSyntheticAccountsCounterpartyBankAddress$inboundSchema.parse(
+      ListSyntheticAccountsUnstructuredAddress$inboundSchema.parse(
         JSON.parse(x),
       ),
-    `Failed to parse 'ListSyntheticAccountsCounterpartyBankAddress' from JSON`,
+    `Failed to parse 'ListSyntheticAccountsUnstructuredAddress' from JSON`,
   );
 }
 
@@ -621,7 +620,7 @@ export const ListSyntheticAccountsWire$inboundSchema: z.ZodMiniType<
   z.object({
     counterparty_name: types.optional(types.string()),
     counterparty_bank_address: z.optional(z.nullable(z.lazy(() =>
-      ListSyntheticAccountsCounterpartyBankAddress$inboundSchema
+      ListSyntheticAccountsUnstructuredAddress$inboundSchema
     ))),
     counterparty_bank_name: z.optional(z.nullable(types.string())),
   }),

@@ -347,6 +347,67 @@ async function run() {
 
 run();
 ```
+### Example Usage: vrn_type_not_allowed
+
+<!-- UsageSnippet language="typescript" operationID="post_/virtual_reference_numbers" method="post" path="/virtual_reference_numbers" example="vrn_type_not_allowed" -->
+```typescript
+import { NewlineSDK } from "newline-ts-sdk";
+
+const newlineSDK = new NewlineSDK({
+  security: {
+    programUid: process.env["NEWLINE_PROGRAM_UID"] ?? "",
+    hmacKey: process.env["NEWLINE_HMAC_KEY"] ?? "",
+  },
+});
+
+async function run() {
+  const result = await newlineSDK.virtualReferenceNumbers.create({
+    externalUid: "partner-generated-id",
+    name: "greenfield1",
+    syntheticAccountUid: "Dg1EPao8XukUpHG8",
+    routingNumber: "123456789",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { NewlineSDKCore } from "newline-ts-sdk/core.js";
+import { virtualReferenceNumbersCreate } from "newline-ts-sdk/funcs/virtual-reference-numbers-create.js";
+
+// Use `NewlineSDKCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const newlineSDK = new NewlineSDKCore({
+  security: {
+    programUid: process.env["NEWLINE_PROGRAM_UID"] ?? "",
+    hmacKey: process.env["NEWLINE_HMAC_KEY"] ?? "",
+  },
+});
+
+async function run() {
+  const res = await virtualReferenceNumbersCreate(newlineSDK, {
+    externalUid: "partner-generated-id",
+    name: "greenfield1",
+    syntheticAccountUid: "Dg1EPao8XukUpHG8",
+    routingNumber: "123456789",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("virtualReferenceNumbersCreate failed:", res.error);
+  }
+}
+
+run();
+```
 
 ### Parameters
 
@@ -365,6 +426,7 @@ run();
 
 | Error Type                                                 | Status Code                                                | Content Type                                               |
 | ---------------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------- |
+| errors.PostVirtualReferenceNumbersBadRequestError          | 400                                                        | application/json                                           |
 | errors.PostVirtualReferenceNumbersUnprocessableEntityError | 422                                                        | application/json                                           |
 | errors.NewlineDefaultError                                 | 4XX, 5XX                                                   | \*/\*                                                      |
 

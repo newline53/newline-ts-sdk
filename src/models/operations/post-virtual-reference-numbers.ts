@@ -6,10 +6,26 @@ import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../../lib/primitives.js";
 import { safeParse } from "../../lib/schemas.js";
 import * as openEnums from "../../types/enums.js";
-import { OpenEnum } from "../../types/enums.js";
+import { ClosedEnum, OpenEnum } from "../../types/enums.js";
 import { Result as SafeParseResult } from "../../types/fp.js";
 import * as types from "../../types/primitives.js";
 import { SDKValidationError } from "../errors/sdk-validation-error.js";
+
+/**
+ * The type of VRN. Defaults to `business` if omitted. `consumer` is only available if enabled for your program.
+ *
+ * @remarks
+ */
+export const TypeRequest = {
+  Business: "business",
+  Consumer: "consumer",
+} as const;
+/**
+ * The type of VRN. Defaults to `business` if omitted. `consumer` is only available if enabled for your program.
+ *
+ * @remarks
+ */
+export type TypeRequest = ClosedEnum<typeof TypeRequest>;
 
 export type PostVirtualReferenceNumbersRequest = {
   /**
@@ -30,9 +46,38 @@ export type PostVirtualReferenceNumbersRequest = {
    * The ABA routing number associated with this VRN.
    */
   routingNumber: string;
+  /**
+   * The type of VRN. Defaults to `business` if omitted. `consumer` is only available if enabled for your program.
+   *
+   * @remarks
+   */
+  type?: TypeRequest | undefined;
 };
 
-export type PostVirtualReferenceNumbersError = {
+export type PostVirtualReferenceNumbersUnprocessableEntityError = {
+  /**
+   * Code provided by Newline for reference
+   */
+  code?: number | undefined;
+  /**
+   * Title of Error Code
+   */
+  title?: string | undefined;
+  /**
+   * Description of Error Code
+   */
+  detail?: string | undefined;
+  /**
+   * Error Timestamp
+   */
+  occurredAt?: string | undefined;
+  /**
+   * Included based on Error Code; Additional context to help users self-solve the error
+   */
+  extra?: string | undefined;
+};
+
+export type PostVirtualReferenceNumbersBadRequestError = {
   /**
    * Code provided by Newline for reference
    */
@@ -101,6 +146,20 @@ export type PostVirtualReferenceNumbersStatus = OpenEnum<
 >;
 
 /**
+ * The type of VRN.
+ */
+export const PostVirtualReferenceNumbersTypeResponseBody = {
+  Business: "business",
+  Consumer: "consumer",
+} as const;
+/**
+ * The type of VRN.
+ */
+export type PostVirtualReferenceNumbersTypeResponseBody = OpenEnum<
+  typeof PostVirtualReferenceNumbersTypeResponseBody
+>;
+
+/**
  * A single registered Virtual Reference Number is returned
  */
 export type PostVirtualReferenceNumbersResponseBody = {
@@ -161,6 +220,10 @@ export type PostVirtualReferenceNumbersResponseBody = {
    */
   virtualReferenceNumberLastFour?: string | undefined;
   /**
+   * The type of VRN.
+   */
+  type?: PostVirtualReferenceNumbersTypeResponseBody | undefined;
+  /**
    * The VRN
    */
   virtualReferenceNumber?: string | undefined;
@@ -172,11 +235,16 @@ export type PostVirtualReferenceNumbersResponse = {
 };
 
 /** @internal */
+export const TypeRequest$outboundSchema: z.ZodMiniEnum<typeof TypeRequest> = z
+  .enum(TypeRequest);
+
+/** @internal */
 export type PostVirtualReferenceNumbersRequest$Outbound = {
   external_uid?: string | undefined;
   name?: string | undefined;
   synthetic_account_uid: string;
   routing_number: string;
+  type: string;
 };
 
 /** @internal */
@@ -189,6 +257,7 @@ export const PostVirtualReferenceNumbersRequest$outboundSchema: z.ZodMiniType<
     name: z.optional(z.string()),
     syntheticAccountUid: z.string(),
     routingNumber: z.string(),
+    type: z._default(TypeRequest$outboundSchema, "business"),
   }),
   z.transform((v) => {
     return remap$(v, {
@@ -210,31 +279,69 @@ export function postVirtualReferenceNumbersRequestToJSON(
 }
 
 /** @internal */
-export const PostVirtualReferenceNumbersError$inboundSchema: z.ZodMiniType<
-  PostVirtualReferenceNumbersError,
-  unknown
-> = z.pipe(
-  z.object({
-    code: types.optional(types.number()),
-    title: types.optional(types.string()),
-    detail: types.optional(types.string()),
-    occurred_at: types.optional(types.string()),
-    extra: types.optional(types.string()),
-  }),
-  z.transform((v) => {
-    return remap$(v, {
-      "occurred_at": "occurredAt",
-    });
-  }),
-);
+export const PostVirtualReferenceNumbersUnprocessableEntityError$inboundSchema:
+  z.ZodMiniType<PostVirtualReferenceNumbersUnprocessableEntityError, unknown> =
+    z.pipe(
+      z.object({
+        code: types.optional(types.number()),
+        title: types.optional(types.string()),
+        detail: types.optional(types.string()),
+        occurred_at: types.optional(types.string()),
+        extra: types.optional(types.string()),
+      }),
+      z.transform((v) => {
+        return remap$(v, {
+          "occurred_at": "occurredAt",
+        });
+      }),
+    );
 
-export function postVirtualReferenceNumbersErrorFromJSON(
+export function postVirtualReferenceNumbersUnprocessableEntityErrorFromJSON(
   jsonString: string,
-): SafeParseResult<PostVirtualReferenceNumbersError, SDKValidationError> {
+): SafeParseResult<
+  PostVirtualReferenceNumbersUnprocessableEntityError,
+  SDKValidationError
+> {
   return safeParse(
     jsonString,
-    (x) => PostVirtualReferenceNumbersError$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'PostVirtualReferenceNumbersError' from JSON`,
+    (x) =>
+      PostVirtualReferenceNumbersUnprocessableEntityError$inboundSchema.parse(
+        JSON.parse(x),
+      ),
+    `Failed to parse 'PostVirtualReferenceNumbersUnprocessableEntityError' from JSON`,
+  );
+}
+
+/** @internal */
+export const PostVirtualReferenceNumbersBadRequestError$inboundSchema:
+  z.ZodMiniType<PostVirtualReferenceNumbersBadRequestError, unknown> = z.pipe(
+    z.object({
+      code: types.optional(types.number()),
+      title: types.optional(types.string()),
+      detail: types.optional(types.string()),
+      occurred_at: types.optional(types.string()),
+      extra: types.optional(types.string()),
+    }),
+    z.transform((v) => {
+      return remap$(v, {
+        "occurred_at": "occurredAt",
+      });
+    }),
+  );
+
+export function postVirtualReferenceNumbersBadRequestErrorFromJSON(
+  jsonString: string,
+): SafeParseResult<
+  PostVirtualReferenceNumbersBadRequestError,
+  SDKValidationError
+> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      PostVirtualReferenceNumbersBadRequestError$inboundSchema.parse(
+        JSON.parse(x),
+      ),
+    `Failed to parse 'PostVirtualReferenceNumbersBadRequestError' from JSON`,
   );
 }
 
@@ -260,6 +367,11 @@ export const PostVirtualReferenceNumbersStatus$inboundSchema: z.ZodMiniType<
 > = openEnums.inboundSchema(PostVirtualReferenceNumbersStatus);
 
 /** @internal */
+export const PostVirtualReferenceNumbersTypeResponseBody$inboundSchema:
+  z.ZodMiniType<PostVirtualReferenceNumbersTypeResponseBody, unknown> =
+    openEnums.inboundSchema(PostVirtualReferenceNumbersTypeResponseBody);
+
+/** @internal */
 export const PostVirtualReferenceNumbersResponseBody$inboundSchema:
   z.ZodMiniType<PostVirtualReferenceNumbersResponseBody, unknown> = z.pipe(
     z.object({
@@ -280,6 +392,9 @@ export const PostVirtualReferenceNumbersResponseBody$inboundSchema:
       synthetic_account_uid: types.optional(types.string()),
       uid: types.optional(types.string()),
       virtual_reference_number_last_four: types.optional(types.string()),
+      type: types.optional(
+        PostVirtualReferenceNumbersTypeResponseBody$inboundSchema,
+      ),
       virtual_reference_number: types.optional(types.string()),
     }),
     z.transform((v) => {

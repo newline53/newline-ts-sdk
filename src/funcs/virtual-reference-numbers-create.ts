@@ -40,6 +40,7 @@ export function virtualReferenceNumbersCreate(
 ): APIPromise<
   Result<
     operations.PostVirtualReferenceNumbersResponse,
+    | errors.PostVirtualReferenceNumbersBadRequestError
     | errors.PostVirtualReferenceNumbersUnprocessableEntityError
     | NewlineError
     | ResponseValidationError
@@ -66,6 +67,7 @@ async function $do(
   [
     Result<
       operations.PostVirtualReferenceNumbersResponse,
+      | errors.PostVirtualReferenceNumbersBadRequestError
       | errors.PostVirtualReferenceNumbersUnprocessableEntityError
       | NewlineError
       | ResponseValidationError
@@ -152,6 +154,7 @@ async function $do(
 
   const [result] = await M.match<
     operations.PostVirtualReferenceNumbersResponse,
+    | errors.PostVirtualReferenceNumbersBadRequestError
     | errors.PostVirtualReferenceNumbersUnprocessableEntityError
     | NewlineError
     | ResponseValidationError
@@ -166,6 +169,11 @@ async function $do(
       hdrs: true,
       key: "Result",
     }),
+    M.jsonErr(
+      400,
+      errors.PostVirtualReferenceNumbersBadRequestError$inboundSchema,
+      { hdrs: true },
+    ),
     M.jsonErr(
       422,
       errors.PostVirtualReferenceNumbersUnprocessableEntityError$inboundSchema,

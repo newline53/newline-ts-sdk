@@ -427,7 +427,7 @@ run();
 **Primary error:**
 * [`NewlineError`](./src/models/errors/newline-error.ts): The base class for HTTP error responses.
 
-<details><summary>Less common errors (38)</summary>
+<details><summary>Less common errors (39)</summary>
 
 <br />
 
@@ -443,6 +443,7 @@ run();
 * [`UpdateSyntheticAccountBadRequestError`](./src/models/errors/update-synthetic-account-bad-request-error.ts): A Synthetic Account is not updated if a required parameter is missing. Status code `400`. Applicable to 1 of 52 methods.*
 * [`PutTransfersUidCancelBadRequestError`](./src/models/errors/put-transfers-uid-cancel-bad-request-error.ts): The transfer is not eligible for cancellation. Status code `400`. Applicable to 1 of 52 methods.*
 * [`PutTransactionsUidAuthorizeBadRequestError`](./src/models/errors/put-transactions-uid-authorize-bad-request-error.ts): Bad authorization request. Status code `400`. Applicable to 1 of 52 methods.*
+* [`PostVirtualReferenceNumbersBadRequestError`](./src/models/errors/post-virtual-reference-numbers-bad-request-error.ts): Bad request. Status code `400`. Applicable to 1 of 52 methods.*
 * [`PostReturnsBadRequestError`](./src/models/errors/post-returns-bad-request-error.ts): Creation Error. Status code `400`. Applicable to 1 of 52 methods.*
 * [`PutTransactionsUidAuthorizeForbiddenError`](./src/models/errors/put-transactions-uid-authorize-forbidden-error.ts): Client authorization disabled. (The Program is not configured for Client Authorization). Status code `403`. Applicable to 1 of 52 methods.*
 * [`GetReturnsForbiddenError`](./src/models/errors/get-returns-forbidden-error.ts): Denied access to Returns. Status code `403`. Applicable to 1 of 52 methods.*

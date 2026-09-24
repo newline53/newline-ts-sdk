@@ -64,11 +64,16 @@ let value: ListTransfersResponseBody = {
         intermediaryBankRoutingNumber: "923456789",
         wireTransmitter: {
           name: "Marge's Roofing Inc",
-          transmitterIdentifier: "123456789012ABC",
+          transmitterIdentifier: "123456789012345",
           line1: "123 Abc St.",
           line2: "Boring, Oregon 97009",
           line3: null,
-          country: "US",
+          buildingNumber: "123",
+          streetName: "Main St",
+          city: "Cincinnati",
+          state: "OH",
+          postalCode: "45202",
+          country: null,
         },
       },
       cancellation: {

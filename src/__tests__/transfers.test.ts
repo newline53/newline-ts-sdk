@@ -96,6 +96,7 @@ test("Transfers Create Transfer Instant Payment", async () => {
         country: null,
       },
       memo: "To unfreeze the prince's assets",
+      purposeOfPayment: "PAYR",
     },
   });
   expect(result).toBeDefined();
@@ -132,10 +133,10 @@ test("Transfers Create Transfer Wire", async () => {
       intermediaryBankRoutingNumber: "923456789",
       wireInstructions: "Please send ASAP",
       wireTransmitter: {
-        name: "Top Tier Tacos",
-        transmitterIdentifier: "123456789",
         line1: "123 Abc St.",
         country: "US",
+        name: "Top Tier Tacos",
+        transmitterIdentifier: "123456789",
       },
     },
   });
@@ -186,6 +187,7 @@ test("Transfers Create Transfer Ach Transfer", async () => {
         country: null,
       },
       memo: "For the 6-5-23 shipment of pineapple popsicles",
+      purposeOfPayment: "PAYR",
     },
     wire: {
       intermediaryBankAddress: {
@@ -198,12 +200,12 @@ test("Transfers Create Transfer Ach Transfer", async () => {
       intermediaryBankRoutingNumber: "923456789",
       wireInstructions: "Send ASAP",
       wireTransmitter: {
-        name: "Marge's Roofing Inc",
-        transmitterIdentifier: "123456789012ABC",
         line1: "123 Abc St.",
         line2: "Boring, Oregon 97009",
         line3: null,
         country: "US",
+        name: "Marge's Roofing Inc",
+        transmitterIdentifier: "123456789012ABC",
       },
     },
   });
@@ -256,6 +258,7 @@ test("Transfers Create Transfer Instant Payment Transfer", async () => {
         country: null,
       },
       memo: "For the 6-5-23 shipment of pineapple popsicles",
+      purposeOfPayment: "PAYR",
     },
     wire: {
       intermediaryBankAddress: {
@@ -268,12 +271,12 @@ test("Transfers Create Transfer Instant Payment Transfer", async () => {
       intermediaryBankRoutingNumber: "923456789",
       wireInstructions: "Send ASAP",
       wireTransmitter: {
-        name: "Marge's Roofing Inc",
-        transmitterIdentifier: "123456789012ABC",
         line1: "123 Abc St.",
         line2: "Boring, Oregon 97009",
         line3: null,
         country: "US",
+        name: "Marge's Roofing Inc",
+        transmitterIdentifier: "123456789012ABC",
       },
     },
   });
@@ -324,6 +327,7 @@ test("Transfers Create Transfer Wire Transfer", async () => {
         country: null,
       },
       memo: "For the 6-5-23 shipment of pineapple popsicles",
+      purposeOfPayment: "PAYR",
     },
     wire: {
       intermediaryBankAddress: {
@@ -336,12 +340,12 @@ test("Transfers Create Transfer Wire Transfer", async () => {
       intermediaryBankRoutingNumber: "923456789",
       wireInstructions: "Send ASAP",
       wireTransmitter: {
-        name: "Marge's Roofing Inc",
-        transmitterIdentifier: "123456789012ABC",
         line1: "123 Abc St.",
         line2: "Boring, Oregon 97009",
         line3: null,
         country: "US",
+        name: "Marge's Roofing Inc",
+        transmitterIdentifier: "123456789012ABC",
       },
     },
   });
@@ -442,6 +446,97 @@ test("Transfers Put /Transfers/{uid}/cancel Canceled Transfer", async () => {
       authorizedRepresentativeName: "Swee'Pea",
       cancellationReason: "Transfer submitted by accident",
     },
+  });
+  expect(result).toBeDefined();
+});
+
+test("Transfers Create Transfer Wire Transfer Structured", async () => {
+  const testHttpClient = createTestHTTPClient(
+    "createTransfer-wire_transfer_structured",
+  );
+
+  const newlineSDK = new NewlineSDK({
+    serverURL: process.env["TEST_SERVER_URL"] ?? "http://localhost:18080",
+    security: {
+      programUid: "NEWLINE_PROGRAM_UID",
+      hmacKey: "NEWLINE_HMAC_KEY",
+    },
+    httpClient: testHttpClient,
+  });
+
+  const result = await newlineSDK.transfers.initiate({
+    externalUid: "partner-generated-id",
+    sourceSyntheticAccountUid: "4XkJnsfHsuqrxmeX",
+    destinationSyntheticAccountUid: "exMDShw6yM3NHLYV",
+    initiatingCustomerUid: "iDtmSA52zRhgN4iy",
+    destinationCustomerUid: "iDtmSA52zRhgN4iy",
+    initiatorType: "customer",
+    usdTransferAmount: "12.34",
+    ach: {
+      originatorName: "J. Fred Muggs",
+      companyId: "ABC-123456",
+      companyDiscretionaryData: "ABC.123",
+      prenote: false,
+      secCode: "CIE",
+      paymentType: "ST",
+      entryDescription: "ACH Entry",
+      serviceProcessing: "SAMEDAY",
+      effectiveEntryDate: "2023-12-01",
+      idNumber: "4270465600",
+    },
+    instantPayment: {
+      instantPaymentTransmitter: {
+        name: "Marge's Roofing Inc",
+        transmitterIdentifier: "123456789012ABC",
+        streetNumber: "123abc",
+        street1: "Abc St.",
+        city: "Chicago",
+        state: "IL",
+        postalCode: "60301",
+        country: null,
+      },
+      memo: "For the 6-5-23 shipment of pineapple popsicles",
+      purposeOfPayment: "PAYR",
+    },
+    wire: {
+      intermediaryBankAddress: {
+        line1: "345 Def Ave",
+        line2: "San Francisco",
+        line3: "CA 94016",
+        country: "US",
+      },
+      intermediaryBankName: "Fidelity Fiduciary Bank",
+      intermediaryBankRoutingNumber: "923456789",
+      wireInstructions: "Send ASAP",
+      wireTransmitter: {
+        line1: "123 Abc St.",
+        line2: "Boring, Oregon 97009",
+        line3: null,
+        country: "US",
+        name: "Marge's Roofing Inc",
+        transmitterIdentifier: "123456789012ABC",
+      },
+    },
+  });
+  expect(result).toBeDefined();
+});
+
+test("Transfers Get Transfer Wire Transfer Structured", async () => {
+  const testHttpClient = createTestHTTPClient(
+    "getTransfer-wire_transfer_structured",
+  );
+
+  const newlineSDK = new NewlineSDK({
+    serverURL: process.env["TEST_SERVER_URL"] ?? "http://localhost:18080",
+    security: {
+      programUid: "NEWLINE_PROGRAM_UID",
+      hmacKey: "NEWLINE_HMAC_KEY",
+    },
+    httpClient: testHttpClient,
+  });
+
+  const result = await newlineSDK.transfers.get({
+    uid: "<id>",
   });
   expect(result).toBeDefined();
 });

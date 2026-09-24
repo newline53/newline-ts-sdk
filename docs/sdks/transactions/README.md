@@ -536,6 +536,61 @@ async function run() {
 
 run();
 ```
+### Example Usage: wire_transaction_structured
+
+<!-- UsageSnippet language="typescript" operationID="get_/transactions/{uid}" method="get" path="/transactions/{uid}" example="wire_transaction_structured" -->
+```typescript
+import { NewlineSDK } from "newline-ts-sdk";
+
+const newlineSDK = new NewlineSDK({
+  security: {
+    programUid: process.env["NEWLINE_PROGRAM_UID"] ?? "",
+    hmacKey: process.env["NEWLINE_HMAC_KEY"] ?? "",
+  },
+});
+
+async function run() {
+  const result = await newlineSDK.transactions.get({
+    uid: "<id>",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { NewlineSDKCore } from "newline-ts-sdk/core.js";
+import { transactionsGet } from "newline-ts-sdk/funcs/transactions-get.js";
+
+// Use `NewlineSDKCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const newlineSDK = new NewlineSDKCore({
+  security: {
+    programUid: process.env["NEWLINE_PROGRAM_UID"] ?? "",
+    hmacKey: process.env["NEWLINE_HMAC_KEY"] ?? "",
+  },
+});
+
+async function run() {
+  const res = await transactionsGet(newlineSDK, {
+    uid: "<id>",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("transactionsGet failed:", res.error);
+  }
+}
+
+run();
+```
 
 ### Parameters
 

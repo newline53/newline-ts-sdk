@@ -50,6 +50,7 @@ let value: GetTransactionsData = {
     counterpartyBankRoutingNumber: "123456789",
     counterpartyAccountNumberLastFour: "3345",
     paymentId: "BayleeStacy",
+    purposeOfPayment: "PAYR",
     originalEndToEndId: "null",
     transmitterName: "Marge's Roofing Inc",
     initiatingPartyName: "Marge's Roofing Inc",

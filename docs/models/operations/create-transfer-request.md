@@ -37,6 +37,7 @@ let value: CreateTransferRequest = {
       country: null,
     },
     memo: "Payment for invoice #123 @client",
+    purposeOfPayment: "PAYR",
   },
   wire: {
     intermediaryBankAddress: {
@@ -49,12 +50,12 @@ let value: CreateTransferRequest = {
     intermediaryBankRoutingNumber: "923456789",
     wireInstructions: "Send ASAP",
     wireTransmitter: {
-      name: "Marge's Roofing Inc",
-      transmitterIdentifier: "123456789012ABC",
       line1: "123 Abc St.",
       line2: "Boring, Oregon 97009",
       line3: null,
       country: "US",
+      name: "Marge's Roofing Inc",
+      transmitterIdentifier: "123456789012345",
     },
   },
 };

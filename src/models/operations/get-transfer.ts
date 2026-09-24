@@ -176,16 +176,40 @@ export type GetTransferAch = {
    */
   idNumber?: string | undefined;
   /**
-   * Trace ID to identify the transaction across Newline and Fifth Third Bank applications.
-   */
-  transferTraceId?: string | undefined;
-  /**
    * Optional additional payment-related information, such as invoice numbers, originator/receiver information, payment instructions, etc. Up to 80 characters. Optional for all newline supported SEC codes other than TEL. Newline will reject the Transfer if an Addenda value is provided with SEC code TEL.
    *
    * @remarks
    */
   addenda?: string | undefined;
 };
+
+/**
+ * An optional code supplied when an instant payment Transfer is initiated, indicating the kind of transaction being sent. If supplied, it must be one of the approved codes listed below, otherwise the Transfer is rejected. Omit the field or send an empty string to leave it unset; when unset it is returned as an empty string. Only applies to Newline initiated instant payments; it is not populated for received instant payments.
+ *
+ * @remarks
+ */
+export const GetTransferPurposeOfPayment = {
+  Nows: "NOWS",
+  Gdds: "GDDS",
+  Scve: "SCVE",
+  Insc: "INSC",
+  Insm: "INSM",
+  Invs: "INVS",
+  Payr: "PAYR",
+  Ubil: "UBIL",
+  Pdep: "PDEP",
+  Acct: "ACCT",
+  Cblk: "CBLK",
+  Mp2P: "MP2P",
+} as const;
+/**
+ * An optional code supplied when an instant payment Transfer is initiated, indicating the kind of transaction being sent. If supplied, it must be one of the approved codes listed below, otherwise the Transfer is rejected. Omit the field or send an empty string to leave it unset; when unset it is returned as an empty string. Only applies to Newline initiated instant payments; it is not populated for received instant payments.
+ *
+ * @remarks
+ */
+export type GetTransferPurposeOfPayment = OpenEnum<
+  typeof GetTransferPurposeOfPayment
+>;
 
 /**
  * Instant payment information. Only present if the Transfer is an instant payment.
@@ -199,6 +223,12 @@ export type GetTransferInstantPayment = {
    * @remarks
    */
   memo?: string | null | undefined;
+  /**
+   * An optional code supplied when an instant payment Transfer is initiated, indicating the kind of transaction being sent. If supplied, it must be one of the approved codes listed below, otherwise the Transfer is rejected. Omit the field or send an empty string to leave it unset; when unset it is returned as an empty string. Only applies to Newline initiated instant payments; it is not populated for received instant payments.
+   *
+   * @remarks
+   */
+  purposeOfPayment?: GetTransferPurposeOfPayment | null | undefined;
 };
 
 /**
@@ -206,7 +236,7 @@ export type GetTransferInstantPayment = {
  *
  * @remarks
  */
-export type GetTransferIntermediaryBankAddress = {
+export type GetTransferUnstructuredAddress = {
   /**
    * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
    *
@@ -229,7 +259,7 @@ export type GetTransferIntermediaryBankAddress = {
 };
 
 /**
- * Address of the Transmitter. Must be provided if the `initiator_type` is `transmitter`.
+ * Information about the Transmitter. Must be provided if the `initiator_type` is `transmitter`. Includes the transmitter's name, identifier, and address. The address format on requests depends on your program's wire address configuration. Responses always return all address fields; fields not applicable to the stored format are `null`.
  *
  * @remarks
  */
@@ -241,13 +271,15 @@ export type GetTransferWireTransmitter = {
    */
   name: string;
   /**
-   * Up to 24 characters, and supplied by Transmitter. Alphanumeric only.
+   * Up to 24 digits, supplied by Transmitter. Numeric only.
    */
   transmitterIdentifier: string;
   /**
-   * Up to 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
    */
-  line1: string | null;
+  line1?: string | null | undefined;
   /**
    * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
    *
@@ -260,7 +292,27 @@ export type GetTransferWireTransmitter = {
    * @remarks
    */
   line3?: string | null | undefined;
-  country: string;
+  /**
+   * Parsed building or house number. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  buildingNumber?: string | null | undefined;
+  /**
+   * Parsed street name. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  streetName?: string | null | undefined;
+  /**
+   * City. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  city?: string | null | undefined;
+  /**
+   * State or province. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  state?: string | null | undefined;
+  /**
+   * US ZIP code (5-digit) or ZIP+4.
+   */
+  postalCode?: string | null | undefined;
+  country?: string | null | undefined;
 };
 
 /**
@@ -274,7 +326,7 @@ export type GetTransferWire = {
    *
    * @remarks
    */
-  intermediaryBankAddress?: GetTransferIntermediaryBankAddress | undefined;
+  intermediaryBankAddress?: GetTransferUnstructuredAddress | undefined;
   /**
    * Name of the intermediary bank, when applicable. For wires only. Maximum 35 characters.
    *
@@ -287,6 +339,11 @@ export type GetTransferWire = {
    * @remarks
    */
   intermediaryBankRoutingNumber?: string | undefined;
+  /**
+   * Information about the Transmitter. Must be provided if the `initiator_type` is `transmitter`. Includes the transmitter's name, identifier, and address. The address format on requests depends on your program's wire address configuration. Responses always return all address fields; fields not applicable to the stored format are `null`.
+   *
+   * @remarks
+   */
   wireTransmitter?: GetTransferWireTransmitter | undefined;
   /**
    * Additional details or instructions for the wire, issued to the recipient financial institution when the wire is executed.
@@ -502,7 +559,6 @@ export const GetTransferAch$inboundSchema: z.ZodMiniType<
     ),
     effective_entry_date: types.optional(types.string()),
     id_number: types.optional(types.string()),
-    transfer_trace_id: types.optional(types.string()),
     addenda: types.optional(types.string()),
   }),
   z.transform((v) => {
@@ -516,7 +572,6 @@ export const GetTransferAch$inboundSchema: z.ZodMiniType<
       "service_processing": "serviceProcessing",
       "effective_entry_date": "effectiveEntryDate",
       "id_number": "idNumber",
-      "transfer_trace_id": "transferTraceId",
     });
   }),
 );
@@ -532,12 +587,28 @@ export function getTransferAchFromJSON(
 }
 
 /** @internal */
+export const GetTransferPurposeOfPayment$inboundSchema: z.ZodMiniType<
+  GetTransferPurposeOfPayment,
+  unknown
+> = openEnums.inboundSchema(GetTransferPurposeOfPayment);
+
+/** @internal */
 export const GetTransferInstantPayment$inboundSchema: z.ZodMiniType<
   GetTransferInstantPayment,
   unknown
-> = z.object({
-  memo: z.optional(z.nullable(types.string())),
-});
+> = z.pipe(
+  z.object({
+    memo: z.optional(z.nullable(types.string())),
+    purpose_of_payment: z.optional(
+      z.nullable(GetTransferPurposeOfPayment$inboundSchema),
+    ),
+  }),
+  z.transform((v) => {
+    return remap$(v, {
+      "purpose_of_payment": "purposeOfPayment",
+    });
+  }),
+);
 
 export function getTransferInstantPaymentFromJSON(
   jsonString: string,
@@ -550,8 +621,8 @@ export function getTransferInstantPaymentFromJSON(
 }
 
 /** @internal */
-export const GetTransferIntermediaryBankAddress$inboundSchema: z.ZodMiniType<
-  GetTransferIntermediaryBankAddress,
+export const GetTransferUnstructuredAddress$inboundSchema: z.ZodMiniType<
+  GetTransferUnstructuredAddress,
   unknown
 > = z.object({
   line1: z.optional(z.nullable(types.string())),
@@ -560,14 +631,13 @@ export const GetTransferIntermediaryBankAddress$inboundSchema: z.ZodMiniType<
   country: z.optional(z.nullable(types.string())),
 });
 
-export function getTransferIntermediaryBankAddressFromJSON(
+export function getTransferUnstructuredAddressFromJSON(
   jsonString: string,
-): SafeParseResult<GetTransferIntermediaryBankAddress, SDKValidationError> {
+): SafeParseResult<GetTransferUnstructuredAddress, SDKValidationError> {
   return safeParse(
     jsonString,
-    (x) =>
-      GetTransferIntermediaryBankAddress$inboundSchema.parse(JSON.parse(x)),
-    `Failed to parse 'GetTransferIntermediaryBankAddress' from JSON`,
+    (x) => GetTransferUnstructuredAddress$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'GetTransferUnstructuredAddress' from JSON`,
   );
 }
 
@@ -579,14 +649,22 @@ export const GetTransferWireTransmitter$inboundSchema: z.ZodMiniType<
   z.object({
     name: types.string(),
     transmitter_identifier: types.string(),
-    line1: types.nullable(types.string()),
+    line1: z.optional(z.nullable(types.string())),
     line2: z.optional(z.nullable(types.string())),
     line3: z.optional(z.nullable(types.string())),
-    country: types.string(),
+    building_number: z.optional(z.nullable(types.string())),
+    street_name: z.optional(z.nullable(types.string())),
+    city: z.optional(z.nullable(types.string())),
+    state: z.optional(z.nullable(types.string())),
+    postal_code: z.optional(z.nullable(types.string())),
+    country: z.optional(z.nullable(types.string())),
   }),
   z.transform((v) => {
     return remap$(v, {
       "transmitter_identifier": "transmitterIdentifier",
+      "building_number": "buildingNumber",
+      "street_name": "streetName",
+      "postal_code": "postalCode",
     });
   }),
 );
@@ -608,7 +686,7 @@ export const GetTransferWire$inboundSchema: z.ZodMiniType<
 > = z.pipe(
   z.object({
     intermediary_bank_address: types.optional(
-      z.lazy(() => GetTransferIntermediaryBankAddress$inboundSchema),
+      z.lazy(() => GetTransferUnstructuredAddress$inboundSchema),
     ),
     intermediary_bank_name: types.optional(types.string()),
     intermediary_bank_routing_number: types.optional(types.string()),

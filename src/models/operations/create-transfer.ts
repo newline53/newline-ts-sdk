@@ -9,6 +9,7 @@ import * as openEnums from "../../types/enums.js";
 import { ClosedEnum, OpenEnum } from "../../types/enums.js";
 import { Result as SafeParseResult } from "../../types/fp.js";
 import * as types from "../../types/primitives.js";
+import { smartUnion } from "../../types/smart-union.js";
 import { SDKValidationError } from "../errors/sdk-validation-error.js";
 
 /**
@@ -201,6 +202,34 @@ export type CreateTransferInstantPaymentTransmitter = {
 };
 
 /**
+ * An optional code supplied when an instant payment Transfer is initiated, indicating the kind of transaction being sent. If supplied, it must be one of the approved codes listed below, otherwise the Transfer is rejected. Omit the field or send an empty string to leave it unset; when unset it is returned as an empty string. Only applies to Newline initiated instant payments; it is not populated for received instant payments.
+ *
+ * @remarks
+ */
+export const CreateTransferPurposeOfPaymentRequest = {
+  Nows: "NOWS",
+  Gdds: "GDDS",
+  Scve: "SCVE",
+  Insc: "INSC",
+  Insm: "INSM",
+  Invs: "INVS",
+  Payr: "PAYR",
+  Ubil: "UBIL",
+  Pdep: "PDEP",
+  Acct: "ACCT",
+  Cblk: "CBLK",
+  Mp2P: "MP2P",
+} as const;
+/**
+ * An optional code supplied when an instant payment Transfer is initiated, indicating the kind of transaction being sent. If supplied, it must be one of the approved codes listed below, otherwise the Transfer is rejected. Omit the field or send an empty string to leave it unset; when unset it is returned as an empty string. Only applies to Newline initiated instant payments; it is not populated for received instant payments.
+ *
+ * @remarks
+ */
+export type CreateTransferPurposeOfPaymentRequest = ClosedEnum<
+  typeof CreateTransferPurposeOfPaymentRequest
+>;
+
+/**
  * Instant payment information. Only present if the Transfer is an instant payment.
  *
  * @remarks
@@ -215,9 +244,15 @@ export type CreateTransferInstantPaymentRequest = {
    * @remarks
    */
   memo?: string | null | undefined;
+  /**
+   * An optional code supplied when an instant payment Transfer is initiated, indicating the kind of transaction being sent. If supplied, it must be one of the approved codes listed below, otherwise the Transfer is rejected. Omit the field or send an empty string to leave it unset; when unset it is returned as an empty string. Only applies to Newline initiated instant payments; it is not populated for received instant payments.
+   *
+   * @remarks
+   */
+  purposeOfPayment?: CreateTransferPurposeOfPaymentRequest | null | undefined;
 };
 
-export type CreateTransferIntermediaryBankAddressRequest = {
+export type CreateTransferIntermediaryBankAddressUnstructuredAddressRequest = {
   /**
    * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
    *
@@ -240,11 +275,40 @@ export type CreateTransferIntermediaryBankAddressRequest = {
 };
 
 /**
- * Address of the Transmitter. Must be provided if the `initiator_type` is `transmitter`.
+ * Structured wire address using ISO-style parsed fields. Accepted when your program's wire address configuration is set to `structured` or `both`. Required fields: `city` and `country`.
  *
  * @remarks
  */
-export type CreateTransferWireTransmitterRequest = {
+export type CreateTransferStructuredAddress = {
+  /**
+   * Full street line (alternative to `building_number` + `street_name`). Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  line1?: string | null | undefined;
+  /**
+   * Optional continuation, unit, or suite. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  line2?: string | null | undefined;
+  /**
+   * Parsed building or house number. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  buildingNumber?: string | null | undefined;
+  /**
+   * Parsed street name. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  streetName?: string | null | undefined;
+  /**
+   * Required. 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  city: string;
+  /**
+   * State or province. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  state?: string | null | undefined;
+  /**
+   * US ZIP code (5-digit) or ZIP+4.
+   */
+  postalCode?: string | null | undefined;
+  country: string;
   /**
    * Name of the Transmitter.
    *
@@ -252,13 +316,16 @@ export type CreateTransferWireTransmitterRequest = {
    */
   name: string;
   /**
-   * Up to 24 characters, and supplied by Transmitter. Alphanumeric only.
+   * Up to 24 digits, supplied by Transmitter. Numeric only.
    */
   transmitterIdentifier: string;
+};
+
+export type CreateTransferWireTransmitterUnstructuredAddress = {
   /**
    * Up to 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
    */
-  line1: string | null;
+  line1?: string | null | undefined;
   /**
    * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
    *
@@ -271,8 +338,27 @@ export type CreateTransferWireTransmitterRequest = {
    * @remarks
    */
   line3?: string | null | undefined;
-  country: string;
+  country?: string | undefined;
+  /**
+   * Name of the Transmitter.
+   *
+   * @remarks
+   */
+  name: string;
+  /**
+   * Up to 24 digits, supplied by Transmitter. Numeric only.
+   */
+  transmitterIdentifier: string;
 };
+
+/**
+ * Information about the Transmitter. Must be provided if the `initiator_type` is `transmitter`. Includes the transmitter's name, identifier, and address. The accepted address format depends on your program's wire address configuration. For `unstructured` format: `line1` and `country` are required. For `structured` format: `city` and `country` are required.
+ *
+ * @remarks
+ */
+export type CreateTransferWireTransmitterRequest =
+  | CreateTransferStructuredAddress
+  | CreateTransferWireTransmitterUnstructuredAddress;
 
 /**
  * Wire-specific information. Only present if the Transfer is a wire.
@@ -286,7 +372,7 @@ export type CreateTransferWireRequest = {
    * @remarks
    */
   intermediaryBankAddress?:
-    | CreateTransferIntermediaryBankAddressRequest
+    | CreateTransferIntermediaryBankAddressUnstructuredAddressRequest
     | undefined;
   intermediaryBankName?: string | undefined;
   /**
@@ -301,7 +387,15 @@ export type CreateTransferWireRequest = {
    * @remarks
    */
   wireInstructions?: string | undefined;
-  wireTransmitter?: CreateTransferWireTransmitterRequest | undefined;
+  /**
+   * Information about the Transmitter. Must be provided if the `initiator_type` is `transmitter`. Includes the transmitter's name, identifier, and address. The accepted address format depends on your program's wire address configuration. For `unstructured` format: `line1` and `country` are required. For `structured` format: `city` and `country` are required.
+   *
+   * @remarks
+   */
+  wireTransmitter?:
+    | CreateTransferStructuredAddress
+    | CreateTransferWireTransmitterUnstructuredAddress
+    | undefined;
 };
 
 export type CreateTransferRequest = {
@@ -519,16 +613,40 @@ export type CreateTransferAchResponse = {
    */
   idNumber?: string | undefined;
   /**
-   * Trace ID to identify the transaction across Newline and Fifth Third Bank applications.
-   */
-  transferTraceId?: string | undefined;
-  /**
    * Optional additional payment-related information, such as invoice numbers, originator/receiver information, payment instructions, etc. Up to 80 characters. Optional for all newline supported SEC codes other than TEL. Newline will reject the Transfer if an Addenda value is provided with SEC code TEL.
    *
    * @remarks
    */
   addenda?: string | undefined;
 };
+
+/**
+ * An optional code supplied when an instant payment Transfer is initiated, indicating the kind of transaction being sent. If supplied, it must be one of the approved codes listed below, otherwise the Transfer is rejected. Omit the field or send an empty string to leave it unset; when unset it is returned as an empty string. Only applies to Newline initiated instant payments; it is not populated for received instant payments.
+ *
+ * @remarks
+ */
+export const CreateTransferPurposeOfPaymentResponse = {
+  Nows: "NOWS",
+  Gdds: "GDDS",
+  Scve: "SCVE",
+  Insc: "INSC",
+  Insm: "INSM",
+  Invs: "INVS",
+  Payr: "PAYR",
+  Ubil: "UBIL",
+  Pdep: "PDEP",
+  Acct: "ACCT",
+  Cblk: "CBLK",
+  Mp2P: "MP2P",
+} as const;
+/**
+ * An optional code supplied when an instant payment Transfer is initiated, indicating the kind of transaction being sent. If supplied, it must be one of the approved codes listed below, otherwise the Transfer is rejected. Omit the field or send an empty string to leave it unset; when unset it is returned as an empty string. Only applies to Newline initiated instant payments; it is not populated for received instant payments.
+ *
+ * @remarks
+ */
+export type CreateTransferPurposeOfPaymentResponse = OpenEnum<
+  typeof CreateTransferPurposeOfPaymentResponse
+>;
 
 /**
  * Instant payment information. Only present if the Transfer is an instant payment.
@@ -542,6 +660,12 @@ export type CreateTransferInstantPaymentResponse = {
    * @remarks
    */
   memo?: string | null | undefined;
+  /**
+   * An optional code supplied when an instant payment Transfer is initiated, indicating the kind of transaction being sent. If supplied, it must be one of the approved codes listed below, otherwise the Transfer is rejected. Omit the field or send an empty string to leave it unset; when unset it is returned as an empty string. Only applies to Newline initiated instant payments; it is not populated for received instant payments.
+   *
+   * @remarks
+   */
+  purposeOfPayment?: CreateTransferPurposeOfPaymentResponse | null | undefined;
 };
 
 /**
@@ -549,7 +673,7 @@ export type CreateTransferInstantPaymentResponse = {
  *
  * @remarks
  */
-export type CreateTransferIntermediaryBankAddressResponse = {
+export type CreateTransferUnstructuredAddressResponse = {
   /**
    * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
    *
@@ -572,7 +696,7 @@ export type CreateTransferIntermediaryBankAddressResponse = {
 };
 
 /**
- * Address of the Transmitter. Must be provided if the `initiator_type` is `transmitter`.
+ * Information about the Transmitter. Must be provided if the `initiator_type` is `transmitter`. Includes the transmitter's name, identifier, and address. The address format on requests depends on your program's wire address configuration. Responses always return all address fields; fields not applicable to the stored format are `null`.
  *
  * @remarks
  */
@@ -584,13 +708,15 @@ export type CreateTransferWireTransmitterResponse = {
    */
   name: string;
   /**
-   * Up to 24 characters, and supplied by Transmitter. Alphanumeric only.
+   * Up to 24 digits, supplied by Transmitter. Numeric only.
    */
   transmitterIdentifier: string;
   /**
-   * Up to 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
    */
-  line1: string | null;
+  line1?: string | null | undefined;
   /**
    * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
    *
@@ -603,7 +729,27 @@ export type CreateTransferWireTransmitterResponse = {
    * @remarks
    */
   line3?: string | null | undefined;
-  country: string;
+  /**
+   * Parsed building or house number. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  buildingNumber?: string | null | undefined;
+  /**
+   * Parsed street name. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  streetName?: string | null | undefined;
+  /**
+   * City. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  city?: string | null | undefined;
+  /**
+   * State or province. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  state?: string | null | undefined;
+  /**
+   * US ZIP code (5-digit) or ZIP+4.
+   */
+  postalCode?: string | null | undefined;
+  country?: string | null | undefined;
 };
 
 /**
@@ -618,7 +764,7 @@ export type CreateTransferWireResponse = {
    * @remarks
    */
   intermediaryBankAddress?:
-    | CreateTransferIntermediaryBankAddressResponse
+    | CreateTransferUnstructuredAddressResponse
     | undefined;
   /**
    * Name of the intermediary bank, when applicable. For wires only. Maximum 35 characters.
@@ -632,6 +778,11 @@ export type CreateTransferWireResponse = {
    * @remarks
    */
   intermediaryBankRoutingNumber?: string | undefined;
+  /**
+   * Information about the Transmitter. Must be provided if the `initiator_type` is `transmitter`. Includes the transmitter's name, identifier, and address. The address format on requests depends on your program's wire address configuration. Responses always return all address fields; fields not applicable to the stored format are `null`.
+   *
+   * @remarks
+   */
   wireTransmitter?: CreateTransferWireTransmitterResponse | undefined;
   /**
    * Additional details or instructions for the wire, issued to the recipient financial institution when the wire is executed.
@@ -906,11 +1057,18 @@ export function createTransferInstantPaymentTransmitterToJSON(
 }
 
 /** @internal */
+export const CreateTransferPurposeOfPaymentRequest$outboundSchema:
+  z.ZodMiniEnum<typeof CreateTransferPurposeOfPaymentRequest> = z.enum(
+    CreateTransferPurposeOfPaymentRequest,
+  );
+
+/** @internal */
 export type CreateTransferInstantPaymentRequest$Outbound = {
   instant_payment_transmitter?:
     | CreateTransferInstantPaymentTransmitter$Outbound
     | undefined;
   memo?: string | null | undefined;
+  purpose_of_payment?: string | null | undefined;
 };
 
 /** @internal */
@@ -923,10 +1081,14 @@ export const CreateTransferInstantPaymentRequest$outboundSchema: z.ZodMiniType<
       z.lazy(() => CreateTransferInstantPaymentTransmitter$outboundSchema),
     ),
     memo: z.optional(z.nullable(z.string())),
+    purposeOfPayment: z.optional(
+      z.nullable(CreateTransferPurposeOfPaymentRequest$outboundSchema),
+    ),
   }),
   z.transform((v) => {
     return remap$(v, {
       instantPaymentTransmitter: "instant_payment_transmitter",
+      purposeOfPayment: "purpose_of_payment",
     });
   }),
 );
@@ -942,18 +1104,19 @@ export function createTransferInstantPaymentRequestToJSON(
 }
 
 /** @internal */
-export type CreateTransferIntermediaryBankAddressRequest$Outbound = {
-  line1?: string | null | undefined;
-  line2?: string | null | undefined;
-  line3?: string | null | undefined;
-  country?: string | null | undefined;
-};
+export type CreateTransferIntermediaryBankAddressUnstructuredAddressRequest$Outbound =
+  {
+    line1?: string | null | undefined;
+    line2?: string | null | undefined;
+    line3?: string | null | undefined;
+    country?: string | null | undefined;
+  };
 
 /** @internal */
-export const CreateTransferIntermediaryBankAddressRequest$outboundSchema:
+export const CreateTransferIntermediaryBankAddressUnstructuredAddressRequest$outboundSchema:
   z.ZodMiniType<
-    CreateTransferIntermediaryBankAddressRequest$Outbound,
-    CreateTransferIntermediaryBankAddressRequest
+    CreateTransferIntermediaryBankAddressUnstructuredAddressRequest$Outbound,
+    CreateTransferIntermediaryBankAddressUnstructuredAddressRequest
   > = z.object({
     line1: z.optional(z.nullable(z.string())),
     line2: z.optional(z.nullable(z.string())),
@@ -961,46 +1124,122 @@ export const CreateTransferIntermediaryBankAddressRequest$outboundSchema:
     country: z.optional(z.nullable(z.string())),
   });
 
-export function createTransferIntermediaryBankAddressRequestToJSON(
-  createTransferIntermediaryBankAddressRequest:
-    CreateTransferIntermediaryBankAddressRequest,
+export function createTransferIntermediaryBankAddressUnstructuredAddressRequestToJSON(
+  createTransferIntermediaryBankAddressUnstructuredAddressRequest:
+    CreateTransferIntermediaryBankAddressUnstructuredAddressRequest,
 ): string {
   return JSON.stringify(
-    CreateTransferIntermediaryBankAddressRequest$outboundSchema.parse(
-      createTransferIntermediaryBankAddressRequest,
+    CreateTransferIntermediaryBankAddressUnstructuredAddressRequest$outboundSchema
+      .parse(createTransferIntermediaryBankAddressUnstructuredAddressRequest),
+  );
+}
+
+/** @internal */
+export type CreateTransferStructuredAddress$Outbound = {
+  line1?: string | null | undefined;
+  line2?: string | null | undefined;
+  building_number?: string | null | undefined;
+  street_name?: string | null | undefined;
+  city: string;
+  state?: string | null | undefined;
+  postal_code?: string | null | undefined;
+  country: string;
+  name: string;
+  transmitter_identifier: string;
+};
+
+/** @internal */
+export const CreateTransferStructuredAddress$outboundSchema: z.ZodMiniType<
+  CreateTransferStructuredAddress$Outbound,
+  CreateTransferStructuredAddress
+> = z.pipe(
+  z.object({
+    line1: z.optional(z.nullable(z.string())),
+    line2: z.optional(z.nullable(z.string())),
+    buildingNumber: z.optional(z.nullable(z.string())),
+    streetName: z.optional(z.nullable(z.string())),
+    city: z.string(),
+    state: z.optional(z.nullable(z.string())),
+    postalCode: z.optional(z.nullable(z.string())),
+    country: z.string(),
+    name: z.string(),
+    transmitterIdentifier: z.string(),
+  }),
+  z.transform((v) => {
+    return remap$(v, {
+      buildingNumber: "building_number",
+      streetName: "street_name",
+      postalCode: "postal_code",
+      transmitterIdentifier: "transmitter_identifier",
+    });
+  }),
+);
+
+export function createTransferStructuredAddressToJSON(
+  createTransferStructuredAddress: CreateTransferStructuredAddress,
+): string {
+  return JSON.stringify(
+    CreateTransferStructuredAddress$outboundSchema.parse(
+      createTransferStructuredAddress,
     ),
   );
 }
 
 /** @internal */
-export type CreateTransferWireTransmitterRequest$Outbound = {
-  name: string;
-  transmitter_identifier: string;
-  line1: string | null;
+export type CreateTransferWireTransmitterUnstructuredAddress$Outbound = {
+  line1?: string | null | undefined;
   line2?: string | null | undefined;
   line3?: string | null | undefined;
-  country: string;
+  country?: string | undefined;
+  name: string;
+  transmitter_identifier: string;
 };
+
+/** @internal */
+export const CreateTransferWireTransmitterUnstructuredAddress$outboundSchema:
+  z.ZodMiniType<
+    CreateTransferWireTransmitterUnstructuredAddress$Outbound,
+    CreateTransferWireTransmitterUnstructuredAddress
+  > = z.pipe(
+    z.object({
+      line1: z.optional(z.nullable(z.string())),
+      line2: z.optional(z.nullable(z.string())),
+      line3: z.optional(z.nullable(z.string())),
+      country: z.optional(z.string()),
+      name: z.string(),
+      transmitterIdentifier: z.string(),
+    }),
+    z.transform((v) => {
+      return remap$(v, {
+        transmitterIdentifier: "transmitter_identifier",
+      });
+    }),
+  );
+
+export function createTransferWireTransmitterUnstructuredAddressToJSON(
+  createTransferWireTransmitterUnstructuredAddress:
+    CreateTransferWireTransmitterUnstructuredAddress,
+): string {
+  return JSON.stringify(
+    CreateTransferWireTransmitterUnstructuredAddress$outboundSchema.parse(
+      createTransferWireTransmitterUnstructuredAddress,
+    ),
+  );
+}
+
+/** @internal */
+export type CreateTransferWireTransmitterRequest$Outbound =
+  | CreateTransferStructuredAddress$Outbound
+  | CreateTransferWireTransmitterUnstructuredAddress$Outbound;
 
 /** @internal */
 export const CreateTransferWireTransmitterRequest$outboundSchema: z.ZodMiniType<
   CreateTransferWireTransmitterRequest$Outbound,
   CreateTransferWireTransmitterRequest
-> = z.pipe(
-  z.object({
-    name: z.string(),
-    transmitterIdentifier: z.string(),
-    line1: z.nullable(z.string()),
-    line2: z.optional(z.nullable(z.string())),
-    line3: z.optional(z.nullable(z.string())),
-    country: z.string(),
-  }),
-  z.transform((v) => {
-    return remap$(v, {
-      transmitterIdentifier: "transmitter_identifier",
-    });
-  }),
-);
+> = smartUnion([
+  z.lazy(() => CreateTransferStructuredAddress$outboundSchema),
+  z.lazy(() => CreateTransferWireTransmitterUnstructuredAddress$outboundSchema),
+]);
 
 export function createTransferWireTransmitterRequestToJSON(
   createTransferWireTransmitterRequest: CreateTransferWireTransmitterRequest,
@@ -1015,12 +1254,15 @@ export function createTransferWireTransmitterRequestToJSON(
 /** @internal */
 export type CreateTransferWireRequest$Outbound = {
   intermediary_bank_address?:
-    | CreateTransferIntermediaryBankAddressRequest$Outbound
+    | CreateTransferIntermediaryBankAddressUnstructuredAddressRequest$Outbound
     | undefined;
   intermediary_bank_name?: string | undefined;
   intermediary_bank_routing_number?: string | undefined;
   wire_instructions?: string | undefined;
-  wire_transmitter?: CreateTransferWireTransmitterRequest$Outbound | undefined;
+  wire_transmitter?:
+    | CreateTransferStructuredAddress$Outbound
+    | CreateTransferWireTransmitterUnstructuredAddress$Outbound
+    | undefined;
 };
 
 /** @internal */
@@ -1029,15 +1271,18 @@ export const CreateTransferWireRequest$outboundSchema: z.ZodMiniType<
   CreateTransferWireRequest
 > = z.pipe(
   z.object({
-    intermediaryBankAddress: z.optional(
-      z.lazy(() => CreateTransferIntermediaryBankAddressRequest$outboundSchema),
-    ),
+    intermediaryBankAddress: z.optional(z.lazy(() =>
+      CreateTransferIntermediaryBankAddressUnstructuredAddressRequest$outboundSchema
+    )),
     intermediaryBankName: z.optional(z.string()),
     intermediaryBankRoutingNumber: z.optional(z.string()),
     wireInstructions: z.optional(z.string()),
-    wireTransmitter: z.optional(
-      z.lazy(() => CreateTransferWireTransmitterRequest$outboundSchema),
-    ),
+    wireTransmitter: z.optional(smartUnion([
+      z.lazy(() => CreateTransferStructuredAddress$outboundSchema),
+      z.lazy(() =>
+        CreateTransferWireTransmitterUnstructuredAddress$outboundSchema
+      ),
+    ])),
   }),
   z.transform((v) => {
     return remap$(v, {
@@ -1164,7 +1409,6 @@ export const CreateTransferAchResponse$inboundSchema: z.ZodMiniType<
     ),
     effective_entry_date: types.optional(types.string()),
     id_number: types.optional(types.string()),
-    transfer_trace_id: types.optional(types.string()),
     addenda: types.optional(types.string()),
   }),
   z.transform((v) => {
@@ -1178,7 +1422,6 @@ export const CreateTransferAchResponse$inboundSchema: z.ZodMiniType<
       "service_processing": "serviceProcessing",
       "effective_entry_date": "effectiveEntryDate",
       "id_number": "idNumber",
-      "transfer_trace_id": "transferTraceId",
     });
   }),
 );
@@ -1194,12 +1437,27 @@ export function createTransferAchResponseFromJSON(
 }
 
 /** @internal */
+export const CreateTransferPurposeOfPaymentResponse$inboundSchema:
+  z.ZodMiniType<CreateTransferPurposeOfPaymentResponse, unknown> = openEnums
+    .inboundSchema(CreateTransferPurposeOfPaymentResponse);
+
+/** @internal */
 export const CreateTransferInstantPaymentResponse$inboundSchema: z.ZodMiniType<
   CreateTransferInstantPaymentResponse,
   unknown
-> = z.object({
-  memo: z.optional(z.nullable(types.string())),
-});
+> = z.pipe(
+  z.object({
+    memo: z.optional(z.nullable(types.string())),
+    purpose_of_payment: z.optional(
+      z.nullable(CreateTransferPurposeOfPaymentResponse$inboundSchema),
+    ),
+  }),
+  z.transform((v) => {
+    return remap$(v, {
+      "purpose_of_payment": "purposeOfPayment",
+    });
+  }),
+);
 
 export function createTransferInstantPaymentResponseFromJSON(
   jsonString: string,
@@ -1213,28 +1471,27 @@ export function createTransferInstantPaymentResponseFromJSON(
 }
 
 /** @internal */
-export const CreateTransferIntermediaryBankAddressResponse$inboundSchema:
-  z.ZodMiniType<CreateTransferIntermediaryBankAddressResponse, unknown> = z
-    .object({
-      line1: z.optional(z.nullable(types.string())),
-      line2: z.optional(z.nullable(types.string())),
-      line3: z.optional(z.nullable(types.string())),
-      country: z.optional(z.nullable(types.string())),
-    });
+export const CreateTransferUnstructuredAddressResponse$inboundSchema:
+  z.ZodMiniType<CreateTransferUnstructuredAddressResponse, unknown> = z.object({
+    line1: z.optional(z.nullable(types.string())),
+    line2: z.optional(z.nullable(types.string())),
+    line3: z.optional(z.nullable(types.string())),
+    country: z.optional(z.nullable(types.string())),
+  });
 
-export function createTransferIntermediaryBankAddressResponseFromJSON(
+export function createTransferUnstructuredAddressResponseFromJSON(
   jsonString: string,
 ): SafeParseResult<
-  CreateTransferIntermediaryBankAddressResponse,
+  CreateTransferUnstructuredAddressResponse,
   SDKValidationError
 > {
   return safeParse(
     jsonString,
     (x) =>
-      CreateTransferIntermediaryBankAddressResponse$inboundSchema.parse(
+      CreateTransferUnstructuredAddressResponse$inboundSchema.parse(
         JSON.parse(x),
       ),
-    `Failed to parse 'CreateTransferIntermediaryBankAddressResponse' from JSON`,
+    `Failed to parse 'CreateTransferUnstructuredAddressResponse' from JSON`,
   );
 }
 
@@ -1246,14 +1503,22 @@ export const CreateTransferWireTransmitterResponse$inboundSchema: z.ZodMiniType<
   z.object({
     name: types.string(),
     transmitter_identifier: types.string(),
-    line1: types.nullable(types.string()),
+    line1: z.optional(z.nullable(types.string())),
     line2: z.optional(z.nullable(types.string())),
     line3: z.optional(z.nullable(types.string())),
-    country: types.string(),
+    building_number: z.optional(z.nullable(types.string())),
+    street_name: z.optional(z.nullable(types.string())),
+    city: z.optional(z.nullable(types.string())),
+    state: z.optional(z.nullable(types.string())),
+    postal_code: z.optional(z.nullable(types.string())),
+    country: z.optional(z.nullable(types.string())),
   }),
   z.transform((v) => {
     return remap$(v, {
       "transmitter_identifier": "transmitterIdentifier",
+      "building_number": "buildingNumber",
+      "street_name": "streetName",
+      "postal_code": "postalCode",
     });
   }),
 );
@@ -1276,7 +1541,7 @@ export const CreateTransferWireResponse$inboundSchema: z.ZodMiniType<
 > = z.pipe(
   z.object({
     intermediary_bank_address: types.optional(
-      z.lazy(() => CreateTransferIntermediaryBankAddressResponse$inboundSchema),
+      z.lazy(() => CreateTransferUnstructuredAddressResponse$inboundSchema),
     ),
     intermediary_bank_name: types.optional(types.string()),
     intermediary_bank_routing_number: types.optional(types.string()),

@@ -9,6 +9,7 @@ import * as openEnums from "../../types/enums.js";
 import { ClosedEnum, OpenEnum } from "../../types/enums.js";
 import { Result as SafeParseResult } from "../../types/fp.js";
 import * as types from "../../types/primitives.js";
+import { smartUnion } from "../../types/smart-union.js";
 import { SDKValidationError } from "../errors/sdk-validation-error.js";
 
 /**
@@ -102,11 +103,43 @@ export type UpdateSyntheticAccountInstantPaymentRequest = {
 };
 
 /**
- * Address of the business or individual who owns the external account.
+ * Structured wire address using ISO-style parsed fields. Accepted when your program's wire address configuration is set to `structured` or `both`. Required fields: `city` and `country`.
  *
  * @remarks
  */
-export type UpdateSyntheticAccountWireCounterpartyAddressRequest = {
+export type UpdateSyntheticAccountStructuredAddress = {
+  /**
+   * Full street line (alternative to `building_number` + `street_name`). Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  line1?: string | null | undefined;
+  /**
+   * Optional continuation, unit, or suite. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  line2?: string | null | undefined;
+  /**
+   * Parsed building or house number. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  buildingNumber?: string | null | undefined;
+  /**
+   * Parsed street name. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  streetName?: string | null | undefined;
+  /**
+   * Required. 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  city: string;
+  /**
+   * State or province. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  state?: string | null | undefined;
+  /**
+   * US ZIP code (5-digit) or ZIP+4.
+   */
+  postalCode?: string | null | undefined;
+  country: string;
+};
+
+export type UpdateSyntheticAccountCounterpartyAddressUnstructuredAddress = {
   /**
    * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
    *
@@ -129,31 +162,41 @@ export type UpdateSyntheticAccountWireCounterpartyAddressRequest = {
 };
 
 /**
+ * Address of the business or individual who owns the external account. The accepted format depends on your program's wire address configuration (`unstructured`, `structured`, or `both`). Unstructured format uses `line1`/`line2`/`line3`/`country`. Structured format uses `building_number`/`street_name`/`city`/`postal_code`/`state`/`country` (with `city` and `country` required).
+ *
+ * @remarks
+ */
+export type UpdateSyntheticAccountCounterpartyAddressUnion =
+  | UpdateSyntheticAccountStructuredAddress
+  | UpdateSyntheticAccountCounterpartyAddressUnstructuredAddress;
+
+/**
  * Address of the financial institution where the external account is held.
  *
  * @remarks
  */
-export type UpdateSyntheticAccountCounterpartyBankAddressRequest = {
-  /**
-   * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
-   *
-   * @remarks
-   */
-  line1?: string | null | undefined;
-  /**
-   * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
-   *
-   * @remarks
-   */
-  line2?: string | null | undefined;
-  /**
-   * Optional 32 characters. Note that this length is shorter than the other lines. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
-   *
-   * @remarks
-   */
-  line3?: string | null | undefined;
-  country?: string | null | undefined;
-};
+export type UpdateSyntheticAccountCounterpartyBankAddressUnstructuredAddressRequest =
+  {
+    /**
+     * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+     *
+     * @remarks
+     */
+    line1?: string | null | undefined;
+    /**
+     * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+     *
+     * @remarks
+     */
+    line2?: string | null | undefined;
+    /**
+     * Optional 32 characters. Note that this length is shorter than the other lines. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+     *
+     * @remarks
+     */
+    line3?: string | null | undefined;
+    country?: string | null | undefined;
+  };
 
 /**
  * Contains wire-specific information. Only populated if the Synthetic Account is in the `wire_external` category.
@@ -162,12 +205,13 @@ export type UpdateSyntheticAccountCounterpartyBankAddressRequest = {
  */
 export type UpdateSyntheticAccountWireRequest = {
   /**
-   * Address of the business or individual who owns the external account.
+   * Address of the business or individual who owns the external account. The accepted format depends on your program's wire address configuration (`unstructured`, `structured`, or `both`). Unstructured format uses `line1`/`line2`/`line3`/`country`. Structured format uses `building_number`/`street_name`/`city`/`postal_code`/`state`/`country` (with `city` and `country` required).
    *
    * @remarks
    */
   counterpartyAddress?:
-    | UpdateSyntheticAccountWireCounterpartyAddressRequest
+    | UpdateSyntheticAccountStructuredAddress
+    | UpdateSyntheticAccountCounterpartyAddressUnstructuredAddress
     | null
     | undefined;
   /**
@@ -182,7 +226,7 @@ export type UpdateSyntheticAccountWireRequest = {
    * @remarks
    */
   counterpartyBankAddress?:
-    | UpdateSyntheticAccountCounterpartyBankAddressRequest
+    | UpdateSyntheticAccountCounterpartyBankAddressUnstructuredAddressRequest
     | null
     | undefined;
   /**
@@ -410,7 +454,7 @@ export type UpdateSyntheticAccountInstantPaymentResponse = {
 };
 
 /**
- * Address of the business or individual who owns the external account.
+ * Address of the business or individual who owns the external account. The accepted format on requests depends on your program's wire address configuration (`unstructured`, `structured`, or `both`). Responses always return all fields; fields not applicable to the stored format are `null`.
  *
  * @remarks
  */
@@ -433,6 +477,26 @@ export type UpdateSyntheticAccountWireCounterpartyAddressResponse = {
    * @remarks
    */
   line3?: string | null | undefined;
+  /**
+   * Parsed building or house number. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  buildingNumber?: string | null | undefined;
+  /**
+   * Parsed street name. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  streetName?: string | null | undefined;
+  /**
+   * City. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  city?: string | null | undefined;
+  /**
+   * State or province. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  state?: string | null | undefined;
+  /**
+   * US ZIP code (5-digit) or ZIP+4.
+   */
+  postalCode?: string | null | undefined;
   country?: string | null | undefined;
 };
 
@@ -441,7 +505,7 @@ export type UpdateSyntheticAccountWireCounterpartyAddressResponse = {
  *
  * @remarks
  */
-export type UpdateSyntheticAccountCounterpartyBankAddressResponse = {
+export type UpdateSyntheticAccountUnstructuredAddressResponse = {
   /**
    * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
    *
@@ -470,7 +534,7 @@ export type UpdateSyntheticAccountCounterpartyBankAddressResponse = {
  */
 export type UpdateSyntheticAccountWireResponse = {
   /**
-   * Address of the business or individual who owns the external account.
+   * Address of the business or individual who owns the external account. The accepted format on requests depends on your program's wire address configuration (`unstructured`, `structured`, or `both`). Responses always return all fields; fields not applicable to the stored format are `null`.
    *
    * @remarks
    */
@@ -490,7 +554,7 @@ export type UpdateSyntheticAccountWireResponse = {
    * @remarks
    */
   counterpartyBankAddress?:
-    | UpdateSyntheticAccountCounterpartyBankAddressResponse
+    | UpdateSyntheticAccountUnstructuredAddressResponse
     | null
     | undefined;
   /**
@@ -755,49 +819,67 @@ export function updateSyntheticAccountInstantPaymentRequestToJSON(
 }
 
 /** @internal */
-export type UpdateSyntheticAccountWireCounterpartyAddressRequest$Outbound = {
+export type UpdateSyntheticAccountStructuredAddress$Outbound = {
   line1?: string | null | undefined;
   line2?: string | null | undefined;
-  line3?: string | null | undefined;
-  country?: string | null | undefined;
+  building_number?: string | null | undefined;
+  street_name?: string | null | undefined;
+  city: string;
+  state?: string | null | undefined;
+  postal_code?: string | null | undefined;
+  country: string;
 };
 
 /** @internal */
-export const UpdateSyntheticAccountWireCounterpartyAddressRequest$outboundSchema:
+export const UpdateSyntheticAccountStructuredAddress$outboundSchema:
   z.ZodMiniType<
-    UpdateSyntheticAccountWireCounterpartyAddressRequest$Outbound,
-    UpdateSyntheticAccountWireCounterpartyAddressRequest
-  > = z.object({
-    line1: z.optional(z.nullable(z.string())),
-    line2: z.optional(z.nullable(z.string())),
-    line3: z.optional(z.nullable(z.string())),
-    country: z.optional(z.nullable(z.string())),
-  });
+    UpdateSyntheticAccountStructuredAddress$Outbound,
+    UpdateSyntheticAccountStructuredAddress
+  > = z.pipe(
+    z.object({
+      line1: z.optional(z.nullable(z.string())),
+      line2: z.optional(z.nullable(z.string())),
+      buildingNumber: z.optional(z.nullable(z.string())),
+      streetName: z.optional(z.nullable(z.string())),
+      city: z.string(),
+      state: z.optional(z.nullable(z.string())),
+      postalCode: z.optional(z.nullable(z.string())),
+      country: z.string(),
+    }),
+    z.transform((v) => {
+      return remap$(v, {
+        buildingNumber: "building_number",
+        streetName: "street_name",
+        postalCode: "postal_code",
+      });
+    }),
+  );
 
-export function updateSyntheticAccountWireCounterpartyAddressRequestToJSON(
-  updateSyntheticAccountWireCounterpartyAddressRequest:
-    UpdateSyntheticAccountWireCounterpartyAddressRequest,
+export function updateSyntheticAccountStructuredAddressToJSON(
+  updateSyntheticAccountStructuredAddress:
+    UpdateSyntheticAccountStructuredAddress,
 ): string {
   return JSON.stringify(
-    UpdateSyntheticAccountWireCounterpartyAddressRequest$outboundSchema.parse(
-      updateSyntheticAccountWireCounterpartyAddressRequest,
+    UpdateSyntheticAccountStructuredAddress$outboundSchema.parse(
+      updateSyntheticAccountStructuredAddress,
     ),
   );
 }
 
 /** @internal */
-export type UpdateSyntheticAccountCounterpartyBankAddressRequest$Outbound = {
-  line1?: string | null | undefined;
-  line2?: string | null | undefined;
-  line3?: string | null | undefined;
-  country?: string | null | undefined;
-};
+export type UpdateSyntheticAccountCounterpartyAddressUnstructuredAddress$Outbound =
+  {
+    line1?: string | null | undefined;
+    line2?: string | null | undefined;
+    line3?: string | null | undefined;
+    country?: string | null | undefined;
+  };
 
 /** @internal */
-export const UpdateSyntheticAccountCounterpartyBankAddressRequest$outboundSchema:
+export const UpdateSyntheticAccountCounterpartyAddressUnstructuredAddress$outboundSchema:
   z.ZodMiniType<
-    UpdateSyntheticAccountCounterpartyBankAddressRequest$Outbound,
-    UpdateSyntheticAccountCounterpartyBankAddressRequest
+    UpdateSyntheticAccountCounterpartyAddressUnstructuredAddress$Outbound,
+    UpdateSyntheticAccountCounterpartyAddressUnstructuredAddress
   > = z.object({
     line1: z.optional(z.nullable(z.string())),
     line2: z.optional(z.nullable(z.string())),
@@ -805,26 +887,87 @@ export const UpdateSyntheticAccountCounterpartyBankAddressRequest$outboundSchema
     country: z.optional(z.nullable(z.string())),
   });
 
-export function updateSyntheticAccountCounterpartyBankAddressRequestToJSON(
-  updateSyntheticAccountCounterpartyBankAddressRequest:
-    UpdateSyntheticAccountCounterpartyBankAddressRequest,
+export function updateSyntheticAccountCounterpartyAddressUnstructuredAddressToJSON(
+  updateSyntheticAccountCounterpartyAddressUnstructuredAddress:
+    UpdateSyntheticAccountCounterpartyAddressUnstructuredAddress,
 ): string {
   return JSON.stringify(
-    UpdateSyntheticAccountCounterpartyBankAddressRequest$outboundSchema.parse(
-      updateSyntheticAccountCounterpartyBankAddressRequest,
+    UpdateSyntheticAccountCounterpartyAddressUnstructuredAddress$outboundSchema
+      .parse(updateSyntheticAccountCounterpartyAddressUnstructuredAddress),
+  );
+}
+
+/** @internal */
+export type UpdateSyntheticAccountCounterpartyAddressUnion$Outbound =
+  | UpdateSyntheticAccountStructuredAddress$Outbound
+  | UpdateSyntheticAccountCounterpartyAddressUnstructuredAddress$Outbound;
+
+/** @internal */
+export const UpdateSyntheticAccountCounterpartyAddressUnion$outboundSchema:
+  z.ZodMiniType<
+    UpdateSyntheticAccountCounterpartyAddressUnion$Outbound,
+    UpdateSyntheticAccountCounterpartyAddressUnion
+  > = smartUnion([
+    z.lazy(() => UpdateSyntheticAccountStructuredAddress$outboundSchema),
+    z.lazy(() =>
+      UpdateSyntheticAccountCounterpartyAddressUnstructuredAddress$outboundSchema
     ),
+  ]);
+
+export function updateSyntheticAccountCounterpartyAddressUnionToJSON(
+  updateSyntheticAccountCounterpartyAddressUnion:
+    UpdateSyntheticAccountCounterpartyAddressUnion,
+): string {
+  return JSON.stringify(
+    UpdateSyntheticAccountCounterpartyAddressUnion$outboundSchema.parse(
+      updateSyntheticAccountCounterpartyAddressUnion,
+    ),
+  );
+}
+
+/** @internal */
+export type UpdateSyntheticAccountCounterpartyBankAddressUnstructuredAddressRequest$Outbound =
+  {
+    line1?: string | null | undefined;
+    line2?: string | null | undefined;
+    line3?: string | null | undefined;
+    country?: string | null | undefined;
+  };
+
+/** @internal */
+export const UpdateSyntheticAccountCounterpartyBankAddressUnstructuredAddressRequest$outboundSchema:
+  z.ZodMiniType<
+    UpdateSyntheticAccountCounterpartyBankAddressUnstructuredAddressRequest$Outbound,
+    UpdateSyntheticAccountCounterpartyBankAddressUnstructuredAddressRequest
+  > = z.object({
+    line1: z.optional(z.nullable(z.string())),
+    line2: z.optional(z.nullable(z.string())),
+    line3: z.optional(z.nullable(z.string())),
+    country: z.optional(z.nullable(z.string())),
+  });
+
+export function updateSyntheticAccountCounterpartyBankAddressUnstructuredAddressRequestToJSON(
+  updateSyntheticAccountCounterpartyBankAddressUnstructuredAddressRequest:
+    UpdateSyntheticAccountCounterpartyBankAddressUnstructuredAddressRequest,
+): string {
+  return JSON.stringify(
+    UpdateSyntheticAccountCounterpartyBankAddressUnstructuredAddressRequest$outboundSchema
+      .parse(
+        updateSyntheticAccountCounterpartyBankAddressUnstructuredAddressRequest,
+      ),
   );
 }
 
 /** @internal */
 export type UpdateSyntheticAccountWireRequest$Outbound = {
   counterparty_address?:
-    | UpdateSyntheticAccountWireCounterpartyAddressRequest$Outbound
+    | UpdateSyntheticAccountStructuredAddress$Outbound
+    | UpdateSyntheticAccountCounterpartyAddressUnstructuredAddress$Outbound
     | null
     | undefined;
   counterparty_name?: string | undefined;
   counterparty_bank_address?:
-    | UpdateSyntheticAccountCounterpartyBankAddressRequest$Outbound
+    | UpdateSyntheticAccountCounterpartyBankAddressUnstructuredAddressRequest$Outbound
     | null
     | undefined;
   counterparty_bank_name?: string | null | undefined;
@@ -836,12 +979,15 @@ export const UpdateSyntheticAccountWireRequest$outboundSchema: z.ZodMiniType<
   UpdateSyntheticAccountWireRequest
 > = z.pipe(
   z.object({
-    counterpartyAddress: z.optional(z.nullable(z.lazy(() =>
-      UpdateSyntheticAccountWireCounterpartyAddressRequest$outboundSchema
-    ))),
+    counterpartyAddress: z.optional(z.nullable(smartUnion([
+      z.lazy(() => UpdateSyntheticAccountStructuredAddress$outboundSchema),
+      z.lazy(() =>
+        UpdateSyntheticAccountCounterpartyAddressUnstructuredAddress$outboundSchema
+      ),
+    ]))),
     counterpartyName: z.optional(z.string()),
     counterpartyBankAddress: z.optional(z.nullable(z.lazy(() =>
-      UpdateSyntheticAccountCounterpartyBankAddressRequest$outboundSchema
+      UpdateSyntheticAccountCounterpartyBankAddressUnstructuredAddressRequest$outboundSchema
     ))),
     counterpartyBankName: z.optional(z.nullable(z.string())),
   }),
@@ -1138,12 +1284,26 @@ export const UpdateSyntheticAccountWireCounterpartyAddressResponse$inboundSchema
   z.ZodMiniType<
     UpdateSyntheticAccountWireCounterpartyAddressResponse,
     unknown
-  > = z.object({
-    line1: z.optional(z.nullable(types.string())),
-    line2: z.optional(z.nullable(types.string())),
-    line3: z.optional(z.nullable(types.string())),
-    country: z.optional(z.nullable(types.string())),
-  });
+  > = z.pipe(
+    z.object({
+      line1: z.optional(z.nullable(types.string())),
+      line2: z.optional(z.nullable(types.string())),
+      line3: z.optional(z.nullable(types.string())),
+      building_number: z.optional(z.nullable(types.string())),
+      street_name: z.optional(z.nullable(types.string())),
+      city: z.optional(z.nullable(types.string())),
+      state: z.optional(z.nullable(types.string())),
+      postal_code: z.optional(z.nullable(types.string())),
+      country: z.optional(z.nullable(types.string())),
+    }),
+    z.transform((v) => {
+      return remap$(v, {
+        "building_number": "buildingNumber",
+        "street_name": "streetName",
+        "postal_code": "postalCode",
+      });
+    }),
+  );
 
 export function updateSyntheticAccountWireCounterpartyAddressResponseFromJSON(
   jsonString: string,
@@ -1162,30 +1322,28 @@ export function updateSyntheticAccountWireCounterpartyAddressResponseFromJSON(
 }
 
 /** @internal */
-export const UpdateSyntheticAccountCounterpartyBankAddressResponse$inboundSchema:
-  z.ZodMiniType<
-    UpdateSyntheticAccountCounterpartyBankAddressResponse,
-    unknown
-  > = z.object({
-    line1: z.optional(z.nullable(types.string())),
-    line2: z.optional(z.nullable(types.string())),
-    line3: z.optional(z.nullable(types.string())),
-    country: z.optional(z.nullable(types.string())),
-  });
+export const UpdateSyntheticAccountUnstructuredAddressResponse$inboundSchema:
+  z.ZodMiniType<UpdateSyntheticAccountUnstructuredAddressResponse, unknown> = z
+    .object({
+      line1: z.optional(z.nullable(types.string())),
+      line2: z.optional(z.nullable(types.string())),
+      line3: z.optional(z.nullable(types.string())),
+      country: z.optional(z.nullable(types.string())),
+    });
 
-export function updateSyntheticAccountCounterpartyBankAddressResponseFromJSON(
+export function updateSyntheticAccountUnstructuredAddressResponseFromJSON(
   jsonString: string,
 ): SafeParseResult<
-  UpdateSyntheticAccountCounterpartyBankAddressResponse,
+  UpdateSyntheticAccountUnstructuredAddressResponse,
   SDKValidationError
 > {
   return safeParse(
     jsonString,
     (x) =>
-      UpdateSyntheticAccountCounterpartyBankAddressResponse$inboundSchema.parse(
+      UpdateSyntheticAccountUnstructuredAddressResponse$inboundSchema.parse(
         JSON.parse(x),
       ),
-    `Failed to parse 'UpdateSyntheticAccountCounterpartyBankAddressResponse' from JSON`,
+    `Failed to parse 'UpdateSyntheticAccountUnstructuredAddressResponse' from JSON`,
   );
 }
 
@@ -1200,7 +1358,7 @@ export const UpdateSyntheticAccountWireResponse$inboundSchema: z.ZodMiniType<
     ))),
     counterparty_name: types.optional(types.string()),
     counterparty_bank_address: z.optional(z.nullable(z.lazy(() =>
-      UpdateSyntheticAccountCounterpartyBankAddressResponse$inboundSchema
+      UpdateSyntheticAccountUnstructuredAddressResponse$inboundSchema
     ))),
     counterparty_bank_name: z.optional(z.nullable(types.string())),
   }),

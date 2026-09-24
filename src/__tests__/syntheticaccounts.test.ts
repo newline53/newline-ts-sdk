@@ -706,3 +706,146 @@ test("Syntheticaccounts Get Synthetic Account Closing Balance", async () => {
   });
   expect(result).toBeDefined();
 });
+
+test("Syntheticaccounts Create Synthetic Account Wire Synthetic Account Structured", async () => {
+  const testHttpClient = createTestHTTPClient(
+    "createSyntheticAccount-wire_synthetic_account_structured",
+  );
+
+  const newlineSDK = new NewlineSDK({
+    serverURL: process.env["TEST_SERVER_URL"] ?? "http://localhost:18080",
+    security: {
+      programUid: "NEWLINE_PROGRAM_UID",
+      hmacKey: "NEWLINE_HMAC_KEY",
+    },
+    httpClient: testHttpClient,
+  });
+
+  const result = await newlineSDK.syntheticAccounts.create({
+    externalUid: "partner-generated-id",
+    name: "New Resource Name",
+    poolUid: "kaxHFJnWvJxRJZxq",
+    syntheticAccountTypeUid: "fRMwt6H14ovFUz1s",
+    routingNumber: "123456789",
+    accountNumber: "123456789012",
+    externalProcessorToken:
+      "processor-sandbox-96d86f35-ef58-4e4a-826f-4870b5d677f2",
+    ach: {
+      accountType: "checking",
+      counterpartyName: "Thelma's Flooring LLC",
+    },
+    instantPayment: {
+      counterpartyAddress: {
+        streetNumber: "123abc",
+        street1: "Abc St.",
+        street2: "Suite 4A",
+        city: "Chicago",
+        state: "IL",
+        postalCode: "60301",
+        country: null,
+      },
+      counterpartyName: "Marge's Roofing Inc",
+      email: "payments@veryexcellentbusiness.com",
+      phone: "5555551212",
+    },
+    wire: {
+      counterpartyAddress: {
+        line1: "234 Xyz Rd",
+        line2: "APT 5",
+        line3: "Boston, MA 02110",
+        country: "US",
+      },
+      counterpartyName: "Marge's Roofing Inc",
+      counterpartyBankAddress: {
+        line1: "123 Abc St.",
+        line2: "Boring, Oregon 97009",
+        line3: null,
+        country: null,
+      },
+      counterpartyBankName: "East West Regional Bank",
+    },
+  });
+  expect(result).toBeDefined();
+});
+
+test("Syntheticaccounts Get Synthetic Account Wire Synthetic Account Structured", async () => {
+  const testHttpClient = createTestHTTPClient(
+    "getSyntheticAccount-wire_synthetic_account_structured",
+  );
+
+  const newlineSDK = new NewlineSDK({
+    serverURL: process.env["TEST_SERVER_URL"] ?? "http://localhost:18080",
+    security: {
+      programUid: "NEWLINE_PROGRAM_UID",
+      hmacKey: "NEWLINE_HMAC_KEY",
+    },
+    httpClient: testHttpClient,
+  });
+
+  const result = await newlineSDK.syntheticAccounts.get({
+    uid: "<id>",
+  });
+  expect(result).toBeDefined();
+});
+
+test("Syntheticaccounts Update Synthetic Account Wire Synthetic Account Structured", async () => {
+  const testHttpClient = createTestHTTPClient(
+    "updateSyntheticAccount-wire_synthetic_account_structured",
+  );
+
+  const newlineSDK = new NewlineSDK({
+    serverURL: process.env["TEST_SERVER_URL"] ?? "http://localhost:18080",
+    security: {
+      programUid: "NEWLINE_PROGRAM_UID",
+      hmacKey: "NEWLINE_HMAC_KEY",
+    },
+    httpClient: testHttpClient,
+  });
+
+  const result = await newlineSDK.syntheticAccounts.update({
+    uid: "<id>",
+    body: {
+      externalUid: "partner-generated-id",
+      name: "New Resource Name",
+      poolUid: "kaxHFJnWvJxRJZxq",
+      syntheticAccountTypeUid: "fRMwt6H14ovFUz1s",
+      routingNumber: "123456789",
+      accountNumber: "123456789012",
+      ach: {
+        accountType: "checking",
+        counterpartyName: "Thelma's Flooring LLC",
+      },
+      instantPayment: {
+        counterpartyAddress: {
+          streetNumber: "123abc",
+          street1: "Abc St.",
+          street2: "Suite 4A",
+          city: "Chicago",
+          state: "IL",
+          postalCode: "60301",
+          country: null,
+        },
+        counterpartyName: "Marge's Roofing Inc",
+        email: "payments@veryexcellentbusiness.com",
+        phone: "5555551212",
+      },
+      wire: {
+        counterpartyAddress: {
+          line1: "234 Xyz Rd",
+          line2: "APT 5",
+          line3: "Boston, MA 02110",
+          country: "US",
+        },
+        counterpartyName: "Marge's Roofing Inc",
+        counterpartyBankAddress: {
+          line1: "123 Abc St.",
+          line2: "Boring, Oregon 97009",
+          line3: null,
+          country: null,
+        },
+        counterpartyBankName: "East West Regional Bank",
+      },
+    },
+  });
+  expect(result).toBeDefined();
+});

@@ -165,6 +165,34 @@ export type GetTransactionsUidAuthorization = {
 };
 
 /**
+ * An optional code supplied when an instant payment Transfer is initiated, indicating the kind of transaction being sent. If supplied, it must be one of the approved codes listed below, otherwise the Transfer is rejected. Omit the field or send an empty string to leave it unset; when unset it is returned as an empty string. Only applies to Newline initiated instant payments; it is not populated for received instant payments.
+ *
+ * @remarks
+ */
+export const GetTransactionsUidPurposeOfPayment = {
+  Nows: "NOWS",
+  Gdds: "GDDS",
+  Scve: "SCVE",
+  Insc: "INSC",
+  Insm: "INSM",
+  Invs: "INVS",
+  Payr: "PAYR",
+  Ubil: "UBIL",
+  Pdep: "PDEP",
+  Acct: "ACCT",
+  Cblk: "CBLK",
+  Mp2P: "MP2P",
+} as const;
+/**
+ * An optional code supplied when an instant payment Transfer is initiated, indicating the kind of transaction being sent. If supplied, it must be one of the approved codes listed below, otherwise the Transfer is rejected. Omit the field or send an empty string to leave it unset; when unset it is returned as an empty string. Only applies to Newline initiated instant payments; it is not populated for received instant payments.
+ *
+ * @remarks
+ */
+export type GetTransactionsUidPurposeOfPayment = OpenEnum<
+  typeof GetTransactionsUidPurposeOfPayment
+>;
+
+/**
  * Name and address of the Transmitter.
  *
  * @remarks
@@ -204,7 +232,7 @@ export type GetTransactionsUidInstantPaymentTransmitter = {
  *
  * @remarks
  */
-export type GetTransactionsUidInstantPaymentCounterpartyBankAddress = {
+export type GetTransactionsUidCounterpartyBankAddress = {
   /**
    * Building number for counterparty address. Alphanumeric only.
    */
@@ -326,6 +354,12 @@ export type GetTransactionsUidInstantPayment = {
    */
   paymentId?: string | undefined;
   /**
+   * An optional code supplied when an instant payment Transfer is initiated, indicating the kind of transaction being sent. If supplied, it must be one of the approved codes listed below, otherwise the Transfer is rejected. Omit the field or send an empty string to leave it unset; when unset it is returned as an empty string. Only applies to Newline initiated instant payments; it is not populated for received instant payments.
+   *
+   * @remarks
+   */
+  purposeOfPayment?: GetTransactionsUidPurposeOfPayment | null | undefined;
+  /**
    * This field is currently always null.
    *
    * @remarks
@@ -357,7 +391,7 @@ export type GetTransactionsUidInstantPayment = {
    * @remarks
    */
   counterpartyBankAddress?:
-    | GetTransactionsUidInstantPaymentCounterpartyBankAddress
+    | GetTransactionsUidCounterpartyBankAddress
     | null
     | undefined;
   /**
@@ -382,7 +416,7 @@ export type GetTransactionsUidInstantPayment = {
  *
  * @remarks
  */
-export type GetTransactionsUidWireCounterpartyBankAddress = {
+export type GetTransactionsUidCounterpartyBankAddressUnstructuredAddress = {
   /**
    * Part of an unparsed address. Data may vary or be null.
    */
@@ -404,17 +438,44 @@ export type GetTransactionsUidWireCounterpartyBankAddress = {
  */
 export type GetTransactionsUidWireCounterpartyAddress = {
   /**
-   * Part of an unparsed address. Data may vary or be null.
+   * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
    */
-  line1?: string | undefined;
+  line1?: string | null | undefined;
   /**
-   * Part of an unparsed address. Data may vary or be null.
+   * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
    */
-  line2?: string | undefined;
+  line2?: string | null | undefined;
   /**
-   * Part of an unparsed address. Data may vary or be null.
+   * Optional 32 characters. Note that this length is shorter than the other lines. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
    */
-  line3?: string | undefined;
+  line3?: string | null | undefined;
+  /**
+   * Parsed building or house number. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  buildingNumber?: string | null | undefined;
+  /**
+   * Parsed street name. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  streetName?: string | null | undefined;
+  /**
+   * City. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  city?: string | null | undefined;
+  /**
+   * State or province. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  state?: string | null | undefined;
+  /**
+   * US ZIP code (5-digit) or ZIP+4.
+   */
+  postalCode?: string | null | undefined;
+  country?: string | null | undefined;
 };
 
 /**
@@ -422,7 +483,7 @@ export type GetTransactionsUidWireCounterpartyAddress = {
  *
  * @remarks
  */
-export type GetTransactionsUidIntermediaryBankAddress = {
+export type GetTransactionsUidIntermediaryBankAddressUnstructuredAddress = {
   /**
    * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
    *
@@ -462,7 +523,7 @@ export type GetTransactionsUidWire = {
    * @remarks
    */
   counterpartyBankAddress?:
-    | GetTransactionsUidWireCounterpartyBankAddress
+    | GetTransactionsUidCounterpartyBankAddressUnstructuredAddress
     | null
     | undefined;
   /**
@@ -492,7 +553,7 @@ export type GetTransactionsUidWire = {
    * @remarks
    */
   intermediaryBankAddress?:
-    | GetTransactionsUidIntermediaryBankAddress
+    | GetTransactionsUidIntermediaryBankAddressUnstructuredAddress
     | undefined;
   /**
    * Name of the intermediary bank, when applicable. For wires only. Maximum 35 characters.
@@ -1175,6 +1236,12 @@ export function getTransactionsUidAuthorizationFromJSON(
 }
 
 /** @internal */
+export const GetTransactionsUidPurposeOfPayment$inboundSchema: z.ZodMiniType<
+  GetTransactionsUidPurposeOfPayment,
+  unknown
+> = openEnums.inboundSchema(GetTransactionsUidPurposeOfPayment);
+
+/** @internal */
 export const GetTransactionsUidInstantPaymentTransmitter$inboundSchema:
   z.ZodMiniType<GetTransactionsUidInstantPaymentTransmitter, unknown> = z.pipe(
     z.object({
@@ -1211,11 +1278,8 @@ export function getTransactionsUidInstantPaymentTransmitterFromJSON(
 }
 
 /** @internal */
-export const GetTransactionsUidInstantPaymentCounterpartyBankAddress$inboundSchema:
-  z.ZodMiniType<
-    GetTransactionsUidInstantPaymentCounterpartyBankAddress,
-    unknown
-  > = z.pipe(
+export const GetTransactionsUidCounterpartyBankAddress$inboundSchema:
+  z.ZodMiniType<GetTransactionsUidCounterpartyBankAddress, unknown> = z.pipe(
     z.object({
       street_number: types.string(),
       street1: types.string(),
@@ -1233,18 +1297,19 @@ export const GetTransactionsUidInstantPaymentCounterpartyBankAddress$inboundSche
     }),
   );
 
-export function getTransactionsUidInstantPaymentCounterpartyBankAddressFromJSON(
+export function getTransactionsUidCounterpartyBankAddressFromJSON(
   jsonString: string,
 ): SafeParseResult<
-  GetTransactionsUidInstantPaymentCounterpartyBankAddress,
+  GetTransactionsUidCounterpartyBankAddress,
   SDKValidationError
 > {
   return safeParse(
     jsonString,
     (x) =>
-      GetTransactionsUidInstantPaymentCounterpartyBankAddress$inboundSchema
-        .parse(JSON.parse(x)),
-    `Failed to parse 'GetTransactionsUidInstantPaymentCounterpartyBankAddress' from JSON`,
+      GetTransactionsUidCounterpartyBankAddress$inboundSchema.parse(
+        JSON.parse(x),
+      ),
+    `Failed to parse 'GetTransactionsUidCounterpartyBankAddress' from JSON`,
   );
 }
 
@@ -1300,6 +1365,9 @@ export const GetTransactionsUidInstantPayment$inboundSchema: z.ZodMiniType<
     counterparty_bank_routing_number: types.optional(types.string()),
     counterparty_account_number_last_four: types.optional(types.string()),
     payment_id: types.optional(types.string()),
+    purpose_of_payment: z.optional(
+      z.nullable(GetTransactionsUidPurposeOfPayment$inboundSchema),
+    ),
     original_end_to_end_id: z.optional(z.nullable(types.string())),
     transmitter_name: types.optional(types.string()),
     initiating_party_name: types.optional(types.string()),
@@ -1307,7 +1375,7 @@ export const GetTransactionsUidInstantPayment$inboundSchema: z.ZodMiniType<
       z.lazy(() => GetTransactionsUidInstantPaymentTransmitter$inboundSchema),
     ),
     counterparty_bank_address: z.optional(z.nullable(z.lazy(() =>
-      GetTransactionsUidInstantPaymentCounterpartyBankAddress$inboundSchema
+      GetTransactionsUidCounterpartyBankAddress$inboundSchema
     ))),
     memo: z.optional(z.nullable(types.string())),
     counterparty_address: z.optional(z.nullable(z.lazy(() =>
@@ -1325,6 +1393,7 @@ export const GetTransactionsUidInstantPayment$inboundSchema: z.ZodMiniType<
       "counterparty_account_number_last_four":
         "counterpartyAccountNumberLastFour",
       "payment_id": "paymentId",
+      "purpose_of_payment": "purposeOfPayment",
       "original_end_to_end_id": "originalEndToEndId",
       "transmitter_name": "transmitterName",
       "initiating_party_name": "initiatingPartyName",
@@ -1346,37 +1415,53 @@ export function getTransactionsUidInstantPaymentFromJSON(
 }
 
 /** @internal */
-export const GetTransactionsUidWireCounterpartyBankAddress$inboundSchema:
-  z.ZodMiniType<GetTransactionsUidWireCounterpartyBankAddress, unknown> = z
-    .object({
-      line1: types.optional(types.string()),
-      line2: types.optional(types.string()),
-      line3: types.optional(types.string()),
-    });
+export const GetTransactionsUidCounterpartyBankAddressUnstructuredAddress$inboundSchema:
+  z.ZodMiniType<
+    GetTransactionsUidCounterpartyBankAddressUnstructuredAddress,
+    unknown
+  > = z.object({
+    line1: types.optional(types.string()),
+    line2: types.optional(types.string()),
+    line3: types.optional(types.string()),
+  });
 
-export function getTransactionsUidWireCounterpartyBankAddressFromJSON(
+export function getTransactionsUidCounterpartyBankAddressUnstructuredAddressFromJSON(
   jsonString: string,
 ): SafeParseResult<
-  GetTransactionsUidWireCounterpartyBankAddress,
+  GetTransactionsUidCounterpartyBankAddressUnstructuredAddress,
   SDKValidationError
 > {
   return safeParse(
     jsonString,
     (x) =>
-      GetTransactionsUidWireCounterpartyBankAddress$inboundSchema.parse(
-        JSON.parse(x),
-      ),
-    `Failed to parse 'GetTransactionsUidWireCounterpartyBankAddress' from JSON`,
+      GetTransactionsUidCounterpartyBankAddressUnstructuredAddress$inboundSchema
+        .parse(JSON.parse(x)),
+    `Failed to parse 'GetTransactionsUidCounterpartyBankAddressUnstructuredAddress' from JSON`,
   );
 }
 
 /** @internal */
 export const GetTransactionsUidWireCounterpartyAddress$inboundSchema:
-  z.ZodMiniType<GetTransactionsUidWireCounterpartyAddress, unknown> = z.object({
-    line1: types.optional(types.string()),
-    line2: types.optional(types.string()),
-    line3: types.optional(types.string()),
-  });
+  z.ZodMiniType<GetTransactionsUidWireCounterpartyAddress, unknown> = z.pipe(
+    z.object({
+      line1: z.optional(z.nullable(types.string())),
+      line2: z.optional(z.nullable(types.string())),
+      line3: z.optional(z.nullable(types.string())),
+      building_number: z.optional(z.nullable(types.string())),
+      street_name: z.optional(z.nullable(types.string())),
+      city: z.optional(z.nullable(types.string())),
+      state: z.optional(z.nullable(types.string())),
+      postal_code: z.optional(z.nullable(types.string())),
+      country: z.optional(z.nullable(types.string())),
+    }),
+    z.transform((v) => {
+      return remap$(v, {
+        "building_number": "buildingNumber",
+        "street_name": "streetName",
+        "postal_code": "postalCode",
+      });
+    }),
+  );
 
 export function getTransactionsUidWireCounterpartyAddressFromJSON(
   jsonString: string,
@@ -1395,27 +1480,29 @@ export function getTransactionsUidWireCounterpartyAddressFromJSON(
 }
 
 /** @internal */
-export const GetTransactionsUidIntermediaryBankAddress$inboundSchema:
-  z.ZodMiniType<GetTransactionsUidIntermediaryBankAddress, unknown> = z.object({
+export const GetTransactionsUidIntermediaryBankAddressUnstructuredAddress$inboundSchema:
+  z.ZodMiniType<
+    GetTransactionsUidIntermediaryBankAddressUnstructuredAddress,
+    unknown
+  > = z.object({
     line1: z.optional(z.nullable(types.string())),
     line2: z.optional(z.nullable(types.string())),
     line3: z.optional(z.nullable(types.string())),
     country: z.optional(z.nullable(types.string())),
   });
 
-export function getTransactionsUidIntermediaryBankAddressFromJSON(
+export function getTransactionsUidIntermediaryBankAddressUnstructuredAddressFromJSON(
   jsonString: string,
 ): SafeParseResult<
-  GetTransactionsUidIntermediaryBankAddress,
+  GetTransactionsUidIntermediaryBankAddressUnstructuredAddress,
   SDKValidationError
 > {
   return safeParse(
     jsonString,
     (x) =>
-      GetTransactionsUidIntermediaryBankAddress$inboundSchema.parse(
-        JSON.parse(x),
-      ),
-    `Failed to parse 'GetTransactionsUidIntermediaryBankAddress' from JSON`,
+      GetTransactionsUidIntermediaryBankAddressUnstructuredAddress$inboundSchema
+        .parse(JSON.parse(x)),
+    `Failed to parse 'GetTransactionsUidIntermediaryBankAddressUnstructuredAddress' from JSON`,
   );
 }
 
@@ -1427,7 +1514,7 @@ export const GetTransactionsUidWire$inboundSchema: z.ZodMiniType<
   z.object({
     counterparty_name: types.string(),
     counterparty_bank_address: z.optional(z.nullable(z.lazy(() =>
-      GetTransactionsUidWireCounterpartyBankAddress$inboundSchema
+      GetTransactionsUidCounterpartyBankAddressUnstructuredAddress$inboundSchema
     ))),
     counterparty_bank_name: z.optional(z.nullable(types.string())),
     counterparty_bank_routing_number: types.optional(types.string()),
@@ -1435,7 +1522,7 @@ export const GetTransactionsUidWire$inboundSchema: z.ZodMiniType<
       GetTransactionsUidWireCounterpartyAddress$inboundSchema
     ))),
     intermediary_bank_address: types.optional(z.lazy(() =>
-      GetTransactionsUidIntermediaryBankAddress$inboundSchema
+      GetTransactionsUidIntermediaryBankAddressUnstructuredAddress$inboundSchema
     )),
     intermediary_bank_name: types.optional(types.string()),
     intermediary_bank_routing_number: types.optional(types.string()),

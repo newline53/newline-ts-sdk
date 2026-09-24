@@ -11,7 +11,9 @@ import { NewlineError } from "./newline-error.js";
  * Creation Error
  */
 export type PostVirtualReferenceNumbersUnprocessableEntityErrorData = {
-  errors?: Array<operations.PostVirtualReferenceNumbersError> | undefined;
+  errors?:
+    | Array<operations.PostVirtualReferenceNumbersUnprocessableEntityError>
+    | undefined;
   /**
    * HTTP Status Code
    */
@@ -24,7 +26,9 @@ export type PostVirtualReferenceNumbersUnprocessableEntityErrorData = {
 export class PostVirtualReferenceNumbersUnprocessableEntityError
   extends NewlineError
 {
-  errors?: Array<operations.PostVirtualReferenceNumbersError> | undefined;
+  errors?:
+    | Array<operations.PostVirtualReferenceNumbersUnprocessableEntityError>
+    | undefined;
   /**
    * HTTP Status Code
    */
@@ -49,13 +53,58 @@ export class PostVirtualReferenceNumbersUnprocessableEntityError
   }
 }
 
+/**
+ * Bad request
+ */
+export type PostVirtualReferenceNumbersBadRequestErrorData = {
+  errors?:
+    | Array<operations.PostVirtualReferenceNumbersBadRequestError>
+    | undefined;
+  /**
+   * HTTP Status Code
+   */
+  status?: number | undefined;
+};
+
+/**
+ * Bad request
+ */
+export class PostVirtualReferenceNumbersBadRequestError extends NewlineError {
+  errors?:
+    | Array<operations.PostVirtualReferenceNumbersBadRequestError>
+    | undefined;
+  /**
+   * HTTP Status Code
+   */
+  status?: number | undefined;
+
+  /** The original data that was passed to this error instance. */
+  data$: PostVirtualReferenceNumbersBadRequestErrorData;
+
+  constructor(
+    err: PostVirtualReferenceNumbersBadRequestErrorData,
+    httpMeta: { response: Response; request: Request; body: string },
+  ) {
+    const message = "message" in err && typeof err.message === "string"
+      ? err.message
+      : `API error occurred: ${JSON.stringify(err)}`;
+    super(message, httpMeta);
+    this.data$ = err;
+    if (err.errors != null) this.errors = err.errors;
+    if (err.status != null) this.status = err.status;
+
+    this.name = "PostVirtualReferenceNumbersBadRequestError";
+  }
+}
+
 /** @internal */
 export const PostVirtualReferenceNumbersUnprocessableEntityError$inboundSchema:
   z.ZodMiniType<PostVirtualReferenceNumbersUnprocessableEntityError, unknown> =
     z.pipe(
       z.object({
         errors: types.optional(z.array(z.lazy(() =>
-          operations.PostVirtualReferenceNumbersError$inboundSchema
+          operations
+            .PostVirtualReferenceNumbersUnprocessableEntityError$inboundSchema
         ))),
         status: types.optional(types.number()),
         request$: z.custom<Request>(x =>
@@ -72,3 +121,26 @@ export const PostVirtualReferenceNumbersUnprocessableEntityError$inboundSchema:
         });
       }),
     );
+
+/** @internal */
+export const PostVirtualReferenceNumbersBadRequestError$inboundSchema:
+  z.ZodMiniType<PostVirtualReferenceNumbersBadRequestError, unknown> = z.pipe(
+    z.object({
+      errors: types.optional(z.array(z.lazy(() =>
+        operations.PostVirtualReferenceNumbersBadRequestError$inboundSchema
+      ))),
+      status: types.optional(types.number()),
+      request$: z.custom<Request>(x =>
+        x instanceof Request
+      ),
+      response$: z.custom<Response>(x => x instanceof Response),
+      body$: z.string(),
+    }),
+    z.transform((v) => {
+      return new PostVirtualReferenceNumbersBadRequestError(v, {
+        request: v.request$,
+        response: v.response$,
+        body: v.body$,
+      });
+    }),
+  );

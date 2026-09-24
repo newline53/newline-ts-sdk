@@ -336,3 +336,23 @@ test("Transactions Get /Custodial Line Items/{uid} Custodial Line Item", async (
   });
   expect(result).toBeDefined();
 });
+
+test("Transactions Get /Transactions/{uid} Wire Transaction Structured", async () => {
+  const testHttpClient = createTestHTTPClient(
+    "get_/transactions/{uid}-wire_transaction_structured",
+  );
+
+  const newlineSDK = new NewlineSDK({
+    serverURL: process.env["TEST_SERVER_URL"] ?? "http://localhost:18080",
+    security: {
+      programUid: "NEWLINE_PROGRAM_UID",
+      hmacKey: "NEWLINE_HMAC_KEY",
+    },
+    httpClient: testHttpClient,
+  });
+
+  const result = await newlineSDK.transactions.get({
+    uid: "<id>",
+  });
+  expect(result).toBeDefined();
+});

@@ -1,6 +1,6 @@
 {
   "name": "newline-ts-sdk",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "author": "Newline by Fifth Third",
   "type": "module",
   "main": "./esm/index.js",
@@ -46,7 +46,7 @@
   "scripts": {
     "test": "vitest run src --reporter=junit --outputFile=.speakeasy/reports/tests.xml --reporter=default",
     "check": "npm run test && npm run lint",
-    "lint": "oxlint --max-warnings=0 --deny-warnings src/**/*.ts src/**/*.tsx",
+    "lint": "oxlint --max-warnings=0 --deny-warnings --no-error-on-unmatched-pattern src",
     "build": "tsgo",
     "prepublishOnly": "npm run build"
   },

@@ -31,6 +31,7 @@ let value: PutVirtualReferenceNumbersUidUnlockResponse = {
     syntheticAccountUid: "Dg1EPao8XukUpHG8",
     uid: "dYTG8WAWAh5UyvY7",
     virtualReferenceNumberLastFour: "3456",
+    type: "business",
     virtualReferenceNumber: "1234567890123456",
   },
 };
