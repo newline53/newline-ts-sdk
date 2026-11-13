@@ -298,6 +298,7 @@ export const GetTransactionsDataType = {
   InitiatedWireReturn: "initiated_wire_return",
   InstantPayment: "instant_payment",
   Interest: "interest",
+  ManualInstantPaymentReturn: "manual_instant_payment_return",
   Other: "other",
   PeerToPeerTransfer: "peer_to_peer_transfer",
   Reversal: "reversal",
@@ -392,6 +393,7 @@ export const GetTransactionsPurposeOfPayment = {
   Acct: "ACCT",
   Cblk: "CBLK",
   Mp2P: "MP2P",
+  Trad: "TRAD",
 } as const;
 /**
  * An optional code supplied when an instant payment Transfer is initiated, indicating the kind of transaction being sent. If supplied, it must be one of the approved codes listed below, otherwise the Transfer is rejected. Omit the field or send an empty string to leave it unset; when unset it is returned as an empty string. Only applies to Newline initiated instant payments; it is not populated for received instant payments.
@@ -444,9 +446,9 @@ export type GetTransactionsInstantPaymentTransmitter = {
  */
 export type GetTransactionsCounterpartyBankAddress = {
   /**
-   * Building number for counterparty address. Alphanumeric only.
+   * Building number for counterparty address. Alphanumeric only. Optional.
    */
-  streetNumber: string;
+  streetNumber?: string | null | undefined;
   /**
    * Street name for counterparty address
    */
@@ -454,7 +456,7 @@ export type GetTransactionsCounterpartyBankAddress = {
   /**
    * Optional second line of street
    */
-  street2?: string | undefined;
+  street2?: string | null | undefined;
   /**
    * Maximum 35 characters
    */
@@ -468,6 +470,41 @@ export type GetTransactionsCounterpartyBankAddress = {
    */
   postalCode: string | null;
   country: string | null;
+};
+
+/**
+ * Information about the ultimate debtor (the entity on whose behalf the payment is made). Only populated if your program has enabled RTP Ultimate Debtor support.
+ */
+export type GetTransactionsUltimateDebtorInfo = {
+  /**
+   * Name of the ultimate debtor
+   */
+  ultimateDebtorName: string;
+  /**
+   * Building number. Alphanumeric only.
+   */
+  streetNumber?: string | null | undefined;
+  /**
+   * Street name
+   */
+  street1?: string | null | undefined;
+  /**
+   * Optional second line of street
+   */
+  street2?: string | null | undefined;
+  /**
+   * Maximum 35 characters
+   */
+  city?: string | null | undefined;
+  /**
+   * 2 characters. Must be a valid US state abbreviation.
+   */
+  state?: string | null | undefined;
+  /**
+   * 5-digit string. ZIP+4 is allowed.
+   */
+  postalCode?: string | null | undefined;
+  country?: string | null | undefined;
 };
 
 /**
@@ -571,6 +608,10 @@ export type GetTransactionsInstantPayment = {
     | GetTransactionsCounterpartyBankAddress
     | null
     | undefined;
+  /**
+   * Information about the ultimate debtor (the entity on whose behalf the payment is made). Only populated if your program has enabled RTP Ultimate Debtor support.
+   */
+  ultimateDebtorInfo?: GetTransactionsUltimateDebtorInfo | null | undefined;
 };
 
 /**
@@ -1077,6 +1118,10 @@ export type GetTransactionsAch = {
    */
   transferTraceId?: string | undefined;
   /**
+   * Original trace number from the ACH trace ID at the time of transaction creation.
+   */
+  originalTraceNumber?: string | undefined;
+  /**
    * Routing Number of individual or business originating the ACH transfer.
    *
    * @remarks
@@ -1488,9 +1533,9 @@ export function getTransactionsInstantPaymentTransmitterFromJSON(
 export const GetTransactionsCounterpartyBankAddress$inboundSchema:
   z.ZodMiniType<GetTransactionsCounterpartyBankAddress, unknown> = z.pipe(
     z.object({
-      street_number: types.string(),
+      street_number: z.optional(z.nullable(types.string())),
       street1: types.string(),
-      street2: types.optional(types.string()),
+      street2: z.optional(z.nullable(types.string())),
       city: types.nullable(types.string()),
       state: types.nullable(types.string()),
       postal_code: types.nullable(types.string()),
@@ -1512,6 +1557,40 @@ export function getTransactionsCounterpartyBankAddressFromJSON(
     (x) =>
       GetTransactionsCounterpartyBankAddress$inboundSchema.parse(JSON.parse(x)),
     `Failed to parse 'GetTransactionsCounterpartyBankAddress' from JSON`,
+  );
+}
+
+/** @internal */
+export const GetTransactionsUltimateDebtorInfo$inboundSchema: z.ZodMiniType<
+  GetTransactionsUltimateDebtorInfo,
+  unknown
+> = z.pipe(
+  z.object({
+    ultimate_debtor_name: types.string(),
+    street_number: z.optional(z.nullable(types.string())),
+    street1: z.optional(z.nullable(types.string())),
+    street2: z.optional(z.nullable(types.string())),
+    city: z.optional(z.nullable(types.string())),
+    state: z.optional(z.nullable(types.string())),
+    postal_code: z.optional(z.nullable(types.string())),
+    country: z.optional(z.nullable(types.string())),
+  }),
+  z.transform((v) => {
+    return remap$(v, {
+      "ultimate_debtor_name": "ultimateDebtorName",
+      "street_number": "streetNumber",
+      "postal_code": "postalCode",
+    });
+  }),
+);
+
+export function getTransactionsUltimateDebtorInfoFromJSON(
+  jsonString: string,
+): SafeParseResult<GetTransactionsUltimateDebtorInfo, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => GetTransactionsUltimateDebtorInfo$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'GetTransactionsUltimateDebtorInfo' from JSON`,
   );
 }
 
@@ -1542,6 +1621,9 @@ export const GetTransactionsInstantPayment$inboundSchema: z.ZodMiniType<
     counterparty_bank_address: z.optional(z.nullable(z.lazy(() =>
       GetTransactionsCounterpartyBankAddress$inboundSchema
     ))),
+    ultimate_debtor_info: z.optional(z.nullable(z.lazy(() =>
+      GetTransactionsUltimateDebtorInfo$inboundSchema
+    ))),
   }),
   z.transform((v) => {
     return remap$(v, {
@@ -1560,6 +1642,7 @@ export const GetTransactionsInstantPayment$inboundSchema: z.ZodMiniType<
       "initiating_party_name": "initiatingPartyName",
       "instant_payment_transmitter": "instantPaymentTransmitter",
       "counterparty_bank_address": "counterpartyBankAddress",
+      "ultimate_debtor_info": "ultimateDebtorInfo",
     });
   }),
 );
@@ -1832,6 +1915,7 @@ export const GetTransactionsAch$inboundSchema: z.ZodMiniType<
     noc_code: types.optional(types.string()),
     noc_reason: types.optional(types.string()),
     transfer_trace_id: types.optional(types.string()),
+    original_trace_number: types.optional(types.string()),
     originator_routing_number: types.optional(types.string()),
     counterparty_name: types.optional(types.string()),
     iat: types.optional(z.lazy(() => GetTransactionsIat$inboundSchema)),
@@ -1852,6 +1936,7 @@ export const GetTransactionsAch$inboundSchema: z.ZodMiniType<
       "noc_code": "nocCode",
       "noc_reason": "nocReason",
       "transfer_trace_id": "transferTraceId",
+      "original_trace_number": "originalTraceNumber",
       "originator_routing_number": "originatorRoutingNumber",
       "counterparty_name": "counterpartyName",
     });

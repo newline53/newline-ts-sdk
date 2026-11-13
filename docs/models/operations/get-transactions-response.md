@@ -77,6 +77,16 @@ let value: GetTransactionsResponse = {
             country: null,
           },
           counterpartyBankAddress: null,
+          ultimateDebtorInfo: {
+            ultimateDebtorName: "John Smith",
+            streetNumber: "123abc",
+            street1: "Abc St.",
+            street2: "Suite 4A",
+            city: "Chicago",
+            state: "IL",
+            postalCode: "60301",
+            country: null,
+          },
         },
         wire: {
           counterpartyName: "Marge's Roofing Inc",
@@ -111,6 +121,7 @@ let value: GetTransactionsResponse = {
           effectiveEntryDate: "2023-12-01",
           idNumber: "4270465600",
           transferTraceId: "A1Z2b3y4c5x6DW78",
+          originalTraceNumber: "A1Z2b3y4c5x6DW78",
           originatorRoutingNumber: "123456789",
           iat: {
             foreignExchangeIndicator: "FF",

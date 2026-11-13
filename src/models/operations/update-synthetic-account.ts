@@ -44,11 +44,14 @@ export type UpdateSyntheticAccountAchRequest = {
   counterpartyName?: string | undefined;
 };
 
+/**
+ * Address of the counterparty. If any address field is provided, street1, city, state, postal_code, and country are required. street_number and street2 are optional.
+ */
 export type UpdateSyntheticAccountInstantPaymentCounterpartyAddressRequest = {
   /**
-   * Building number for counterparty address. Alphanumeric only.
+   * Building number for counterparty address. Alphanumeric only. Optional.
    */
-  streetNumber: string;
+  streetNumber?: string | null | undefined;
   /**
    * Street name for counterparty address
    */
@@ -56,7 +59,7 @@ export type UpdateSyntheticAccountInstantPaymentCounterpartyAddressRequest = {
   /**
    * Optional second line of street
    */
-  street2?: string | undefined;
+  street2?: string | null | undefined;
   /**
    * Maximum 35 characters
    */
@@ -400,11 +403,14 @@ export type UpdateSyntheticAccountAchResponse = {
   counterpartyName?: string | undefined;
 };
 
+/**
+ * Address of the counterparty. If any address field is provided, street1, city, state, postal_code, and country are required. street_number and street2 are optional.
+ */
 export type UpdateSyntheticAccountInstantPaymentCounterpartyAddressResponse = {
   /**
-   * Building number for counterparty address. Alphanumeric only.
+   * Building number for counterparty address. Alphanumeric only. Optional.
    */
-  streetNumber: string;
+  streetNumber?: string | null | undefined;
   /**
    * Street name for counterparty address
    */
@@ -412,7 +418,7 @@ export type UpdateSyntheticAccountInstantPaymentCounterpartyAddressResponse = {
   /**
    * Optional second line of street
    */
-  street2?: string | undefined;
+  street2?: string | null | undefined;
   /**
    * Maximum 35 characters
    */
@@ -733,9 +739,9 @@ export function updateSyntheticAccountAchRequestToJSON(
 /** @internal */
 export type UpdateSyntheticAccountInstantPaymentCounterpartyAddressRequest$Outbound =
   {
-    street_number: string;
+    street_number?: string | null | undefined;
     street1: string;
-    street2?: string | undefined;
+    street2?: string | null | undefined;
     city: string | null;
     state: string | null;
     postal_code: string | null;
@@ -749,9 +755,9 @@ export const UpdateSyntheticAccountInstantPaymentCounterpartyAddressRequest$outb
     UpdateSyntheticAccountInstantPaymentCounterpartyAddressRequest
   > = z.pipe(
     z.object({
-      streetNumber: z.string(),
+      streetNumber: z.optional(z.nullable(z.string())),
       street1: z.string(),
-      street2: z.optional(z.string()),
+      street2: z.optional(z.nullable(z.string())),
       city: z.nullable(z.string()),
       state: z.nullable(z.string()),
       postalCode: z.nullable(z.string()),
@@ -1213,9 +1219,9 @@ export const UpdateSyntheticAccountInstantPaymentCounterpartyAddressResponse$inb
     unknown
   > = z.pipe(
     z.object({
-      street_number: types.string(),
+      street_number: z.optional(z.nullable(types.string())),
       street1: types.string(),
-      street2: types.optional(types.string()),
+      street2: z.optional(z.nullable(types.string())),
       city: types.nullable(types.string()),
       state: types.nullable(types.string()),
       postal_code: types.nullable(types.string()),

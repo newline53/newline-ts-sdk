@@ -95,11 +95,14 @@ export type GetSyntheticAccountAch = {
   counterpartyName?: string | undefined;
 };
 
+/**
+ * Address of the counterparty. If any address field is provided, street1, city, state, postal_code, and country are required. street_number and street2 are optional.
+ */
 export type GetSyntheticAccountInstantPaymentCounterpartyAddress = {
   /**
-   * Building number for counterparty address. Alphanumeric only.
+   * Building number for counterparty address. Alphanumeric only. Optional.
    */
-  streetNumber: string;
+  streetNumber?: string | null | undefined;
   /**
    * Street name for counterparty address
    */
@@ -107,7 +110,7 @@ export type GetSyntheticAccountInstantPaymentCounterpartyAddress = {
   /**
    * Optional second line of street
    */
-  street2?: string | undefined;
+  street2?: string | null | undefined;
   /**
    * Maximum 35 characters
    */
@@ -488,9 +491,9 @@ export const GetSyntheticAccountInstantPaymentCounterpartyAddress$inboundSchema:
   z.ZodMiniType<GetSyntheticAccountInstantPaymentCounterpartyAddress, unknown> =
     z.pipe(
       z.object({
-        street_number: types.string(),
+        street_number: z.optional(z.nullable(types.string())),
         street1: types.string(),
-        street2: types.optional(types.string()),
+        street2: z.optional(z.nullable(types.string())),
         city: types.nullable(types.string()),
         state: types.nullable(types.string()),
         postal_code: types.nullable(types.string()),

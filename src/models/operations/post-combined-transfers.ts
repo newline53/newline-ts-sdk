@@ -44,11 +44,14 @@ export type SyntheticAccountAch = {
   counterpartyName: string;
 };
 
+/**
+ * Address of the counterparty. If any address field is provided, street1, city, state, postal_code, and country are required. street_number and street2 are optional.
+ */
 export type PostCombinedTransfersInstantPaymentCounterpartyAddress = {
   /**
-   * Building number for counterparty address. Alphanumeric only.
+   * Building number for counterparty address. Alphanumeric only. Optional.
    */
-  streetNumber: string;
+  streetNumber?: string | null | undefined;
   /**
    * Street name for counterparty address
    */
@@ -56,7 +59,7 @@ export type PostCombinedTransfersInstantPaymentCounterpartyAddress = {
   /**
    * Optional second line of street
    */
-  street2?: string | undefined;
+  street2?: string | null | undefined;
   /**
    * Maximum 35 characters
    */
@@ -83,7 +86,9 @@ export type SyntheticAccountInstantPayment = {
    *
    * @remarks
    */
-  counterpartyAddress: PostCombinedTransfersInstantPaymentCounterpartyAddress;
+  counterpartyAddress?:
+    | PostCombinedTransfersInstantPaymentCounterpartyAddress
+    | undefined;
   /**
    * Name of the business or individual who owns the counterparty Account.
    *
@@ -499,6 +504,7 @@ export const PostCombinedTransfersPurposeOfPayment = {
   Acct: "ACCT",
   Cblk: "CBLK",
   Mp2P: "MP2P",
+  Trad: "TRAD",
 } as const;
 /**
  * An optional code supplied when an instant payment Transfer is initiated, indicating the kind of transaction being sent. If supplied, it must be one of the approved codes listed below, otherwise the Transfer is rejected. Omit the field or send an empty string to leave it unset; when unset it is returned as an empty string. Only applies to Newline initiated instant payments; it is not populated for received instant payments.
@@ -927,9 +933,9 @@ export function syntheticAccountAchToJSON(
 
 /** @internal */
 export type PostCombinedTransfersInstantPaymentCounterpartyAddress$Outbound = {
-  street_number: string;
+  street_number?: string | null | undefined;
   street1: string;
-  street2?: string | undefined;
+  street2?: string | null | undefined;
   city: string | null;
   state: string | null;
   postal_code: string | null;
@@ -943,9 +949,9 @@ export const PostCombinedTransfersInstantPaymentCounterpartyAddress$outboundSche
     PostCombinedTransfersInstantPaymentCounterpartyAddress
   > = z.pipe(
     z.object({
-      streetNumber: z.string(),
+      streetNumber: z.optional(z.nullable(z.string())),
       street1: z.string(),
-      street2: z.optional(z.string()),
+      street2: z.optional(z.nullable(z.string())),
       city: z.nullable(z.string()),
       state: z.nullable(z.string()),
       postalCode: z.nullable(z.string()),
@@ -972,8 +978,9 @@ export function postCombinedTransfersInstantPaymentCounterpartyAddressToJSON(
 
 /** @internal */
 export type SyntheticAccountInstantPayment$Outbound = {
-  counterparty_address:
-    PostCombinedTransfersInstantPaymentCounterpartyAddress$Outbound;
+  counterparty_address?:
+    | PostCombinedTransfersInstantPaymentCounterpartyAddress$Outbound
+    | undefined;
   counterparty_name: string;
   email?: string | null | undefined;
   phone?: string | null | undefined;
@@ -985,9 +992,9 @@ export const SyntheticAccountInstantPayment$outboundSchema: z.ZodMiniType<
   SyntheticAccountInstantPayment
 > = z.pipe(
   z.object({
-    counterpartyAddress: z.lazy(() =>
+    counterpartyAddress: z.optional(z.lazy(() =>
       PostCombinedTransfersInstantPaymentCounterpartyAddress$outboundSchema
-    ),
+    )),
     counterpartyName: z.string(),
     email: z.optional(z.nullable(z.string())),
     phone: z.optional(z.nullable(z.string())),

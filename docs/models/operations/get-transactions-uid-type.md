@@ -16,5 +16,5 @@ let value: GetTransactionsUidType = "ach";
 ## Values
 
 ```typescript
-"ach" | "ach_return" | "atm_withdrawal" | "book_transfer" | "card_load" | "card_purchase" | "card_refund" | "cash_load" | "corporate_action" | "credit" | "denied_authorization" | "dispute" | "fee" | "initiated_ach_return" | "initiated_ach_reversal" | "initiated_wire_return" | "instant_payment" | "interest" | "other" | "peer_to_peer_transfer" | "reversal" | "reversed_transfer" | "set_account_balance" | "wire" | Unrecognized<string>
+"ach" | "ach_return" | "atm_withdrawal" | "book_transfer" | "card_load" | "card_purchase" | "card_refund" | "cash_load" | "corporate_action" | "credit" | "denied_authorization" | "dispute" | "fee" | "initiated_ach_return" | "initiated_ach_reversal" | "initiated_wire_return" | "instant_payment" | "interest" | "manual_instant_payment_return" | "other" | "peer_to_peer_transfer" | "reversal" | "reversed_transfer" | "set_account_balance" | "wire" | Unrecognized<string>
 ```

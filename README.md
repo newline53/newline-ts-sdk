@@ -609,7 +609,7 @@ import { NewlineSDK } from "newline-ts-sdk";
 const sdk = new NewlineSDK({ debugLogger: console });
 ```
 
-You can also enable a default debug logger by setting an environment variable `NEWLINE_DEBUG` to true.
+You can also enable a default debug logger by setting an environment variable `NEWLINE_DEBUG` to `true`, `1`, `yes` or `on` (case-insensitive). Any other value leaves it off.
 <!-- End Debugging [debug] -->
 
 <!-- Placeholder for Future Speakeasy SDK Sections -->

@@ -16,5 +16,5 @@ let value: GetTransactionsPurposeOfPayment = "PAYR";
 ## Values
 
 ```typescript
-"NOWS" | "GDDS" | "SCVE" | "INSC" | "INSM" | "INVS" | "PAYR" | "UBIL" | "PDEP" | "ACCT" | "CBLK" | "MP2P" | Unrecognized<string>
+"NOWS" | "GDDS" | "SCVE" | "INSC" | "INSM" | "INVS" | "PAYR" | "UBIL" | "PDEP" | "ACCT" | "CBLK" | "MP2P" | "TRAD" | Unrecognized<string>
 ```

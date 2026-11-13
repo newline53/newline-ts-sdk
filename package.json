@@ -1,6 +1,6 @@
 {
   "name": "newline-ts-sdk",
-  "version": "0.10.0",
+  "version": "0.10.8",
   "author": "Newline by Fifth Third",
   "type": "module",
   "main": "./esm/index.js",
@@ -61,6 +61,6 @@
     "vitest": "^3.2.6"
   },
   "dependencies": {
-    "zod": "^3.25.65 || ^4.0.0"
+    "zod": "^3.25.65 || ^4.6.6"
   }
 }

@@ -44,11 +44,14 @@ export type CreateSyntheticAccountAchRequest = {
   counterpartyName: string;
 };
 
+/**
+ * Address of the counterparty. If any address field is provided, street1, city, state, postal_code, and country are required. street_number and street2 are optional.
+ */
 export type CreateSyntheticAccountInstantPaymentCounterpartyAddressRequest = {
   /**
-   * Building number for counterparty address. Alphanumeric only.
+   * Building number for counterparty address. Alphanumeric only. Optional.
    */
-  streetNumber: string;
+  streetNumber?: string | null | undefined;
   /**
    * Street name for counterparty address
    */
@@ -56,7 +59,7 @@ export type CreateSyntheticAccountInstantPaymentCounterpartyAddressRequest = {
   /**
    * Optional second line of street
    */
-  street2?: string | undefined;
+  street2?: string | null | undefined;
   /**
    * Maximum 35 characters
    */
@@ -83,8 +86,9 @@ export type CreateSyntheticAccountInstantPaymentRequest = {
    *
    * @remarks
    */
-  counterpartyAddress:
-    CreateSyntheticAccountInstantPaymentCounterpartyAddressRequest;
+  counterpartyAddress?:
+    | CreateSyntheticAccountInstantPaymentCounterpartyAddressRequest
+    | undefined;
   /**
    * Name of the business or individual who owns the counterparty Account.
    *
@@ -394,11 +398,14 @@ export type CreateSyntheticAccountAchResponse = {
   counterpartyName?: string | undefined;
 };
 
+/**
+ * Address of the counterparty. If any address field is provided, street1, city, state, postal_code, and country are required. street_number and street2 are optional.
+ */
 export type CreateSyntheticAccountInstantPaymentCounterpartyAddressResponse = {
   /**
-   * Building number for counterparty address. Alphanumeric only.
+   * Building number for counterparty address. Alphanumeric only. Optional.
    */
-  streetNumber: string;
+  streetNumber?: string | null | undefined;
   /**
    * Street name for counterparty address
    */
@@ -406,7 +413,7 @@ export type CreateSyntheticAccountInstantPaymentCounterpartyAddressResponse = {
   /**
    * Optional second line of street
    */
-  street2?: string | undefined;
+  street2?: string | null | undefined;
   /**
    * Maximum 35 characters
    */
@@ -725,9 +732,9 @@ export function createSyntheticAccountAchRequestToJSON(
 /** @internal */
 export type CreateSyntheticAccountInstantPaymentCounterpartyAddressRequest$Outbound =
   {
-    street_number: string;
+    street_number?: string | null | undefined;
     street1: string;
-    street2?: string | undefined;
+    street2?: string | null | undefined;
     city: string | null;
     state: string | null;
     postal_code: string | null;
@@ -741,9 +748,9 @@ export const CreateSyntheticAccountInstantPaymentCounterpartyAddressRequest$outb
     CreateSyntheticAccountInstantPaymentCounterpartyAddressRequest
   > = z.pipe(
     z.object({
-      streetNumber: z.string(),
+      streetNumber: z.optional(z.nullable(z.string())),
       street1: z.string(),
-      street2: z.optional(z.string()),
+      street2: z.optional(z.nullable(z.string())),
       city: z.nullable(z.string()),
       state: z.nullable(z.string()),
       postalCode: z.nullable(z.string()),
@@ -769,8 +776,9 @@ export function createSyntheticAccountInstantPaymentCounterpartyAddressRequestTo
 
 /** @internal */
 export type CreateSyntheticAccountInstantPaymentRequest$Outbound = {
-  counterparty_address:
-    CreateSyntheticAccountInstantPaymentCounterpartyAddressRequest$Outbound;
+  counterparty_address?:
+    | CreateSyntheticAccountInstantPaymentCounterpartyAddressRequest$Outbound
+    | undefined;
   counterparty_name: string;
   email?: string | null | undefined;
   phone?: string | null | undefined;
@@ -783,9 +791,9 @@ export const CreateSyntheticAccountInstantPaymentRequest$outboundSchema:
     CreateSyntheticAccountInstantPaymentRequest
   > = z.pipe(
     z.object({
-      counterpartyAddress: z.lazy(() =>
+      counterpartyAddress: z.optional(z.lazy(() =>
         CreateSyntheticAccountInstantPaymentCounterpartyAddressRequest$outboundSchema
-      ),
+      )),
       counterpartyName: z.string(),
       email: z.optional(z.nullable(z.string())),
       phone: z.optional(z.nullable(z.string())),
@@ -1180,9 +1188,9 @@ export const CreateSyntheticAccountInstantPaymentCounterpartyAddressResponse$inb
     unknown
   > = z.pipe(
     z.object({
-      street_number: types.string(),
+      street_number: z.optional(z.nullable(types.string())),
       street1: types.string(),
-      street2: types.optional(types.string()),
+      street2: z.optional(z.nullable(types.string())),
       city: types.nullable(types.string()),
       state: types.nullable(types.string()),
       postal_code: types.nullable(types.string()),
