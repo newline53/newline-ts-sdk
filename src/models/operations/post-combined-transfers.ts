@@ -15,15 +15,15 @@ import { SDKValidationError } from "../errors/sdk-validation-error.js";
 /**
  * The type of ACH account
  */
-export const PostCombinedTransfersAccountType = {
+export const PostCombinedTransfersAccountTypeRequest = {
   Checking: "checking",
   Savings: "savings",
 } as const;
 /**
  * The type of ACH account
  */
-export type PostCombinedTransfersAccountType = ClosedEnum<
-  typeof PostCombinedTransfersAccountType
+export type PostCombinedTransfersAccountTypeRequest = ClosedEnum<
+  typeof PostCombinedTransfersAccountTypeRequest
 >;
 
 /**
@@ -31,11 +31,11 @@ export type PostCombinedTransfersAccountType = ClosedEnum<
  *
  * @remarks
  */
-export type SyntheticAccountAch = {
+export type SyntheticAccountAchRequest = {
   /**
    * The type of ACH account
    */
-  accountType: PostCombinedTransfersAccountType;
+  accountType: PostCombinedTransfersAccountTypeRequest;
   /**
    * Name of the business or individual who owns the external account. Conditional maximum character length: for all newline supported SEC codes other than CIE, the counterparty_name can be 22 characters. For CIE SEC codes, the counterparty_name can be up to 15 characters.
    *
@@ -47,7 +47,7 @@ export type SyntheticAccountAch = {
 /**
  * Address of the counterparty. If any address field is provided, street1, city, state, postal_code, and country are required. street_number and street2 are optional.
  */
-export type PostCombinedTransfersInstantPaymentCounterpartyAddress = {
+export type PostCombinedTransfersInstantPaymentCounterpartyAddressRequest = {
   /**
    * Building number for counterparty address. Alphanumeric only. Optional.
    */
@@ -80,14 +80,14 @@ export type PostCombinedTransfersInstantPaymentCounterpartyAddress = {
  *
  * @remarks
  */
-export type SyntheticAccountInstantPayment = {
+export type SyntheticAccountInstantPaymentRequest = {
   /**
    * Address of the business or individual who owns the external account.
    *
    * @remarks
    */
   counterpartyAddress?:
-    | PostCombinedTransfersInstantPaymentCounterpartyAddress
+    | PostCombinedTransfersInstantPaymentCounterpartyAddressRequest
     | undefined;
   /**
    * Name of the business or individual who owns the counterparty Account.
@@ -178,34 +178,35 @@ export type PostCombinedTransfersCounterpartyAddressUnion =
  *
  * @remarks
  */
-export type SyntheticAccountCounterpartyBankAddressUnstructuredAddress = {
-  /**
-   * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
-   *
-   * @remarks
-   */
-  line1?: string | null | undefined;
-  /**
-   * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
-   *
-   * @remarks
-   */
-  line2?: string | null | undefined;
-  /**
-   * Optional 32 characters. Note that this length is shorter than the other lines. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
-   *
-   * @remarks
-   */
-  line3?: string | null | undefined;
-  country?: string | null | undefined;
-};
+export type SyntheticAccountCounterpartyBankAddressUnstructuredAddressRequest =
+  {
+    /**
+     * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+     *
+     * @remarks
+     */
+    line1?: string | null | undefined;
+    /**
+     * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+     *
+     * @remarks
+     */
+    line2?: string | null | undefined;
+    /**
+     * Optional 32 characters. Note that this length is shorter than the other lines. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+     *
+     * @remarks
+     */
+    line3?: string | null | undefined;
+    country?: string | null | undefined;
+  };
 
 /**
  * Contains wire-specific information. Only populated if the Synthetic Account is in the `wire_external` category.
  *
  * @remarks
  */
-export type SyntheticAccountWire = {
+export type SyntheticAccountWireRequest = {
   /**
    * Address of the business or individual who owns the external account. The accepted format depends on your program's wire address configuration (`unstructured`, `structured`, or `both`). Unstructured format uses `line1`/`line2`/`line3`/`country`. Structured format uses `building_number`/`street_name`/`city`/`postal_code`/`state`/`country` (with `city` and `country` required).
    *
@@ -228,7 +229,7 @@ export type SyntheticAccountWire = {
    * @remarks
    */
   counterpartyBankAddress?:
-    | SyntheticAccountCounterpartyBankAddressUnstructuredAddress
+    | SyntheticAccountCounterpartyBankAddressUnstructuredAddressRequest
     | null
     | undefined;
   /**
@@ -282,19 +283,19 @@ export type SyntheticAccountRequest = {
    *
    * @remarks
    */
-  ach?: SyntheticAccountAch | undefined;
+  ach?: SyntheticAccountAchRequest | undefined;
   /**
    * Contains Instant Payment-specific information. Only populated if the Synthetic Account is in the `instant_payment_external` category.
    *
    * @remarks
    */
-  instantPayment?: SyntheticAccountInstantPayment | undefined;
+  instantPayment?: SyntheticAccountInstantPaymentRequest | undefined;
   /**
    * Contains wire-specific information. Only populated if the Synthetic Account is in the `wire_external` category.
    *
    * @remarks
    */
-  wire?: SyntheticAccountWire | undefined;
+  wire?: SyntheticAccountWireRequest | undefined;
 };
 
 /**
@@ -302,7 +303,7 @@ export type SyntheticAccountRequest = {
  *
  * @remarks
  */
-export const PostCombinedTransfersInitiatorType = {
+export const PostCombinedTransfersInitiatorTypeRequest = {
   Customer: "customer",
   Transmitter: "transmitter",
 } as const;
@@ -311,29 +312,30 @@ export const PostCombinedTransfersInitiatorType = {
  *
  * @remarks
  */
-export type PostCombinedTransfersInitiatorType = ClosedEnum<
-  typeof PostCombinedTransfersInitiatorType
+export type PostCombinedTransfersInitiatorTypeRequest = ClosedEnum<
+  typeof PostCombinedTransfersInitiatorTypeRequest
 >;
 
 /**
- * Standard Entry Class (SEC) code. Newline supports the following SEC codes: CCD, CIE, PPD, TEL, WEB. For more details, refer to our ACH guide's [section](https://developers.newline53.com/docs/ach#standard-entry-class-sec-codes) on SEC code use.
+ * Standard Entry Class (SEC) code. Newline supports the following SEC codes: CCD, CIE, PPD, TEL, WEB, IAT. For more details, refer to our ACH guide's [section](https://developers.newline53.com/docs/ach#standard-entry-class-sec-codes) on SEC code use.
  *
  * @remarks
  */
-export const PostCombinedTransfersSecCode = {
+export const PostCombinedTransfersSecCodeRequest = {
   Ccd: "CCD",
   Cie: "CIE",
   Ppd: "PPD",
   Tel: "TEL",
   Web: "WEB",
+  Iat: "IAT",
 } as const;
 /**
- * Standard Entry Class (SEC) code. Newline supports the following SEC codes: CCD, CIE, PPD, TEL, WEB. For more details, refer to our ACH guide's [section](https://developers.newline53.com/docs/ach#standard-entry-class-sec-codes) on SEC code use.
+ * Standard Entry Class (SEC) code. Newline supports the following SEC codes: CCD, CIE, PPD, TEL, WEB, IAT. For more details, refer to our ACH guide's [section](https://developers.newline53.com/docs/ach#standard-entry-class-sec-codes) on SEC code use.
  *
  * @remarks
  */
-export type PostCombinedTransfersSecCode = ClosedEnum<
-  typeof PostCombinedTransfersSecCode
+export type PostCombinedTransfersSecCodeRequest = ClosedEnum<
+  typeof PostCombinedTransfersSecCodeRequest
 >;
 
 /**
@@ -341,7 +343,7 @@ export type PostCombinedTransfersSecCode = ClosedEnum<
  *
  * @remarks
  */
-export const PostCombinedTransfersPaymentType = {
+export const PostCombinedTransfersPaymentTypeRequest = {
   R: "R",
   S: "S",
   St: "ST",
@@ -351,8 +353,8 @@ export const PostCombinedTransfersPaymentType = {
  *
  * @remarks
  */
-export type PostCombinedTransfersPaymentType = ClosedEnum<
-  typeof PostCombinedTransfersPaymentType
+export type PostCombinedTransfersPaymentTypeRequest = ClosedEnum<
+  typeof PostCombinedTransfersPaymentTypeRequest
 >;
 
 /**
@@ -360,7 +362,7 @@ export type PostCombinedTransfersPaymentType = ClosedEnum<
  *
  * @remarks
  */
-export const PostCombinedTransfersServiceProcessing = {
+export const PostCombinedTransfersServiceProcessingRequest = {
   Sameday: "SAMEDAY",
   Standard: "STANDARD",
 } as const;
@@ -369,8 +371,8 @@ export const PostCombinedTransfersServiceProcessing = {
  *
  * @remarks
  */
-export type PostCombinedTransfersServiceProcessing = ClosedEnum<
-  typeof PostCombinedTransfersServiceProcessing
+export type PostCombinedTransfersServiceProcessingRequest = ClosedEnum<
+  typeof PostCombinedTransfersServiceProcessingRequest
 >;
 
 /**
@@ -378,7 +380,7 @@ export type PostCombinedTransfersServiceProcessing = ClosedEnum<
  *
  * @remarks
  */
-export type TransferAch = {
+export type TransferAchRequest = {
   /**
    * Individual or business originating the ACH transfer. 1 to 16 characters; letters, numbers, apostrophe, comma, period, dash allowed.
    *
@@ -404,17 +406,17 @@ export type TransferAch = {
    */
   prenote?: boolean | undefined;
   /**
-   * Standard Entry Class (SEC) code. Newline supports the following SEC codes: CCD, CIE, PPD, TEL, WEB. For more details, refer to our ACH guide's [section](https://developers.newline53.com/docs/ach#standard-entry-class-sec-codes) on SEC code use.
+   * Standard Entry Class (SEC) code. Newline supports the following SEC codes: CCD, CIE, PPD, TEL, WEB, IAT. For more details, refer to our ACH guide's [section](https://developers.newline53.com/docs/ach#standard-entry-class-sec-codes) on SEC code use.
    *
    * @remarks
    */
-  secCode: PostCombinedTransfersSecCode;
+  secCode: PostCombinedTransfersSecCodeRequest;
   /**
    * Recurring (R), single entry (S), or standing authorization entry (ST). If no value is provided, the default value populated in the NACHA file is for a single entry.
    *
    * @remarks
    */
-  paymentType?: PostCombinedTransfersPaymentType | undefined;
+  paymentType?: PostCombinedTransfersPaymentTypeRequest | undefined;
   /**
    * Description value that will appear in the bank statement.
    *
@@ -426,7 +428,7 @@ export type TransferAch = {
    *
    * @remarks
    */
-  serviceProcessing: PostCombinedTransfersServiceProcessing;
+  serviceProcessing: PostCombinedTransfersServiceProcessingRequest;
   /**
    * The effective date when the transaction is scheduled to be processed. Date values provided cannot be in the past or provided in the future beyond 30 days. For received returns, if the date provided by the originating financial institution does not match the Newline format, then the raw value will be returned. The Newline date format is YYYY-MM-DD
    *
@@ -452,7 +454,7 @@ export type TransferAch = {
  *
  * @remarks
  */
-export type PostCombinedTransfersInstantPaymentTransmitter = {
+export type PostCombinedTransfersInstantPaymentTransmitterRequest = {
   /**
    * Name of the Transmitter.
    *
@@ -520,9 +522,9 @@ export type PostCombinedTransfersPurposeOfPayment = ClosedEnum<
  *
  * @remarks
  */
-export type TransferInstantPayment = {
+export type TransferInstantPaymentRequest = {
   instantPaymentTransmitter?:
-    | PostCombinedTransfersInstantPaymentTransmitter
+    | PostCombinedTransfersInstantPaymentTransmitterRequest
     | undefined;
   /**
    * A message transmitted to the recipient bank. Supports letters, numbers, and special characters: . !@#$%^&*',/:;<=>?~`|[]{})(+=_- (max 140 characters).
@@ -538,7 +540,7 @@ export type TransferInstantPayment = {
   purposeOfPayment?: PostCombinedTransfersPurposeOfPayment | null | undefined;
 };
 
-export type TransferIntermediaryBankAddressUnstructuredAddress = {
+export type TransferIntermediaryBankAddressUnstructuredAddressRequest = {
   /**
    * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
    *
@@ -642,7 +644,7 @@ export type WireTransmitterTransferUnstructuredAddress = {
  *
  * @remarks
  */
-export type PostCombinedTransfersWireTransmitter =
+export type PostCombinedTransfersWireTransmitterRequest =
   | TransferStructuredAddress
   | WireTransmitterTransferUnstructuredAddress;
 
@@ -651,14 +653,14 @@ export type PostCombinedTransfersWireTransmitter =
  *
  * @remarks
  */
-export type TransferWire = {
+export type TransferWireRequest = {
   /**
    * Address of the intermediary bank. To be populated if an intermediary bank is required to execute the wire transfer.
    *
    * @remarks
    */
   intermediaryBankAddress?:
-    | TransferIntermediaryBankAddressUnstructuredAddress
+    | TransferIntermediaryBankAddressUnstructuredAddressRequest
     | undefined;
   intermediaryBankName?: string | undefined;
   /**
@@ -717,7 +719,7 @@ export type TransferRequest = {
    *
    * @remarks
    */
-  initiatorType?: PostCombinedTransfersInitiatorType | undefined;
+  initiatorType?: PostCombinedTransfersInitiatorTypeRequest | undefined;
   /**
    * The USD amount to transfer
    */
@@ -727,19 +729,19 @@ export type TransferRequest = {
    *
    * @remarks
    */
-  ach?: TransferAch | undefined;
+  ach?: TransferAchRequest | undefined;
   /**
    * Instant payment information. Only present if the Transfer is an instant payment.
    *
    * @remarks
    */
-  instantPayment?: TransferInstantPayment | undefined;
+  instantPayment?: TransferInstantPaymentRequest | undefined;
   /**
    * Wire-specific information. Only present if the Transfer is a wire.
    *
    * @remarks
    */
-  wire?: TransferWire | undefined;
+  wire?: TransferWireRequest | undefined;
 };
 
 export type PostCombinedTransfersRequest = {
@@ -837,18 +839,847 @@ export type PostCombinedTransfersStatus = OpenEnum<
 >;
 
 /**
- * Parameters provided at time of creation. UID field will get populated once synthetic account has been successfully created, unless uid value was supplied at creation time.
+ * The name of the Synthetic Account Category associated with the Synthetic Account Type for this account. Refer to the Synthetic Account Type for details.
+ */
+export const PostCombinedTransfersSyntheticAccountCategory = {
+  General: "general",
+  AchExternal: "ach_external",
+  InstantPaymentExternal: "instant_payment_external",
+  WireExternal: "wire_external",
+} as const;
+/**
+ * The name of the Synthetic Account Category associated with the Synthetic Account Type for this account. Refer to the Synthetic Account Type for details.
+ */
+export type PostCombinedTransfersSyntheticAccountCategory = OpenEnum<
+  typeof PostCombinedTransfersSyntheticAccountCategory
+>;
+
+/**
+ * A value indicating the overall state of this Synthetic Account.
  *
  * @remarks
  */
-export type PostCombinedTransfersSyntheticAccountResponse = {};
+export const PostCombinedTransfersSyntheticAccountStatus = {
+  Initiated: "initiated",
+  Active: "active",
+  Archived: "archived",
+  Failed: "failed",
+} as const;
+/**
+ * A value indicating the overall state of this Synthetic Account.
+ *
+ * @remarks
+ */
+export type PostCombinedTransfersSyntheticAccountStatus = OpenEnum<
+  typeof PostCombinedTransfersSyntheticAccountStatus
+>;
+
+export type PostCombinedTransfersAssetBalance = {
+  assetQuantity?: string | undefined;
+  assetType?: string | undefined;
+  currentUsdValue?: string | undefined;
+  custodialAccountUid?: string | undefined;
+  custodialAccountName?: string | undefined;
+  debit?: boolean | undefined;
+};
+
+/**
+ * The type of ACH account
+ */
+export const PostCombinedTransfersAccountTypeResponse = {
+  Checking: "checking",
+  Savings: "savings",
+} as const;
+/**
+ * The type of ACH account
+ */
+export type PostCombinedTransfersAccountTypeResponse = OpenEnum<
+  typeof PostCombinedTransfersAccountTypeResponse
+>;
+
+/**
+ * Contains ACH-specific information. Only populated if the Synthetic Account is in the `ach_external` category.
+ *
+ * @remarks
+ */
+export type PostCombinedTransfersSyntheticAccountAchResponse = {
+  /**
+   * The type of ACH account
+   */
+  accountType?: PostCombinedTransfersAccountTypeResponse | undefined;
+  /**
+   * Name of the business or individual who owns the external account. Conditional maximum character length: for all newline supported SEC codes other than CIE, the counterparty_name can be 22 characters. For CIE SEC codes, the counterparty_name can be up to 15 characters.
+   *
+   * @remarks
+   */
+  counterpartyName?: string | undefined;
+};
+
+/**
+ * Address of the counterparty. If any address field is provided, street1, city, state, postal_code, and country are required. street_number and street2 are optional.
+ */
+export type PostCombinedTransfersInstantPaymentCounterpartyAddressResponse = {
+  /**
+   * Building number for counterparty address. Alphanumeric only. Optional.
+   */
+  streetNumber?: string | null | undefined;
+  /**
+   * Street name for counterparty address
+   */
+  street1: string;
+  /**
+   * Optional second line of street
+   */
+  street2?: string | null | undefined;
+  /**
+   * Maximum 35 characters
+   */
+  city: string | null;
+  /**
+   * 2 characters. Must be a valid US state abbreviation.
+   */
+  state: string | null;
+  /**
+   * 5-digit string. ZIP+4 is allowed.
+   */
+  postalCode: string | null;
+  country: string | null;
+};
+
+export type PostCombinedTransfersSyntheticAccountInstantPaymentResponse = {
+  /**
+   * Address of the business or individual who owns the external account.
+   *
+   * @remarks
+   */
+  counterpartyAddress?:
+    | PostCombinedTransfersInstantPaymentCounterpartyAddressResponse
+    | undefined;
+  /**
+   * Name of the business or individual who owns the counterparty Account.
+   *
+   * @remarks
+   */
+  counterpartyName?: string | undefined;
+  /**
+   * Email address of the counterparty
+   */
+  email?: string | null | undefined;
+  /**
+   * Exactly 10 digits long (no hyphens, parentheses, or spaces)
+   */
+  phone?: string | null | undefined;
+};
+
+/**
+ * Address of the business or individual who owns the external account. The accepted format on requests depends on your program's wire address configuration (`unstructured`, `structured`, or `both`). Responses always return all fields; fields not applicable to the stored format are `null`.
+ *
+ * @remarks
+ */
+export type PostCombinedTransfersWireCounterpartyAddressResponse = {
+  /**
+   * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
+   */
+  line1?: string | null | undefined;
+  /**
+   * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
+   */
+  line2?: string | null | undefined;
+  /**
+   * Optional 32 characters. Note that this length is shorter than the other lines. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
+   */
+  line3?: string | null | undefined;
+  /**
+   * Parsed building or house number. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  buildingNumber?: string | null | undefined;
+  /**
+   * Parsed street name. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  streetName?: string | null | undefined;
+  /**
+   * City. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  city?: string | null | undefined;
+  /**
+   * State or province. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  state?: string | null | undefined;
+  /**
+   * US ZIP code (5-digit) or ZIP+4.
+   */
+  postalCode?: string | null | undefined;
+  country?: string | null | undefined;
+};
+
+/**
+ * Address of the financial institution where the external account is held.
+ *
+ * @remarks
+ */
+export type PostCombinedTransfersSyntheticAccountUnstructuredAddressResponse = {
+  /**
+   * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
+   */
+  line1?: string | null | undefined;
+  /**
+   * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
+   */
+  line2?: string | null | undefined;
+  /**
+   * Optional 32 characters. Note that this length is shorter than the other lines. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
+   */
+  line3?: string | null | undefined;
+  country?: string | null | undefined;
+};
+
+/**
+ * Contains wire-specific information. Only populated if the Synthetic Account is in the `wire_external` category.
+ *
+ * @remarks
+ */
+export type PostCombinedTransfersSyntheticAccountWireResponse = {
+  /**
+   * Address of the business or individual who owns the external account. The accepted format on requests depends on your program's wire address configuration (`unstructured`, `structured`, or `both`). Responses always return all fields; fields not applicable to the stored format are `null`.
+   *
+   * @remarks
+   */
+  counterpartyAddress?:
+    | PostCombinedTransfersWireCounterpartyAddressResponse
+    | null
+    | undefined;
+  /**
+   * Name of the business or individual who owns the counterparty Account. Required for synthetic accounts in the wire_external category. Maximum 35 characters.
+   *
+   * @remarks
+   */
+  counterpartyName?: string | undefined;
+  /**
+   * Address of the financial institution where the external account is held.
+   *
+   * @remarks
+   */
+  counterpartyBankAddress?:
+    | PostCombinedTransfersSyntheticAccountUnstructuredAddressResponse
+    | null
+    | undefined;
+  /**
+   * Name of the financial institution where the counterparty account is held.
+   *
+   * @remarks
+   */
+  counterpartyBankName?: string | null | undefined;
+};
+
+/**
+ * Parameters provided at time of creation. UID field will get populated once synthetic account has been successfully created,unless uid value was supplied at creation time.
+ *
+ * @remarks
+ */
+export type PostCombinedTransfersSyntheticAccountResponse = {
+  /**
+   * Newline-generated unique id resource specific to the current endpoint
+   */
+  uid?: string | undefined;
+  /**
+   * A unique identifier the Client supplies. It must be unique within the resource type. If the same value is given, no new resource will be created.
+   *
+   * @remarks
+   */
+  externalUid?: string | undefined;
+  /**
+   * A unique name, per pool, to identify the resource
+   */
+  name?: string | undefined;
+  /**
+   * The unique id of the Synthetic Account's pool
+   */
+  poolUid?: string | undefined;
+  /**
+   * A unique id referring to the Synthetic Account's type.
+   *
+   * @remarks
+   */
+  syntheticAccountTypeUid?: string | undefined;
+  /**
+   * Array of unique ids of the Custodial Accounts this Synthetic Account is associated with.
+   *
+   * @remarks
+   */
+  custodialAccountUids?: Array<string> | undefined;
+  /**
+   * The name of the Synthetic Account Category associated with the Synthetic Account Type for this account. Refer to the Synthetic Account Type for details.
+   */
+  syntheticAccountCategory?:
+    | PostCombinedTransfersSyntheticAccountCategory
+    | undefined;
+  /**
+   * A value indicating the overall state of this Synthetic Account.
+   *
+   * @remarks
+   */
+  status?: PostCombinedTransfersSyntheticAccountStatus | undefined;
+  /**
+   * Liability or asset. Any Synthetic Account created via [POST /synthetic_accounts](/reference/post_synthetic-accounts) is a liability account, except for external accounts. Some asset Synthetic Accounts are automatically created by Newline during Customer onboarding for accounting purposes.
+   */
+  liability?: boolean | undefined;
+  /**
+   * The current settled balance of this account in US Dollars. This field will be null for synthetic_account_types in an external category (`ach_external`, `instant_payment_external`, `wire_external`).
+   */
+  netUsdBalance?: string | null | undefined;
+  /**
+   * The sum of all pending transactions for this account in US Dollars. This field will be null for Synthetic Account Types in an external category (`ach_external`, `instant_payment_external`, `wire_external`).
+   */
+  netUsdPendingBalance?: string | null | undefined;
+  /**
+   * The balance available to spend calculated as the settled balance less any pending withdrawals. Pending deposits are not included. This field will be null for Synthetic Account Types in an external category (`ach_external`, `instant_payment_external`, `wire_external`).
+   */
+  netUsdAvailableBalance?: string | null | undefined;
+  /**
+   * The settled balance for the account in US Dollars as of the date in net_usd_closing_balance_as_of. This field will be null for Synthetic Account Types in an external category (`ach_external`, `instant_payment_external`, `wire_external`).
+   */
+  netUsdClosingBalance?: string | null | undefined;
+  /**
+   * The date that net_usd_closing_balance was last calculated. This field will be null for Synthetic Account Types in an external category (`ach_external`, `instant_payment_external`, `wire_external`).
+   */
+  netUsdClosingBalanceAsOf?: string | undefined;
+  /**
+   * A list of balances for the various asset types held in Custodial Accounts associated with this Synthetic Account.
+   *
+   * @remarks
+   */
+  assetBalances?: Array<PostCombinedTransfersAssetBalance | null> | undefined;
+  /**
+   * Used to identify the Master Synthetic Accounts that exist for every Program Customer. Master Synthetic Accounts are the default accounts where any unknown custodial transactions will settle and cannot be archived while a Program Customer is still active.
+   *
+   * @remarks
+   */
+  masterAccount?: boolean | undefined;
+  /**
+   * The ABA routing number (if any) associated with this account. Some Synthetic Account Types require this field to be submitted along with the POST request. For example, any Synthetic Account Type from the `ach_external` or the `wire_external` category will require a `routing_number`. Submitting a `routing_number` with a Synthetic Account Type that does not require one will result in the routing number being ignored.
+   */
+  routingNumber?: string | null | undefined;
+  /**
+   * Last 4 digits of the Synthetic Account number
+   */
+  accountNumberLastFour?: string | null | undefined;
+  /**
+   * The DateTime at which this account was created
+   */
+  openedAt?: Date | undefined;
+  /**
+   * The DateTime at which this account was closed. This value will be present if the status is `archived` or `failed`.
+   *
+   * @remarks
+   */
+  closedAt?: Date | null | undefined;
+  /**
+   * The account number (if any) associated with this account. Some Synthetic Account Types require this field to be submitted along with the POST request. For example, any Synthetic Account Type from the `ach_external` or the `wire_external` category will require an `account_number`. Submitting an `account_number` with a Synthetic Account Type that does not require one will result in the account number being ignored.
+   */
+  accountNumber?: string | null | undefined;
+  /**
+   * Contains ACH-specific information. Only populated if the Synthetic Account is in the `ach_external` category.
+   *
+   * @remarks
+   */
+  ach?: PostCombinedTransfersSyntheticAccountAchResponse | undefined;
+  instantPayment?:
+    | PostCombinedTransfersSyntheticAccountInstantPaymentResponse
+    | undefined;
+  /**
+   * Contains wire-specific information. Only populated if the Synthetic Account is in the `wire_external` category.
+   *
+   * @remarks
+   */
+  wire?: PostCombinedTransfersSyntheticAccountWireResponse | undefined;
+};
+
+/**
+ * A value indicating the overall status of the Transfer.
+ *
+ * @remarks
+ */
+export const PostCombinedTransfersTransferStatus = {
+  Canceled: "canceled",
+  Queued: "queued",
+  Pending: "pending",
+  Settled: "settled",
+  Failed: "failed",
+} as const;
+/**
+ * A value indicating the overall status of the Transfer.
+ *
+ * @remarks
+ */
+export type PostCombinedTransfersTransferStatus = OpenEnum<
+  typeof PostCombinedTransfersTransferStatus
+>;
+
+/**
+ * The initiator_type declares the originator for the Transfer. If set to Customer, origination information is pulled from the supplied initiating_customer_uid. If set to Transmitter, origination information is required, provided in the transmitter object (see below). Defaults to Customer. Providing Transmitter information is the Client's responsibility, please review more details in our [Transfers guide](https://developers.newline53.com/docs/transfer#introduction-what-is-a-transfer).
+ *
+ * @remarks
+ */
+export const PostCombinedTransfersInitiatorTypeResponse = {
+  Customer: "customer",
+  Transmitter: "transmitter",
+} as const;
+/**
+ * The initiator_type declares the originator for the Transfer. If set to Customer, origination information is pulled from the supplied initiating_customer_uid. If set to Transmitter, origination information is required, provided in the transmitter object (see below). Defaults to Customer. Providing Transmitter information is the Client's responsibility, please review more details in our [Transfers guide](https://developers.newline53.com/docs/transfer#introduction-what-is-a-transfer).
+ *
+ * @remarks
+ */
+export type PostCombinedTransfersInitiatorTypeResponse = OpenEnum<
+  typeof PostCombinedTransfersInitiatorTypeResponse
+>;
+
+/**
+ * Standard Entry Class (SEC) code. Newline supports the following SEC codes: CCD, CIE, PPD, TEL, WEB, IAT. For more details, refer to our ACH guide's [section](https://developers.newline53.com/docs/ach#standard-entry-class-sec-codes) on SEC code use.
+ *
+ * @remarks
+ */
+export const PostCombinedTransfersSecCodeResponse = {
+  Ccd: "CCD",
+  Cie: "CIE",
+  Ppd: "PPD",
+  Tel: "TEL",
+  Web: "WEB",
+  Iat: "IAT",
+} as const;
+/**
+ * Standard Entry Class (SEC) code. Newline supports the following SEC codes: CCD, CIE, PPD, TEL, WEB, IAT. For more details, refer to our ACH guide's [section](https://developers.newline53.com/docs/ach#standard-entry-class-sec-codes) on SEC code use.
+ *
+ * @remarks
+ */
+export type PostCombinedTransfersSecCodeResponse = OpenEnum<
+  typeof PostCombinedTransfersSecCodeResponse
+>;
+
+/**
+ * Recurring (R), single entry (S), or standing authorization entry (ST). If no value is provided, the default value populated in the NACHA file is for a single entry.
+ *
+ * @remarks
+ */
+export const PostCombinedTransfersPaymentTypeResponse = {
+  R: "R",
+  S: "S",
+  St: "ST",
+} as const;
+/**
+ * Recurring (R), single entry (S), or standing authorization entry (ST). If no value is provided, the default value populated in the NACHA file is for a single entry.
+ *
+ * @remarks
+ */
+export type PostCombinedTransfersPaymentTypeResponse = OpenEnum<
+  typeof PostCombinedTransfersPaymentTypeResponse
+>;
+
+/**
+ * Requested service processing duration for the ACH transfer. Allowable values are: STANDARD or SAMEDAY
+ *
+ * @remarks
+ */
+export const PostCombinedTransfersServiceProcessingResponse = {
+  Sameday: "SAMEDAY",
+  Standard: "STANDARD",
+} as const;
+/**
+ * Requested service processing duration for the ACH transfer. Allowable values are: STANDARD or SAMEDAY
+ *
+ * @remarks
+ */
+export type PostCombinedTransfersServiceProcessingResponse = OpenEnum<
+  typeof PostCombinedTransfersServiceProcessingResponse
+>;
+
+/**
+ * ACH information. Only present if the Transfer is an ACH.
+ *
+ * @remarks
+ */
+export type PostCombinedTransfersTransferAchResponse = {
+  /**
+   * Individual or business originating the ACH transfer. 1 to 16 characters; letters, numbers, apostrophe, comma, period, dash allowed.
+   *
+   * @remarks
+   */
+  originatorName?: string | undefined;
+  /**
+   * ACH Company ID. 1 to 10 characters. Letters, numbers, apostrophe, comma, period, dash allowed. Optional for the majority of cases. Required if the general liability account is configured with multiple IDs. Whether optional or required, it will be validated if supplied.
+   *
+   * @remarks
+   */
+  companyId?: string | undefined;
+  /**
+   * An optional field to add customized information such as a customer code or internal reference number. 1 to 10 characters. Alphanumeric. Also allows '.', ',', or '-'.
+   *
+   * @remarks
+   */
+  companyDiscretionaryData?: string | undefined;
+  /**
+   * If prenote is 'true', the amount of the transfer must be $0.00. Newline will infer credit_prenote or debit_prenote based on the source and destination accounts. If prenote is 'true', then the resulting Transaction Type of the resulting transaction record is of type: 'ach'. If no value is provided, the default value will be 'false'.
+   *
+   * @remarks
+   */
+  prenote?: boolean | undefined;
+  /**
+   * Standard Entry Class (SEC) code. Newline supports the following SEC codes: CCD, CIE, PPD, TEL, WEB, IAT. For more details, refer to our ACH guide's [section](https://developers.newline53.com/docs/ach#standard-entry-class-sec-codes) on SEC code use.
+   *
+   * @remarks
+   */
+  secCode?: PostCombinedTransfersSecCodeResponse | undefined;
+  /**
+   * Recurring (R), single entry (S), or standing authorization entry (ST). If no value is provided, the default value populated in the NACHA file is for a single entry.
+   *
+   * @remarks
+   */
+  paymentType?: PostCombinedTransfersPaymentTypeResponse | undefined;
+  /**
+   * Description value that will appear in the bank statement.
+   *
+   * @remarks
+   */
+  entryDescription?: string | undefined;
+  /**
+   * Requested service processing duration for the ACH transfer. Allowable values are: STANDARD or SAMEDAY
+   *
+   * @remarks
+   */
+  serviceProcessing?:
+    | PostCombinedTransfersServiceProcessingResponse
+    | undefined;
+  /**
+   * The effective date when the transaction is scheduled to be processed. Date values provided cannot be in the past or provided in the future beyond 30 days. For received returns, if the date provided by the originating financial institution does not match the Newline format, then the raw value will be returned. The Newline date format is YYYY-MM-DD
+   *
+   * @remarks
+   */
+  effectiveEntryDate?: string | undefined;
+  /**
+   * Unique identifier supplied by the originator of a transaction (e.g. invoice number). 1 to 22 characters depending on SEC code, alphanumeric. If the SEC value is anything other than CIE, then this is an optional field and can be up to 15 characters. If SEC value CIE is provided, then the ID number is mandatory, and the character length can be up to 22 characters.
+   *
+   * @remarks
+   */
+  idNumber?: string | undefined;
+  /**
+   * Optional additional payment-related information, such as invoice numbers, originator/receiver information, payment instructions, etc. Up to 80 characters. Optional for all newline supported SEC codes other than TEL. Newline will reject the Transfer if an Addenda value is provided with SEC code TEL.
+   *
+   * @remarks
+   */
+  addenda?: string | undefined;
+};
+
+/**
+ * Address of the Transmitter. Must be provided if the `initiator_type` is `transmitter`.
+ *
+ * @remarks
+ */
+export type PostCombinedTransfersInstantPaymentTransmitterResponse = {
+  /**
+   * Name of the Transmitter.
+   *
+   * @remarks
+   */
+  name: string;
+  /**
+   * Up to 24 characters, and supplied by Transmitter. Alphanumeric only.
+   */
+  transmitterIdentifier: string;
+  /**
+   * Building number for Transmitter address. Alphanumeric only.
+   */
+  streetNumber: string;
+  /**
+   * Street name for Transmitter address
+   */
+  street1: string;
+  /**
+   * Maximum 35 characters
+   */
+  city: string | null;
+  /**
+   * 2 characters. Must be a valid US state abbreviation.
+   */
+  state: string | null;
+  /**
+   * 5-digit string. ZIP+4 is allowed.
+   */
+  postalCode: string | null;
+  country: string | null;
+};
+
+/**
+ * Instant payment information. Only present if the Transfer is an instant payment.
+ *
+ * @remarks
+ */
+export type PostCombinedTransfersTransferInstantPaymentResponse = {
+  instantPaymentTransmitter?:
+    | PostCombinedTransfersInstantPaymentTransmitterResponse
+    | undefined;
+};
+
+/**
+ * Address of the intermediary bank. To be populated if an intermediary bank is required to execute the wire transfer.
+ *
+ * @remarks
+ */
+export type PostCombinedTransfersTransferUnstructuredAddressResponse = {
+  /**
+   * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
+   */
+  line1?: string | null | undefined;
+  /**
+   * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
+   */
+  line2?: string | null | undefined;
+  /**
+   * Optional 32 characters. Note that this length is shorter than the other lines. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
+   */
+  line3?: string | null | undefined;
+  country?: string | null | undefined;
+};
+
+/**
+ * Information about the Transmitter. Must be provided if the `initiator_type` is `transmitter`. Includes the transmitter's name, identifier, and address. The address format on requests depends on your program's wire address configuration. Responses always return all address fields; fields not applicable to the stored format are `null`.
+ *
+ * @remarks
+ */
+export type PostCombinedTransfersWireTransmitterResponse = {
+  /**
+   * Name of the Transmitter.
+   *
+   * @remarks
+   */
+  name: string;
+  /**
+   * Up to 24 digits, supplied by Transmitter. Numeric only.
+   */
+  transmitterIdentifier: string;
+  /**
+   * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
+   */
+  line1?: string | null | undefined;
+  /**
+   * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
+   */
+  line2?: string | null | undefined;
+  /**
+   * Optional 32 characters. Note that this length is shorter than the other lines. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
+   */
+  line3?: string | null | undefined;
+  /**
+   * Parsed building or house number. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  buildingNumber?: string | null | undefined;
+  /**
+   * Parsed street name. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  streetName?: string | null | undefined;
+  /**
+   * City. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  city?: string | null | undefined;
+  /**
+   * State or province. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  state?: string | null | undefined;
+  /**
+   * US ZIP code (5-digit) or ZIP+4.
+   */
+  postalCode?: string | null | undefined;
+  country?: string | null | undefined;
+};
+
+export type PostCombinedTransfersTransferWireResponse = {
+  /**
+   * Address of the intermediary bank. To be populated if an intermediary bank is required to execute the wire transfer.
+   *
+   * @remarks
+   */
+  intermediaryBankAddress?:
+    | PostCombinedTransfersTransferUnstructuredAddressResponse
+    | undefined;
+  /**
+   * Name of the intermediary bank, when applicable. For wires only. Maximum 35 characters.
+   *
+   * @remarks
+   */
+  intermediaryBankName?: string | undefined;
+  /**
+   * The ABA routing number associated with the intermediary bank involved in the wire transfer
+   *
+   * @remarks
+   */
+  intermediaryBankRoutingNumber?: string | undefined;
+  /**
+   * Information about the Transmitter. Must be provided if the `initiator_type` is `transmitter`. Includes the transmitter's name, identifier, and address. The address format on requests depends on your program's wire address configuration. Responses always return all address fields; fields not applicable to the stored format are `null`.
+   *
+   * @remarks
+   */
+  wireTransmitter?: PostCombinedTransfersWireTransmitterResponse | undefined;
+};
+
+export const PostCombinedTransfersCurrentCancellationStatus = {
+  PendingCancellation: "pending_cancellation",
+  SuccessfulCancellation: "successful_cancellation",
+  FailedCancellation: "failed_cancellation",
+} as const;
+export type PostCombinedTransfersCurrentCancellationStatus = OpenEnum<
+  typeof PostCombinedTransfersCurrentCancellationStatus
+>;
+
+/**
+ * Cancellation information. Only present if there has been an attempt at canceling the transfer.
+ *
+ * @remarks
+ */
+export type PostCombinedTransfersCancellation = {
+  /**
+   * Name of the authorized representative who wanted to cancel the transfer.
+   */
+  authorizedRepresentativeName?: string | undefined;
+  /**
+   * Reason for cancellation.
+   */
+  cancellationReason?: string | undefined;
+  currentCancellationStatus?:
+    | PostCombinedTransfersCurrentCancellationStatus
+    | undefined;
+  /**
+   * The DateTime at which a cancellation request was most recently received.
+   */
+  cancellationRequestedAt?: Date | undefined;
+  /**
+   * The DateTime at which a cancellation request succeeded. Only present if `current_cancellation_status` is `successful_cancellation`.
+   *
+   * @remarks
+   */
+  cancellationSucceededAt?: Date | undefined;
+  /**
+   * The DateTime at which a cancellation request last failed. Only present if `current_cancellation_status` is `failed_cancellation`.
+   *
+   * @remarks
+   */
+  cancellationFailedAt?: Date | undefined;
+};
 
 /**
  * Parameters provided at time of creation. UID field will get populated once transfer has been successfully initiated.
  *
  * @remarks
  */
-export type PostCombinedTransfersTransferResponse = {};
+export type PostCombinedTransfersTransferResponse = {
+  /**
+   * Synthetic Account where the assets should be debited. Must be an active liability or external-type account. Cannot be equal to `destination_synthetic_account_uid`.
+   */
+  sourceSyntheticAccountUid?: string | undefined;
+  /**
+   * Synthetic Account where the assets should be credited. Must be an active liability or external-type account. Cannot be equal to `source_synthetic_account_uid`.
+   */
+  destinationSyntheticAccountUid?: string | undefined;
+  /**
+   * Customer that initiated the Transfer, when `initiator_type` is `customer`. The Customer and Synthetic Accounts supplied in the Transfer request must relate to the same Pool for the Transfer to be accepted.
+   */
+  initiatingCustomerUid?: string | undefined;
+  /**
+   * Customer who is on the receiving end of the Transfer. The destination Customer must be provided for peer to peer Transfers and can be optional for all other Transfers. If not provided, the destination Customer will be the same as the initiating Customer by default.
+   */
+  destinationCustomerUid?: string | undefined;
+  /**
+   * A value indicating the overall status of the Transfer.
+   *
+   * @remarks
+   */
+  status?: PostCombinedTransfersTransferStatus | undefined;
+  /**
+   * The initiator_type declares the originator for the Transfer. If set to Customer, origination information is pulled from the supplied initiating_customer_uid. If set to Transmitter, origination information is required, provided in the transmitter object (see below). Defaults to Customer. Providing Transmitter information is the Client's responsibility, please review more details in our [Transfers guide](https://developers.newline53.com/docs/transfer#introduction-what-is-a-transfer).
+   *
+   * @remarks
+   */
+  initiatorType?: PostCombinedTransfersInitiatorTypeResponse | undefined;
+  /**
+   * Timestamp of when the transfer request was received
+   */
+  createdAt?: Date | undefined;
+  /**
+   * Timestamp indicating when the transfer is scheduled to be processed. Only applicable when the program is configured to queue on the relevant payment rail. When queuing is configured, the value is equal to the configured queuing minutes added to the transfer creation time.
+   *
+   * @remarks
+   */
+  queuedUntil?: Date | undefined;
+  /**
+   * Newline-generated unique id resource specific to the current endpoint
+   */
+  uid?: string | undefined;
+  /**
+   * A unique identifier, optionally supplied by the Client when the Transfer was requested
+   *
+   * @remarks
+   */
+  externalUid?: string | undefined;
+  /**
+   * An array of Transaction UIDs that are associated with this Transfer.
+   *
+   * @remarks
+   */
+  transactionUids?: Array<string> | undefined;
+  /**
+   * The USD amount to transfer
+   *
+   * @remarks
+   */
+  usdTransferAmount?: string | undefined;
+  /**
+   * ACH information. Only present if the Transfer is an ACH.
+   *
+   * @remarks
+   */
+  ach?: PostCombinedTransfersTransferAchResponse | undefined;
+  /**
+   * Instant payment information. Only present if the Transfer is an instant payment.
+   *
+   * @remarks
+   */
+  instantPayment?:
+    | PostCombinedTransfersTransferInstantPaymentResponse
+    | undefined;
+  /**
+   * Wire-specific information. Only present if the Transfer is a wire.
+   *
+   * @remarks
+   */
+  wire?: PostCombinedTransfersTransferWireResponse | undefined;
+  /**
+   * Cancellation information. Only present if there has been an attempt at canceling the transfer.
+   *
+   * @remarks
+   */
+  cancellation?: PostCombinedTransfersCancellation | undefined;
+};
 
 /**
  * A single Combined Transfer is returned
@@ -872,17 +1703,7 @@ export type PostCombinedTransfersResponseBody = {
    * The combined transfer's status
    */
   status?: PostCombinedTransfersStatus | undefined;
-  /**
-   * Parameters provided at time of creation. UID field will get populated once synthetic account has been successfully created, unless uid value was supplied at creation time.
-   *
-   * @remarks
-   */
   syntheticAccount?: PostCombinedTransfersSyntheticAccountResponse | undefined;
-  /**
-   * Parameters provided at time of creation. UID field will get populated once transfer has been successfully initiated.
-   *
-   * @remarks
-   */
   transfer?: PostCombinedTransfersTransferResponse | undefined;
   /**
    * Unique identifier for the Combined Transfer
@@ -896,23 +1717,24 @@ export type PostCombinedTransfersResponse = {
 };
 
 /** @internal */
-export const PostCombinedTransfersAccountType$outboundSchema: z.ZodMiniEnum<
-  typeof PostCombinedTransfersAccountType
-> = z.enum(PostCombinedTransfersAccountType);
+export const PostCombinedTransfersAccountTypeRequest$outboundSchema:
+  z.ZodMiniEnum<typeof PostCombinedTransfersAccountTypeRequest> = z.enum(
+    PostCombinedTransfersAccountTypeRequest,
+  );
 
 /** @internal */
-export type SyntheticAccountAch$Outbound = {
+export type SyntheticAccountAchRequest$Outbound = {
   account_type: string;
   counterparty_name: string;
 };
 
 /** @internal */
-export const SyntheticAccountAch$outboundSchema: z.ZodMiniType<
-  SyntheticAccountAch$Outbound,
-  SyntheticAccountAch
+export const SyntheticAccountAchRequest$outboundSchema: z.ZodMiniType<
+  SyntheticAccountAchRequest$Outbound,
+  SyntheticAccountAchRequest
 > = z.pipe(
   z.object({
-    accountType: PostCombinedTransfersAccountType$outboundSchema,
+    accountType: PostCombinedTransfersAccountTypeRequest$outboundSchema,
     counterpartyName: z.string(),
   }),
   z.transform((v) => {
@@ -923,30 +1745,31 @@ export const SyntheticAccountAch$outboundSchema: z.ZodMiniType<
   }),
 );
 
-export function syntheticAccountAchToJSON(
-  syntheticAccountAch: SyntheticAccountAch,
+export function syntheticAccountAchRequestToJSON(
+  syntheticAccountAchRequest: SyntheticAccountAchRequest,
 ): string {
   return JSON.stringify(
-    SyntheticAccountAch$outboundSchema.parse(syntheticAccountAch),
+    SyntheticAccountAchRequest$outboundSchema.parse(syntheticAccountAchRequest),
   );
 }
 
 /** @internal */
-export type PostCombinedTransfersInstantPaymentCounterpartyAddress$Outbound = {
-  street_number?: string | null | undefined;
-  street1: string;
-  street2?: string | null | undefined;
-  city: string | null;
-  state: string | null;
-  postal_code: string | null;
-  country: string | null;
-};
+export type PostCombinedTransfersInstantPaymentCounterpartyAddressRequest$Outbound =
+  {
+    street_number?: string | null | undefined;
+    street1: string;
+    street2?: string | null | undefined;
+    city: string | null;
+    state: string | null;
+    postal_code: string | null;
+    country: string | null;
+  };
 
 /** @internal */
-export const PostCombinedTransfersInstantPaymentCounterpartyAddress$outboundSchema:
+export const PostCombinedTransfersInstantPaymentCounterpartyAddressRequest$outboundSchema:
   z.ZodMiniType<
-    PostCombinedTransfersInstantPaymentCounterpartyAddress$Outbound,
-    PostCombinedTransfersInstantPaymentCounterpartyAddress
+    PostCombinedTransfersInstantPaymentCounterpartyAddressRequest$Outbound,
+    PostCombinedTransfersInstantPaymentCounterpartyAddressRequest
   > = z.pipe(
     z.object({
       streetNumber: z.optional(z.nullable(z.string())),
@@ -965,21 +1788,20 @@ export const PostCombinedTransfersInstantPaymentCounterpartyAddress$outboundSche
     }),
   );
 
-export function postCombinedTransfersInstantPaymentCounterpartyAddressToJSON(
-  postCombinedTransfersInstantPaymentCounterpartyAddress:
-    PostCombinedTransfersInstantPaymentCounterpartyAddress,
+export function postCombinedTransfersInstantPaymentCounterpartyAddressRequestToJSON(
+  postCombinedTransfersInstantPaymentCounterpartyAddressRequest:
+    PostCombinedTransfersInstantPaymentCounterpartyAddressRequest,
 ): string {
   return JSON.stringify(
-    PostCombinedTransfersInstantPaymentCounterpartyAddress$outboundSchema.parse(
-      postCombinedTransfersInstantPaymentCounterpartyAddress,
-    ),
+    PostCombinedTransfersInstantPaymentCounterpartyAddressRequest$outboundSchema
+      .parse(postCombinedTransfersInstantPaymentCounterpartyAddressRequest),
   );
 }
 
 /** @internal */
-export type SyntheticAccountInstantPayment$Outbound = {
+export type SyntheticAccountInstantPaymentRequest$Outbound = {
   counterparty_address?:
-    | PostCombinedTransfersInstantPaymentCounterpartyAddress$Outbound
+    | PostCombinedTransfersInstantPaymentCounterpartyAddressRequest$Outbound
     | undefined;
   counterparty_name: string;
   email?: string | null | undefined;
@@ -987,32 +1809,33 @@ export type SyntheticAccountInstantPayment$Outbound = {
 };
 
 /** @internal */
-export const SyntheticAccountInstantPayment$outboundSchema: z.ZodMiniType<
-  SyntheticAccountInstantPayment$Outbound,
-  SyntheticAccountInstantPayment
-> = z.pipe(
-  z.object({
-    counterpartyAddress: z.optional(z.lazy(() =>
-      PostCombinedTransfersInstantPaymentCounterpartyAddress$outboundSchema
-    )),
-    counterpartyName: z.string(),
-    email: z.optional(z.nullable(z.string())),
-    phone: z.optional(z.nullable(z.string())),
-  }),
-  z.transform((v) => {
-    return remap$(v, {
-      counterpartyAddress: "counterparty_address",
-      counterpartyName: "counterparty_name",
-    });
-  }),
-);
+export const SyntheticAccountInstantPaymentRequest$outboundSchema:
+  z.ZodMiniType<
+    SyntheticAccountInstantPaymentRequest$Outbound,
+    SyntheticAccountInstantPaymentRequest
+  > = z.pipe(
+    z.object({
+      counterpartyAddress: z.optional(z.lazy(() =>
+        PostCombinedTransfersInstantPaymentCounterpartyAddressRequest$outboundSchema
+      )),
+      counterpartyName: z.string(),
+      email: z.optional(z.nullable(z.string())),
+      phone: z.optional(z.nullable(z.string())),
+    }),
+    z.transform((v) => {
+      return remap$(v, {
+        counterpartyAddress: "counterparty_address",
+        counterpartyName: "counterparty_name",
+      });
+    }),
+  );
 
-export function syntheticAccountInstantPaymentToJSON(
-  syntheticAccountInstantPayment: SyntheticAccountInstantPayment,
+export function syntheticAccountInstantPaymentRequestToJSON(
+  syntheticAccountInstantPaymentRequest: SyntheticAccountInstantPaymentRequest,
 ): string {
   return JSON.stringify(
-    SyntheticAccountInstantPayment$outboundSchema.parse(
-      syntheticAccountInstantPayment,
+    SyntheticAccountInstantPaymentRequest$outboundSchema.parse(
+      syntheticAccountInstantPaymentRequest,
     ),
   );
 }
@@ -1123,7 +1946,7 @@ export function postCombinedTransfersCounterpartyAddressUnionToJSON(
 }
 
 /** @internal */
-export type SyntheticAccountCounterpartyBankAddressUnstructuredAddress$Outbound =
+export type SyntheticAccountCounterpartyBankAddressUnstructuredAddressRequest$Outbound =
   {
     line1?: string | null | undefined;
     line2?: string | null | undefined;
@@ -1132,10 +1955,10 @@ export type SyntheticAccountCounterpartyBankAddressUnstructuredAddress$Outbound 
   };
 
 /** @internal */
-export const SyntheticAccountCounterpartyBankAddressUnstructuredAddress$outboundSchema:
+export const SyntheticAccountCounterpartyBankAddressUnstructuredAddressRequest$outboundSchema:
   z.ZodMiniType<
-    SyntheticAccountCounterpartyBankAddressUnstructuredAddress$Outbound,
-    SyntheticAccountCounterpartyBankAddressUnstructuredAddress
+    SyntheticAccountCounterpartyBankAddressUnstructuredAddressRequest$Outbound,
+    SyntheticAccountCounterpartyBankAddressUnstructuredAddressRequest
   > = z.object({
     line1: z.optional(z.nullable(z.string())),
     line2: z.optional(z.nullable(z.string())),
@@ -1143,18 +1966,18 @@ export const SyntheticAccountCounterpartyBankAddressUnstructuredAddress$outbound
     country: z.optional(z.nullable(z.string())),
   });
 
-export function syntheticAccountCounterpartyBankAddressUnstructuredAddressToJSON(
-  syntheticAccountCounterpartyBankAddressUnstructuredAddress:
-    SyntheticAccountCounterpartyBankAddressUnstructuredAddress,
+export function syntheticAccountCounterpartyBankAddressUnstructuredAddressRequestToJSON(
+  syntheticAccountCounterpartyBankAddressUnstructuredAddressRequest:
+    SyntheticAccountCounterpartyBankAddressUnstructuredAddressRequest,
 ): string {
   return JSON.stringify(
-    SyntheticAccountCounterpartyBankAddressUnstructuredAddress$outboundSchema
-      .parse(syntheticAccountCounterpartyBankAddressUnstructuredAddress),
+    SyntheticAccountCounterpartyBankAddressUnstructuredAddressRequest$outboundSchema
+      .parse(syntheticAccountCounterpartyBankAddressUnstructuredAddressRequest),
   );
 }
 
 /** @internal */
-export type SyntheticAccountWire$Outbound = {
+export type SyntheticAccountWireRequest$Outbound = {
   counterparty_address?:
     | SyntheticAccountStructuredAddress$Outbound
     | CounterpartyAddressSyntheticAccountUnstructuredAddress$Outbound
@@ -1162,16 +1985,16 @@ export type SyntheticAccountWire$Outbound = {
     | undefined;
   counterparty_name: string;
   counterparty_bank_address?:
-    | SyntheticAccountCounterpartyBankAddressUnstructuredAddress$Outbound
+    | SyntheticAccountCounterpartyBankAddressUnstructuredAddressRequest$Outbound
     | null
     | undefined;
   counterparty_bank_name?: string | null | undefined;
 };
 
 /** @internal */
-export const SyntheticAccountWire$outboundSchema: z.ZodMiniType<
-  SyntheticAccountWire$Outbound,
-  SyntheticAccountWire
+export const SyntheticAccountWireRequest$outboundSchema: z.ZodMiniType<
+  SyntheticAccountWireRequest$Outbound,
+  SyntheticAccountWireRequest
 > = z.pipe(
   z.object({
     counterpartyAddress: z.optional(z.nullable(smartUnion([
@@ -1182,7 +2005,7 @@ export const SyntheticAccountWire$outboundSchema: z.ZodMiniType<
     ]))),
     counterpartyName: z.string(),
     counterpartyBankAddress: z.optional(z.nullable(z.lazy(() =>
-      SyntheticAccountCounterpartyBankAddressUnstructuredAddress$outboundSchema
+      SyntheticAccountCounterpartyBankAddressUnstructuredAddressRequest$outboundSchema
     ))),
     counterpartyBankName: z.optional(z.nullable(z.string())),
   }),
@@ -1196,11 +2019,13 @@ export const SyntheticAccountWire$outboundSchema: z.ZodMiniType<
   }),
 );
 
-export function syntheticAccountWireToJSON(
-  syntheticAccountWire: SyntheticAccountWire,
+export function syntheticAccountWireRequestToJSON(
+  syntheticAccountWireRequest: SyntheticAccountWireRequest,
 ): string {
   return JSON.stringify(
-    SyntheticAccountWire$outboundSchema.parse(syntheticAccountWire),
+    SyntheticAccountWireRequest$outboundSchema.parse(
+      syntheticAccountWireRequest,
+    ),
   );
 }
 
@@ -1213,9 +2038,9 @@ export type SyntheticAccountRequest$Outbound = {
   routing_number?: string | null | undefined;
   account_number?: string | null | undefined;
   external_processor_token?: string | null | undefined;
-  ach?: SyntheticAccountAch$Outbound | undefined;
-  instant_payment?: SyntheticAccountInstantPayment$Outbound | undefined;
-  wire?: SyntheticAccountWire$Outbound | undefined;
+  ach?: SyntheticAccountAchRequest$Outbound | undefined;
+  instant_payment?: SyntheticAccountInstantPaymentRequest$Outbound | undefined;
+  wire?: SyntheticAccountWireRequest$Outbound | undefined;
 };
 
 /** @internal */
@@ -1231,11 +2056,11 @@ export const SyntheticAccountRequest$outboundSchema: z.ZodMiniType<
     routingNumber: z.optional(z.nullable(z.string())),
     accountNumber: z.optional(z.nullable(z.string())),
     externalProcessorToken: z.optional(z.nullable(z.string())),
-    ach: z.optional(z.lazy(() => SyntheticAccountAch$outboundSchema)),
+    ach: z.optional(z.lazy(() => SyntheticAccountAchRequest$outboundSchema)),
     instantPayment: z.optional(
-      z.lazy(() => SyntheticAccountInstantPayment$outboundSchema),
+      z.lazy(() => SyntheticAccountInstantPaymentRequest$outboundSchema),
     ),
-    wire: z.optional(z.lazy(() => SyntheticAccountWire$outboundSchema)),
+    wire: z.optional(z.lazy(() => SyntheticAccountWireRequest$outboundSchema)),
   }),
   z.transform((v) => {
     return remap$(v, {
@@ -1259,28 +2084,30 @@ export function syntheticAccountRequestToJSON(
 }
 
 /** @internal */
-export const PostCombinedTransfersInitiatorType$outboundSchema: z.ZodMiniEnum<
-  typeof PostCombinedTransfersInitiatorType
-> = z.enum(PostCombinedTransfersInitiatorType);
-
-/** @internal */
-export const PostCombinedTransfersSecCode$outboundSchema: z.ZodMiniEnum<
-  typeof PostCombinedTransfersSecCode
-> = z.enum(PostCombinedTransfersSecCode);
-
-/** @internal */
-export const PostCombinedTransfersPaymentType$outboundSchema: z.ZodMiniEnum<
-  typeof PostCombinedTransfersPaymentType
-> = z.enum(PostCombinedTransfersPaymentType);
-
-/** @internal */
-export const PostCombinedTransfersServiceProcessing$outboundSchema:
-  z.ZodMiniEnum<typeof PostCombinedTransfersServiceProcessing> = z.enum(
-    PostCombinedTransfersServiceProcessing,
+export const PostCombinedTransfersInitiatorTypeRequest$outboundSchema:
+  z.ZodMiniEnum<typeof PostCombinedTransfersInitiatorTypeRequest> = z.enum(
+    PostCombinedTransfersInitiatorTypeRequest,
   );
 
 /** @internal */
-export type TransferAch$Outbound = {
+export const PostCombinedTransfersSecCodeRequest$outboundSchema: z.ZodMiniEnum<
+  typeof PostCombinedTransfersSecCodeRequest
+> = z.enum(PostCombinedTransfersSecCodeRequest);
+
+/** @internal */
+export const PostCombinedTransfersPaymentTypeRequest$outboundSchema:
+  z.ZodMiniEnum<typeof PostCombinedTransfersPaymentTypeRequest> = z.enum(
+    PostCombinedTransfersPaymentTypeRequest,
+  );
+
+/** @internal */
+export const PostCombinedTransfersServiceProcessingRequest$outboundSchema:
+  z.ZodMiniEnum<typeof PostCombinedTransfersServiceProcessingRequest> = z.enum(
+    PostCombinedTransfersServiceProcessingRequest,
+  );
+
+/** @internal */
+export type TransferAchRequest$Outbound = {
   originator_name: string;
   company_id?: string | undefined;
   company_discretionary_data?: string | undefined;
@@ -1295,19 +2122,22 @@ export type TransferAch$Outbound = {
 };
 
 /** @internal */
-export const TransferAch$outboundSchema: z.ZodMiniType<
-  TransferAch$Outbound,
-  TransferAch
+export const TransferAchRequest$outboundSchema: z.ZodMiniType<
+  TransferAchRequest$Outbound,
+  TransferAchRequest
 > = z.pipe(
   z.object({
     originatorName: z.string(),
     companyId: z.optional(z.string()),
     companyDiscretionaryData: z.optional(z.string()),
     prenote: z.optional(z.boolean()),
-    secCode: PostCombinedTransfersSecCode$outboundSchema,
-    paymentType: z.optional(PostCombinedTransfersPaymentType$outboundSchema),
+    secCode: PostCombinedTransfersSecCodeRequest$outboundSchema,
+    paymentType: z.optional(
+      PostCombinedTransfersPaymentTypeRequest$outboundSchema,
+    ),
     entryDescription: z.string(),
-    serviceProcessing: PostCombinedTransfersServiceProcessing$outboundSchema,
+    serviceProcessing:
+      PostCombinedTransfersServiceProcessingRequest$outboundSchema,
     effectiveEntryDate: z.string(),
     idNumber: z.optional(z.string()),
     addenda: z.optional(z.string()),
@@ -1327,12 +2157,16 @@ export const TransferAch$outboundSchema: z.ZodMiniType<
   }),
 );
 
-export function transferAchToJSON(transferAch: TransferAch): string {
-  return JSON.stringify(TransferAch$outboundSchema.parse(transferAch));
+export function transferAchRequestToJSON(
+  transferAchRequest: TransferAchRequest,
+): string {
+  return JSON.stringify(
+    TransferAchRequest$outboundSchema.parse(transferAchRequest),
+  );
 }
 
 /** @internal */
-export type PostCombinedTransfersInstantPaymentTransmitter$Outbound = {
+export type PostCombinedTransfersInstantPaymentTransmitterRequest$Outbound = {
   name: string;
   transmitter_identifier: string;
   street_number: string;
@@ -1344,10 +2178,10 @@ export type PostCombinedTransfersInstantPaymentTransmitter$Outbound = {
 };
 
 /** @internal */
-export const PostCombinedTransfersInstantPaymentTransmitter$outboundSchema:
+export const PostCombinedTransfersInstantPaymentTransmitterRequest$outboundSchema:
   z.ZodMiniType<
-    PostCombinedTransfersInstantPaymentTransmitter$Outbound,
-    PostCombinedTransfersInstantPaymentTransmitter
+    PostCombinedTransfersInstantPaymentTransmitterRequest$Outbound,
+    PostCombinedTransfersInstantPaymentTransmitterRequest
   > = z.pipe(
     z.object({
       name: z.string(),
@@ -1368,13 +2202,13 @@ export const PostCombinedTransfersInstantPaymentTransmitter$outboundSchema:
     }),
   );
 
-export function postCombinedTransfersInstantPaymentTransmitterToJSON(
-  postCombinedTransfersInstantPaymentTransmitter:
-    PostCombinedTransfersInstantPaymentTransmitter,
+export function postCombinedTransfersInstantPaymentTransmitterRequestToJSON(
+  postCombinedTransfersInstantPaymentTransmitterRequest:
+    PostCombinedTransfersInstantPaymentTransmitterRequest,
 ): string {
   return JSON.stringify(
-    PostCombinedTransfersInstantPaymentTransmitter$outboundSchema.parse(
-      postCombinedTransfersInstantPaymentTransmitter,
+    PostCombinedTransfersInstantPaymentTransmitterRequest$outboundSchema.parse(
+      postCombinedTransfersInstantPaymentTransmitterRequest,
     ),
   );
 }
@@ -1386,25 +2220,23 @@ export const PostCombinedTransfersPurposeOfPayment$outboundSchema:
   );
 
 /** @internal */
-export type TransferInstantPayment$Outbound = {
+export type TransferInstantPaymentRequest$Outbound = {
   instant_payment_transmitter?:
-    | PostCombinedTransfersInstantPaymentTransmitter$Outbound
+    | PostCombinedTransfersInstantPaymentTransmitterRequest$Outbound
     | undefined;
   memo?: string | null | undefined;
   purpose_of_payment?: string | null | undefined;
 };
 
 /** @internal */
-export const TransferInstantPayment$outboundSchema: z.ZodMiniType<
-  TransferInstantPayment$Outbound,
-  TransferInstantPayment
+export const TransferInstantPaymentRequest$outboundSchema: z.ZodMiniType<
+  TransferInstantPaymentRequest$Outbound,
+  TransferInstantPaymentRequest
 > = z.pipe(
   z.object({
-    instantPaymentTransmitter: z.optional(
-      z.lazy(() =>
-        PostCombinedTransfersInstantPaymentTransmitter$outboundSchema
-      ),
-    ),
+    instantPaymentTransmitter: z.optional(z.lazy(() =>
+      PostCombinedTransfersInstantPaymentTransmitterRequest$outboundSchema
+    )),
     memo: z.optional(z.nullable(z.string())),
     purposeOfPayment: z.optional(
       z.nullable(PostCombinedTransfersPurposeOfPayment$outboundSchema),
@@ -1418,27 +2250,30 @@ export const TransferInstantPayment$outboundSchema: z.ZodMiniType<
   }),
 );
 
-export function transferInstantPaymentToJSON(
-  transferInstantPayment: TransferInstantPayment,
+export function transferInstantPaymentRequestToJSON(
+  transferInstantPaymentRequest: TransferInstantPaymentRequest,
 ): string {
   return JSON.stringify(
-    TransferInstantPayment$outboundSchema.parse(transferInstantPayment),
+    TransferInstantPaymentRequest$outboundSchema.parse(
+      transferInstantPaymentRequest,
+    ),
   );
 }
 
 /** @internal */
-export type TransferIntermediaryBankAddressUnstructuredAddress$Outbound = {
-  line1?: string | null | undefined;
-  line2?: string | null | undefined;
-  line3?: string | null | undefined;
-  country?: string | null | undefined;
-};
+export type TransferIntermediaryBankAddressUnstructuredAddressRequest$Outbound =
+  {
+    line1?: string | null | undefined;
+    line2?: string | null | undefined;
+    line3?: string | null | undefined;
+    country?: string | null | undefined;
+  };
 
 /** @internal */
-export const TransferIntermediaryBankAddressUnstructuredAddress$outboundSchema:
+export const TransferIntermediaryBankAddressUnstructuredAddressRequest$outboundSchema:
   z.ZodMiniType<
-    TransferIntermediaryBankAddressUnstructuredAddress$Outbound,
-    TransferIntermediaryBankAddressUnstructuredAddress
+    TransferIntermediaryBankAddressUnstructuredAddressRequest$Outbound,
+    TransferIntermediaryBankAddressUnstructuredAddressRequest
   > = z.object({
     line1: z.optional(z.nullable(z.string())),
     line2: z.optional(z.nullable(z.string())),
@@ -1446,14 +2281,13 @@ export const TransferIntermediaryBankAddressUnstructuredAddress$outboundSchema:
     country: z.optional(z.nullable(z.string())),
   });
 
-export function transferIntermediaryBankAddressUnstructuredAddressToJSON(
-  transferIntermediaryBankAddressUnstructuredAddress:
-    TransferIntermediaryBankAddressUnstructuredAddress,
+export function transferIntermediaryBankAddressUnstructuredAddressRequestToJSON(
+  transferIntermediaryBankAddressUnstructuredAddressRequest:
+    TransferIntermediaryBankAddressUnstructuredAddressRequest,
 ): string {
   return JSON.stringify(
-    TransferIntermediaryBankAddressUnstructuredAddress$outboundSchema.parse(
-      transferIntermediaryBankAddressUnstructuredAddress,
-    ),
+    TransferIntermediaryBankAddressUnstructuredAddressRequest$outboundSchema
+      .parse(transferIntermediaryBankAddressUnstructuredAddressRequest),
   );
 }
 
@@ -1549,33 +2383,35 @@ export function wireTransmitterTransferUnstructuredAddressToJSON(
 }
 
 /** @internal */
-export type PostCombinedTransfersWireTransmitter$Outbound =
+export type PostCombinedTransfersWireTransmitterRequest$Outbound =
   | TransferStructuredAddress$Outbound
   | WireTransmitterTransferUnstructuredAddress$Outbound;
 
 /** @internal */
-export const PostCombinedTransfersWireTransmitter$outboundSchema: z.ZodMiniType<
-  PostCombinedTransfersWireTransmitter$Outbound,
-  PostCombinedTransfersWireTransmitter
-> = smartUnion([
-  z.lazy(() => TransferStructuredAddress$outboundSchema),
-  z.lazy(() => WireTransmitterTransferUnstructuredAddress$outboundSchema),
-]);
+export const PostCombinedTransfersWireTransmitterRequest$outboundSchema:
+  z.ZodMiniType<
+    PostCombinedTransfersWireTransmitterRequest$Outbound,
+    PostCombinedTransfersWireTransmitterRequest
+  > = smartUnion([
+    z.lazy(() => TransferStructuredAddress$outboundSchema),
+    z.lazy(() => WireTransmitterTransferUnstructuredAddress$outboundSchema),
+  ]);
 
-export function postCombinedTransfersWireTransmitterToJSON(
-  postCombinedTransfersWireTransmitter: PostCombinedTransfersWireTransmitter,
+export function postCombinedTransfersWireTransmitterRequestToJSON(
+  postCombinedTransfersWireTransmitterRequest:
+    PostCombinedTransfersWireTransmitterRequest,
 ): string {
   return JSON.stringify(
-    PostCombinedTransfersWireTransmitter$outboundSchema.parse(
-      postCombinedTransfersWireTransmitter,
+    PostCombinedTransfersWireTransmitterRequest$outboundSchema.parse(
+      postCombinedTransfersWireTransmitterRequest,
     ),
   );
 }
 
 /** @internal */
-export type TransferWire$Outbound = {
+export type TransferWireRequest$Outbound = {
   intermediary_bank_address?:
-    | TransferIntermediaryBankAddressUnstructuredAddress$Outbound
+    | TransferIntermediaryBankAddressUnstructuredAddressRequest$Outbound
     | undefined;
   intermediary_bank_name?: string | undefined;
   intermediary_bank_routing_number?: string | undefined;
@@ -1587,13 +2423,13 @@ export type TransferWire$Outbound = {
 };
 
 /** @internal */
-export const TransferWire$outboundSchema: z.ZodMiniType<
-  TransferWire$Outbound,
-  TransferWire
+export const TransferWireRequest$outboundSchema: z.ZodMiniType<
+  TransferWireRequest$Outbound,
+  TransferWireRequest
 > = z.pipe(
   z.object({
     intermediaryBankAddress: z.optional(z.lazy(() =>
-      TransferIntermediaryBankAddressUnstructuredAddress$outboundSchema
+      TransferIntermediaryBankAddressUnstructuredAddressRequest$outboundSchema
     )),
     intermediaryBankName: z.optional(z.string()),
     intermediaryBankRoutingNumber: z.optional(z.string()),
@@ -1616,8 +2452,12 @@ export const TransferWire$outboundSchema: z.ZodMiniType<
   }),
 );
 
-export function transferWireToJSON(transferWire: TransferWire): string {
-  return JSON.stringify(TransferWire$outboundSchema.parse(transferWire));
+export function transferWireRequestToJSON(
+  transferWireRequest: TransferWireRequest,
+): string {
+  return JSON.stringify(
+    TransferWireRequest$outboundSchema.parse(transferWireRequest),
+  );
 }
 
 /** @internal */
@@ -1629,9 +2469,9 @@ export type TransferRequest$Outbound = {
   destination_customer_uid?: string | undefined;
   initiator_type?: string | undefined;
   usd_transfer_amount: string;
-  ach?: TransferAch$Outbound | undefined;
-  instant_payment?: TransferInstantPayment$Outbound | undefined;
-  wire?: TransferWire$Outbound | undefined;
+  ach?: TransferAchRequest$Outbound | undefined;
+  instant_payment?: TransferInstantPaymentRequest$Outbound | undefined;
+  wire?: TransferWireRequest$Outbound | undefined;
 };
 
 /** @internal */
@@ -1646,14 +2486,14 @@ export const TransferRequest$outboundSchema: z.ZodMiniType<
     initiatingCustomerUid: z.string(),
     destinationCustomerUid: z.optional(z.string()),
     initiatorType: z.optional(
-      PostCombinedTransfersInitiatorType$outboundSchema,
+      PostCombinedTransfersInitiatorTypeRequest$outboundSchema,
     ),
     usdTransferAmount: z.string(),
-    ach: z.optional(z.lazy(() => TransferAch$outboundSchema)),
+    ach: z.optional(z.lazy(() => TransferAchRequest$outboundSchema)),
     instantPayment: z.optional(
-      z.lazy(() => TransferInstantPayment$outboundSchema),
+      z.lazy(() => TransferInstantPaymentRequest$outboundSchema),
     ),
-    wire: z.optional(z.lazy(() => TransferWire$outboundSchema)),
+    wire: z.optional(z.lazy(() => TransferWireRequest$outboundSchema)),
   }),
   z.transform((v) => {
     return remap$(v, {
@@ -1810,9 +2650,335 @@ export const PostCombinedTransfersStatus$inboundSchema: z.ZodMiniType<
 > = openEnums.inboundSchema(PostCombinedTransfersStatus);
 
 /** @internal */
+export const PostCombinedTransfersSyntheticAccountCategory$inboundSchema:
+  z.ZodMiniType<PostCombinedTransfersSyntheticAccountCategory, unknown> =
+    openEnums.inboundSchema(PostCombinedTransfersSyntheticAccountCategory);
+
+/** @internal */
+export const PostCombinedTransfersSyntheticAccountStatus$inboundSchema:
+  z.ZodMiniType<PostCombinedTransfersSyntheticAccountStatus, unknown> =
+    openEnums.inboundSchema(PostCombinedTransfersSyntheticAccountStatus);
+
+/** @internal */
+export const PostCombinedTransfersAssetBalance$inboundSchema: z.ZodMiniType<
+  PostCombinedTransfersAssetBalance,
+  unknown
+> = z.pipe(
+  z.object({
+    asset_quantity: types.optional(types.string()),
+    asset_type: types.optional(types.string()),
+    current_usd_value: types.optional(types.string()),
+    custodial_account_uid: types.optional(types.string()),
+    custodial_account_name: types.optional(types.string()),
+    debit: types.optional(types.boolean()),
+  }),
+  z.transform((v) => {
+    return remap$(v, {
+      "asset_quantity": "assetQuantity",
+      "asset_type": "assetType",
+      "current_usd_value": "currentUsdValue",
+      "custodial_account_uid": "custodialAccountUid",
+      "custodial_account_name": "custodialAccountName",
+    });
+  }),
+);
+
+export function postCombinedTransfersAssetBalanceFromJSON(
+  jsonString: string,
+): SafeParseResult<PostCombinedTransfersAssetBalance, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => PostCombinedTransfersAssetBalance$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'PostCombinedTransfersAssetBalance' from JSON`,
+  );
+}
+
+/** @internal */
+export const PostCombinedTransfersAccountTypeResponse$inboundSchema:
+  z.ZodMiniType<PostCombinedTransfersAccountTypeResponse, unknown> = openEnums
+    .inboundSchema(PostCombinedTransfersAccountTypeResponse);
+
+/** @internal */
+export const PostCombinedTransfersSyntheticAccountAchResponse$inboundSchema:
+  z.ZodMiniType<PostCombinedTransfersSyntheticAccountAchResponse, unknown> = z
+    .pipe(
+      z.object({
+        account_type: types.optional(
+          PostCombinedTransfersAccountTypeResponse$inboundSchema,
+        ),
+        counterparty_name: types.optional(types.string()),
+      }),
+      z.transform((v) => {
+        return remap$(v, {
+          "account_type": "accountType",
+          "counterparty_name": "counterpartyName",
+        });
+      }),
+    );
+
+export function postCombinedTransfersSyntheticAccountAchResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<
+  PostCombinedTransfersSyntheticAccountAchResponse,
+  SDKValidationError
+> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      PostCombinedTransfersSyntheticAccountAchResponse$inboundSchema.parse(
+        JSON.parse(x),
+      ),
+    `Failed to parse 'PostCombinedTransfersSyntheticAccountAchResponse' from JSON`,
+  );
+}
+
+/** @internal */
+export const PostCombinedTransfersInstantPaymentCounterpartyAddressResponse$inboundSchema:
+  z.ZodMiniType<
+    PostCombinedTransfersInstantPaymentCounterpartyAddressResponse,
+    unknown
+  > = z.pipe(
+    z.object({
+      street_number: z.optional(z.nullable(types.string())),
+      street1: types.string(),
+      street2: z.optional(z.nullable(types.string())),
+      city: types.nullable(types.string()),
+      state: types.nullable(types.string()),
+      postal_code: types.nullable(types.string()),
+      country: types.nullable(types.string()),
+    }),
+    z.transform((v) => {
+      return remap$(v, {
+        "street_number": "streetNumber",
+        "postal_code": "postalCode",
+      });
+    }),
+  );
+
+export function postCombinedTransfersInstantPaymentCounterpartyAddressResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<
+  PostCombinedTransfersInstantPaymentCounterpartyAddressResponse,
+  SDKValidationError
+> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      PostCombinedTransfersInstantPaymentCounterpartyAddressResponse$inboundSchema
+        .parse(JSON.parse(x)),
+    `Failed to parse 'PostCombinedTransfersInstantPaymentCounterpartyAddressResponse' from JSON`,
+  );
+}
+
+/** @internal */
+export const PostCombinedTransfersSyntheticAccountInstantPaymentResponse$inboundSchema:
+  z.ZodMiniType<
+    PostCombinedTransfersSyntheticAccountInstantPaymentResponse,
+    unknown
+  > = z.pipe(
+    z.object({
+      counterparty_address: types.optional(z.lazy(() =>
+        PostCombinedTransfersInstantPaymentCounterpartyAddressResponse$inboundSchema
+      )),
+      counterparty_name: types.optional(types.string()),
+      email: z.optional(z.nullable(types.string())),
+      phone: z.optional(z.nullable(types.string())),
+    }),
+    z.transform((v) => {
+      return remap$(v, {
+        "counterparty_address": "counterpartyAddress",
+        "counterparty_name": "counterpartyName",
+      });
+    }),
+  );
+
+export function postCombinedTransfersSyntheticAccountInstantPaymentResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<
+  PostCombinedTransfersSyntheticAccountInstantPaymentResponse,
+  SDKValidationError
+> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      PostCombinedTransfersSyntheticAccountInstantPaymentResponse$inboundSchema
+        .parse(JSON.parse(x)),
+    `Failed to parse 'PostCombinedTransfersSyntheticAccountInstantPaymentResponse' from JSON`,
+  );
+}
+
+/** @internal */
+export const PostCombinedTransfersWireCounterpartyAddressResponse$inboundSchema:
+  z.ZodMiniType<PostCombinedTransfersWireCounterpartyAddressResponse, unknown> =
+    z.pipe(
+      z.object({
+        line1: z.optional(z.nullable(types.string())),
+        line2: z.optional(z.nullable(types.string())),
+        line3: z.optional(z.nullable(types.string())),
+        building_number: z.optional(z.nullable(types.string())),
+        street_name: z.optional(z.nullable(types.string())),
+        city: z.optional(z.nullable(types.string())),
+        state: z.optional(z.nullable(types.string())),
+        postal_code: z.optional(z.nullable(types.string())),
+        country: z.optional(z.nullable(types.string())),
+      }),
+      z.transform((v) => {
+        return remap$(v, {
+          "building_number": "buildingNumber",
+          "street_name": "streetName",
+          "postal_code": "postalCode",
+        });
+      }),
+    );
+
+export function postCombinedTransfersWireCounterpartyAddressResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<
+  PostCombinedTransfersWireCounterpartyAddressResponse,
+  SDKValidationError
+> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      PostCombinedTransfersWireCounterpartyAddressResponse$inboundSchema.parse(
+        JSON.parse(x),
+      ),
+    `Failed to parse 'PostCombinedTransfersWireCounterpartyAddressResponse' from JSON`,
+  );
+}
+
+/** @internal */
+export const PostCombinedTransfersSyntheticAccountUnstructuredAddressResponse$inboundSchema:
+  z.ZodMiniType<
+    PostCombinedTransfersSyntheticAccountUnstructuredAddressResponse,
+    unknown
+  > = z.object({
+    line1: z.optional(z.nullable(types.string())),
+    line2: z.optional(z.nullable(types.string())),
+    line3: z.optional(z.nullable(types.string())),
+    country: z.optional(z.nullable(types.string())),
+  });
+
+export function postCombinedTransfersSyntheticAccountUnstructuredAddressResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<
+  PostCombinedTransfersSyntheticAccountUnstructuredAddressResponse,
+  SDKValidationError
+> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      PostCombinedTransfersSyntheticAccountUnstructuredAddressResponse$inboundSchema
+        .parse(JSON.parse(x)),
+    `Failed to parse 'PostCombinedTransfersSyntheticAccountUnstructuredAddressResponse' from JSON`,
+  );
+}
+
+/** @internal */
+export const PostCombinedTransfersSyntheticAccountWireResponse$inboundSchema:
+  z.ZodMiniType<PostCombinedTransfersSyntheticAccountWireResponse, unknown> = z
+    .pipe(
+      z.object({
+        counterparty_address: z.optional(z.nullable(z.lazy(() =>
+          PostCombinedTransfersWireCounterpartyAddressResponse$inboundSchema
+        ))),
+        counterparty_name: types.optional(types.string()),
+        counterparty_bank_address: z.optional(z.nullable(z.lazy(() =>
+          PostCombinedTransfersSyntheticAccountUnstructuredAddressResponse$inboundSchema
+        ))),
+        counterparty_bank_name: z.optional(z.nullable(types.string())),
+      }),
+      z.transform((v) => {
+        return remap$(v, {
+          "counterparty_address": "counterpartyAddress",
+          "counterparty_name": "counterpartyName",
+          "counterparty_bank_address": "counterpartyBankAddress",
+          "counterparty_bank_name": "counterpartyBankName",
+        });
+      }),
+    );
+
+export function postCombinedTransfersSyntheticAccountWireResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<
+  PostCombinedTransfersSyntheticAccountWireResponse,
+  SDKValidationError
+> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      PostCombinedTransfersSyntheticAccountWireResponse$inboundSchema.parse(
+        JSON.parse(x),
+      ),
+    `Failed to parse 'PostCombinedTransfersSyntheticAccountWireResponse' from JSON`,
+  );
+}
+
+/** @internal */
 export const PostCombinedTransfersSyntheticAccountResponse$inboundSchema:
   z.ZodMiniType<PostCombinedTransfersSyntheticAccountResponse, unknown> = z
-    .object({});
+    .pipe(
+      z.object({
+        uid: types.optional(types.string()),
+        external_uid: types.optional(types.string()),
+        name: types.optional(types.string()),
+        pool_uid: types.optional(types.string()),
+        synthetic_account_type_uid: types.optional(types.string()),
+        custodial_account_uids: types.optional(z.array(types.string())),
+        synthetic_account_category: types.optional(
+          PostCombinedTransfersSyntheticAccountCategory$inboundSchema,
+        ),
+        status: types.optional(
+          PostCombinedTransfersSyntheticAccountStatus$inboundSchema,
+        ),
+        liability: types.optional(types.boolean()),
+        net_usd_balance: z.optional(z.nullable(types.string())),
+        net_usd_pending_balance: z.optional(z.nullable(types.string())),
+        net_usd_available_balance: z.optional(z.nullable(types.string())),
+        net_usd_closing_balance: z.optional(z.nullable(types.string())),
+        net_usd_closing_balance_as_of: types.optional(types.string()),
+        asset_balances: types.optional(z.array(types.nullable(z.lazy(() =>
+          PostCombinedTransfersAssetBalance$inboundSchema
+        )))),
+        master_account: types.optional(types.boolean()),
+        routing_number: z.optional(z.nullable(types.string())),
+        account_number_last_four: z.optional(z.nullable(types.string())),
+        opened_at: types.optional(types.date()),
+        closed_at: z.optional(z.nullable(types.date())),
+        account_number: z.optional(z.nullable(types.string())),
+        ach: types.optional(z.lazy(() =>
+          PostCombinedTransfersSyntheticAccountAchResponse$inboundSchema
+        )),
+        instant_payment: types.optional(z.lazy(() =>
+          PostCombinedTransfersSyntheticAccountInstantPaymentResponse$inboundSchema
+        )),
+        wire: types.optional(z.lazy(() =>
+          PostCombinedTransfersSyntheticAccountWireResponse$inboundSchema
+        )),
+      }),
+      z.transform((v) => {
+        return remap$(v, {
+          "external_uid": "externalUid",
+          "pool_uid": "poolUid",
+          "synthetic_account_type_uid": "syntheticAccountTypeUid",
+          "custodial_account_uids": "custodialAccountUids",
+          "synthetic_account_category": "syntheticAccountCategory",
+          "net_usd_balance": "netUsdBalance",
+          "net_usd_pending_balance": "netUsdPendingBalance",
+          "net_usd_available_balance": "netUsdAvailableBalance",
+          "net_usd_closing_balance": "netUsdClosingBalance",
+          "net_usd_closing_balance_as_of": "netUsdClosingBalanceAsOf",
+          "asset_balances": "assetBalances",
+          "master_account": "masterAccount",
+          "routing_number": "routingNumber",
+          "account_number_last_four": "accountNumberLastFour",
+          "opened_at": "openedAt",
+          "closed_at": "closedAt",
+          "account_number": "accountNumber",
+          "instant_payment": "instantPayment",
+        });
+      }),
+    );
 
 export function postCombinedTransfersSyntheticAccountResponseFromJSON(
   jsonString: string,
@@ -1831,10 +2997,356 @@ export function postCombinedTransfersSyntheticAccountResponseFromJSON(
 }
 
 /** @internal */
+export const PostCombinedTransfersTransferStatus$inboundSchema: z.ZodMiniType<
+  PostCombinedTransfersTransferStatus,
+  unknown
+> = openEnums.inboundSchema(PostCombinedTransfersTransferStatus);
+
+/** @internal */
+export const PostCombinedTransfersInitiatorTypeResponse$inboundSchema:
+  z.ZodMiniType<PostCombinedTransfersInitiatorTypeResponse, unknown> = openEnums
+    .inboundSchema(PostCombinedTransfersInitiatorTypeResponse);
+
+/** @internal */
+export const PostCombinedTransfersSecCodeResponse$inboundSchema: z.ZodMiniType<
+  PostCombinedTransfersSecCodeResponse,
+  unknown
+> = openEnums.inboundSchema(PostCombinedTransfersSecCodeResponse);
+
+/** @internal */
+export const PostCombinedTransfersPaymentTypeResponse$inboundSchema:
+  z.ZodMiniType<PostCombinedTransfersPaymentTypeResponse, unknown> = openEnums
+    .inboundSchema(PostCombinedTransfersPaymentTypeResponse);
+
+/** @internal */
+export const PostCombinedTransfersServiceProcessingResponse$inboundSchema:
+  z.ZodMiniType<PostCombinedTransfersServiceProcessingResponse, unknown> =
+    openEnums.inboundSchema(PostCombinedTransfersServiceProcessingResponse);
+
+/** @internal */
+export const PostCombinedTransfersTransferAchResponse$inboundSchema:
+  z.ZodMiniType<PostCombinedTransfersTransferAchResponse, unknown> = z.pipe(
+    z.object({
+      originator_name: types.optional(types.string()),
+      company_id: types.optional(types.string()),
+      company_discretionary_data: types.optional(types.string()),
+      prenote: types.optional(types.boolean()),
+      sec_code: types.optional(
+        PostCombinedTransfersSecCodeResponse$inboundSchema,
+      ),
+      payment_type: types.optional(
+        PostCombinedTransfersPaymentTypeResponse$inboundSchema,
+      ),
+      entry_description: types.optional(types.string()),
+      service_processing: types.optional(
+        PostCombinedTransfersServiceProcessingResponse$inboundSchema,
+      ),
+      effective_entry_date: types.optional(types.string()),
+      id_number: types.optional(types.string()),
+      addenda: types.optional(types.string()),
+    }),
+    z.transform((v) => {
+      return remap$(v, {
+        "originator_name": "originatorName",
+        "company_id": "companyId",
+        "company_discretionary_data": "companyDiscretionaryData",
+        "sec_code": "secCode",
+        "payment_type": "paymentType",
+        "entry_description": "entryDescription",
+        "service_processing": "serviceProcessing",
+        "effective_entry_date": "effectiveEntryDate",
+        "id_number": "idNumber",
+      });
+    }),
+  );
+
+export function postCombinedTransfersTransferAchResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<
+  PostCombinedTransfersTransferAchResponse,
+  SDKValidationError
+> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      PostCombinedTransfersTransferAchResponse$inboundSchema.parse(
+        JSON.parse(x),
+      ),
+    `Failed to parse 'PostCombinedTransfersTransferAchResponse' from JSON`,
+  );
+}
+
+/** @internal */
+export const PostCombinedTransfersInstantPaymentTransmitterResponse$inboundSchema:
+  z.ZodMiniType<
+    PostCombinedTransfersInstantPaymentTransmitterResponse,
+    unknown
+  > = z.pipe(
+    z.object({
+      name: types.string(),
+      transmitter_identifier: types.string(),
+      street_number: types.string(),
+      street1: types.string(),
+      city: types.nullable(types.string()),
+      state: types.nullable(types.string()),
+      postal_code: types.nullable(types.string()),
+      country: types.nullable(types.string()),
+    }),
+    z.transform((v) => {
+      return remap$(v, {
+        "transmitter_identifier": "transmitterIdentifier",
+        "street_number": "streetNumber",
+        "postal_code": "postalCode",
+      });
+    }),
+  );
+
+export function postCombinedTransfersInstantPaymentTransmitterResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<
+  PostCombinedTransfersInstantPaymentTransmitterResponse,
+  SDKValidationError
+> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      PostCombinedTransfersInstantPaymentTransmitterResponse$inboundSchema
+        .parse(JSON.parse(x)),
+    `Failed to parse 'PostCombinedTransfersInstantPaymentTransmitterResponse' from JSON`,
+  );
+}
+
+/** @internal */
+export const PostCombinedTransfersTransferInstantPaymentResponse$inboundSchema:
+  z.ZodMiniType<PostCombinedTransfersTransferInstantPaymentResponse, unknown> =
+    z.pipe(
+      z.object({
+        instant_payment_transmitter: types.optional(z.lazy(() =>
+          PostCombinedTransfersInstantPaymentTransmitterResponse$inboundSchema
+        )),
+      }),
+      z.transform((v) => {
+        return remap$(v, {
+          "instant_payment_transmitter": "instantPaymentTransmitter",
+        });
+      }),
+    );
+
+export function postCombinedTransfersTransferInstantPaymentResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<
+  PostCombinedTransfersTransferInstantPaymentResponse,
+  SDKValidationError
+> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      PostCombinedTransfersTransferInstantPaymentResponse$inboundSchema.parse(
+        JSON.parse(x),
+      ),
+    `Failed to parse 'PostCombinedTransfersTransferInstantPaymentResponse' from JSON`,
+  );
+}
+
+/** @internal */
+export const PostCombinedTransfersTransferUnstructuredAddressResponse$inboundSchema:
+  z.ZodMiniType<
+    PostCombinedTransfersTransferUnstructuredAddressResponse,
+    unknown
+  > = z.object({
+    line1: z.optional(z.nullable(types.string())),
+    line2: z.optional(z.nullable(types.string())),
+    line3: z.optional(z.nullable(types.string())),
+    country: z.optional(z.nullable(types.string())),
+  });
+
+export function postCombinedTransfersTransferUnstructuredAddressResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<
+  PostCombinedTransfersTransferUnstructuredAddressResponse,
+  SDKValidationError
+> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      PostCombinedTransfersTransferUnstructuredAddressResponse$inboundSchema
+        .parse(JSON.parse(x)),
+    `Failed to parse 'PostCombinedTransfersTransferUnstructuredAddressResponse' from JSON`,
+  );
+}
+
+/** @internal */
+export const PostCombinedTransfersWireTransmitterResponse$inboundSchema:
+  z.ZodMiniType<PostCombinedTransfersWireTransmitterResponse, unknown> = z.pipe(
+    z.object({
+      name: types.string(),
+      transmitter_identifier: types.string(),
+      line1: z.optional(z.nullable(types.string())),
+      line2: z.optional(z.nullable(types.string())),
+      line3: z.optional(z.nullable(types.string())),
+      building_number: z.optional(z.nullable(types.string())),
+      street_name: z.optional(z.nullable(types.string())),
+      city: z.optional(z.nullable(types.string())),
+      state: z.optional(z.nullable(types.string())),
+      postal_code: z.optional(z.nullable(types.string())),
+      country: z.optional(z.nullable(types.string())),
+    }),
+    z.transform((v) => {
+      return remap$(v, {
+        "transmitter_identifier": "transmitterIdentifier",
+        "building_number": "buildingNumber",
+        "street_name": "streetName",
+        "postal_code": "postalCode",
+      });
+    }),
+  );
+
+export function postCombinedTransfersWireTransmitterResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<
+  PostCombinedTransfersWireTransmitterResponse,
+  SDKValidationError
+> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      PostCombinedTransfersWireTransmitterResponse$inboundSchema.parse(
+        JSON.parse(x),
+      ),
+    `Failed to parse 'PostCombinedTransfersWireTransmitterResponse' from JSON`,
+  );
+}
+
+/** @internal */
+export const PostCombinedTransfersTransferWireResponse$inboundSchema:
+  z.ZodMiniType<PostCombinedTransfersTransferWireResponse, unknown> = z.pipe(
+    z.object({
+      intermediary_bank_address: types.optional(z.lazy(() =>
+        PostCombinedTransfersTransferUnstructuredAddressResponse$inboundSchema
+      )),
+      intermediary_bank_name: types.optional(types.string()),
+      intermediary_bank_routing_number: types.optional(types.string()),
+      wire_transmitter: types.optional(z.lazy(() =>
+        PostCombinedTransfersWireTransmitterResponse$inboundSchema
+      )),
+    }),
+    z.transform((v) => {
+      return remap$(v, {
+        "intermediary_bank_address": "intermediaryBankAddress",
+        "intermediary_bank_name": "intermediaryBankName",
+        "intermediary_bank_routing_number": "intermediaryBankRoutingNumber",
+        "wire_transmitter": "wireTransmitter",
+      });
+    }),
+  );
+
+export function postCombinedTransfersTransferWireResponseFromJSON(
+  jsonString: string,
+): SafeParseResult<
+  PostCombinedTransfersTransferWireResponse,
+  SDKValidationError
+> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      PostCombinedTransfersTransferWireResponse$inboundSchema.parse(
+        JSON.parse(x),
+      ),
+    `Failed to parse 'PostCombinedTransfersTransferWireResponse' from JSON`,
+  );
+}
+
+/** @internal */
+export const PostCombinedTransfersCurrentCancellationStatus$inboundSchema:
+  z.ZodMiniType<PostCombinedTransfersCurrentCancellationStatus, unknown> =
+    openEnums.inboundSchema(PostCombinedTransfersCurrentCancellationStatus);
+
+/** @internal */
+export const PostCombinedTransfersCancellation$inboundSchema: z.ZodMiniType<
+  PostCombinedTransfersCancellation,
+  unknown
+> = z.pipe(
+  z.object({
+    authorized_representative_name: types.optional(types.string()),
+    cancellation_reason: types.optional(types.string()),
+    current_cancellation_status: types.optional(
+      PostCombinedTransfersCurrentCancellationStatus$inboundSchema,
+    ),
+    cancellation_requested_at: types.optional(types.date()),
+    cancellation_succeeded_at: types.optional(types.date()),
+    cancellation_failed_at: types.optional(types.date()),
+  }),
+  z.transform((v) => {
+    return remap$(v, {
+      "authorized_representative_name": "authorizedRepresentativeName",
+      "cancellation_reason": "cancellationReason",
+      "current_cancellation_status": "currentCancellationStatus",
+      "cancellation_requested_at": "cancellationRequestedAt",
+      "cancellation_succeeded_at": "cancellationSucceededAt",
+      "cancellation_failed_at": "cancellationFailedAt",
+    });
+  }),
+);
+
+export function postCombinedTransfersCancellationFromJSON(
+  jsonString: string,
+): SafeParseResult<PostCombinedTransfersCancellation, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => PostCombinedTransfersCancellation$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'PostCombinedTransfersCancellation' from JSON`,
+  );
+}
+
+/** @internal */
 export const PostCombinedTransfersTransferResponse$inboundSchema: z.ZodMiniType<
   PostCombinedTransfersTransferResponse,
   unknown
-> = z.object({});
+> = z.pipe(
+  z.object({
+    source_synthetic_account_uid: types.optional(types.string()),
+    destination_synthetic_account_uid: types.optional(types.string()),
+    initiating_customer_uid: types.optional(types.string()),
+    destination_customer_uid: types.optional(types.string()),
+    status: types.optional(PostCombinedTransfersTransferStatus$inboundSchema),
+    initiator_type: types.optional(
+      PostCombinedTransfersInitiatorTypeResponse$inboundSchema,
+    ),
+    created_at: types.optional(types.date()),
+    queued_until: types.optional(types.date()),
+    uid: types.optional(types.string()),
+    external_uid: types.optional(types.string()),
+    transaction_uids: types.optional(z.array(types.string())),
+    usd_transfer_amount: types.optional(types.string()),
+    ach: types.optional(
+      z.lazy(() => PostCombinedTransfersTransferAchResponse$inboundSchema),
+    ),
+    instant_payment: types.optional(z.lazy(() =>
+      PostCombinedTransfersTransferInstantPaymentResponse$inboundSchema
+    )),
+    wire: types.optional(z.lazy(() =>
+      PostCombinedTransfersTransferWireResponse$inboundSchema
+    )),
+    cancellation: types.optional(z.lazy(() =>
+      PostCombinedTransfersCancellation$inboundSchema
+    )),
+  }),
+  z.transform((v) => {
+    return remap$(v, {
+      "source_synthetic_account_uid": "sourceSyntheticAccountUid",
+      "destination_synthetic_account_uid": "destinationSyntheticAccountUid",
+      "initiating_customer_uid": "initiatingCustomerUid",
+      "destination_customer_uid": "destinationCustomerUid",
+      "initiator_type": "initiatorType",
+      "created_at": "createdAt",
+      "queued_until": "queuedUntil",
+      "external_uid": "externalUid",
+      "transaction_uids": "transactionUids",
+      "usd_transfer_amount": "usdTransferAmount",
+      "instant_payment": "instantPayment",
+    });
+  }),
+);
 
 export function postCombinedTransfersTransferResponseFromJSON(
   jsonString: string,

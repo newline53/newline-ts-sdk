@@ -473,7 +473,7 @@ export type GetTransactionsCounterpartyBankAddress = {
 };
 
 /**
- * Information about the ultimate debtor (the entity on whose behalf the payment is made). Only populated if your program has enabled RTP Ultimate Debtor support.
+ * Information about the ultimate debtor (the entity on whose behalf the payment is made).
  */
 export type GetTransactionsUltimateDebtorInfo = {
   /**
@@ -609,7 +609,7 @@ export type GetTransactionsInstantPayment = {
     | null
     | undefined;
   /**
-   * Information about the ultimate debtor (the entity on whose behalf the payment is made). Only populated if your program has enabled RTP Ultimate Debtor support.
+   * Information about the ultimate debtor (the entity on whose behalf the payment is made).
    */
   ultimateDebtorInfo?: GetTransactionsUltimateDebtorInfo | null | undefined;
 };
@@ -747,7 +747,7 @@ export type GetTransactionsWire = {
 };
 
 /**
- * Standard Entry Class (SEC) code. Newline supports the following SEC codes: CCD, CIE, PPD, TEL, WEB. For more details, refer to our ACH guide's [section](https://developers.newline53.com/docs/ach#standard-entry-class-sec-codes) on SEC code use.
+ * Standard Entry Class (SEC) code. Newline supports the following SEC codes: CCD, CIE, PPD, TEL, WEB, IAT. For more details, refer to our ACH guide's [section](https://developers.newline53.com/docs/ach#standard-entry-class-sec-codes) on SEC code use.
  *
  * @remarks
  */
@@ -757,9 +757,10 @@ export const GetTransactionsSecCode = {
   Ppd: "PPD",
   Tel: "TEL",
   Web: "WEB",
+  Iat: "IAT",
 } as const;
 /**
- * Standard Entry Class (SEC) code. Newline supports the following SEC codes: CCD, CIE, PPD, TEL, WEB. For more details, refer to our ACH guide's [section](https://developers.newline53.com/docs/ach#standard-entry-class-sec-codes) on SEC code use.
+ * Standard Entry Class (SEC) code. Newline supports the following SEC codes: CCD, CIE, PPD, TEL, WEB, IAT. For more details, refer to our ACH guide's [section](https://developers.newline53.com/docs/ach#standard-entry-class-sec-codes) on SEC code use.
  *
  * @remarks
  */
@@ -1058,7 +1059,7 @@ export type GetTransactionsAch = {
    */
   prenote?: boolean | undefined;
   /**
-   * Standard Entry Class (SEC) code. Newline supports the following SEC codes: CCD, CIE, PPD, TEL, WEB. For more details, refer to our ACH guide's [section](https://developers.newline53.com/docs/ach#standard-entry-class-sec-codes) on SEC code use.
+   * Standard Entry Class (SEC) code. Newline supports the following SEC codes: CCD, CIE, PPD, TEL, WEB, IAT. For more details, refer to our ACH guide's [section](https://developers.newline53.com/docs/ach#standard-entry-class-sec-codes) on SEC code use.
    *
    * @remarks
    */
@@ -1093,6 +1094,12 @@ export type GetTransactionsAch = {
    * @remarks
    */
   idNumber?: string | undefined;
+  /**
+   * Optional additional payment-related information, such as invoice numbers, originator/receiver information, payment instructions, etc. Up to 80 characters. Optional for all newline supported SEC codes other than TEL. Newline will reject the Transfer if an Addenda value is provided with SEC code TEL.
+   *
+   * @remarks
+   */
+  addenda?: string | undefined;
   /**
    * ACH return code, pulled from the Return File
    */
@@ -1910,6 +1917,7 @@ export const GetTransactionsAch$inboundSchema: z.ZodMiniType<
     ),
     effective_entry_date: types.optional(types.string()),
     id_number: types.optional(types.string()),
+    addenda: types.optional(types.string()),
     ach_return_code: types.optional(types.string()),
     ach_return_reason: types.optional(types.string()),
     noc_code: types.optional(types.string()),

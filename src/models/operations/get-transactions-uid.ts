@@ -263,7 +263,7 @@ export type GetTransactionsUidCounterpartyBankAddress = {
 };
 
 /**
- * Information about the ultimate debtor (the entity on whose behalf the payment is made). Only populated if your program has enabled RTP Ultimate Debtor support.
+ * Information about the ultimate debtor (the entity on whose behalf the payment is made).
  */
 export type GetTransactionsUidUltimateDebtorInfo = {
   /**
@@ -432,7 +432,7 @@ export type GetTransactionsUidInstantPayment = {
     | null
     | undefined;
   /**
-   * Information about the ultimate debtor (the entity on whose behalf the payment is made). Only populated if your program has enabled RTP Ultimate Debtor support.
+   * Information about the ultimate debtor (the entity on whose behalf the payment is made).
    */
   ultimateDebtorInfo?: GetTransactionsUidUltimateDebtorInfo | null | undefined;
   /**
@@ -647,7 +647,7 @@ export type GetTransactionsUidWire = {
 };
 
 /**
- * Standard Entry Class (SEC) code. Newline supports the following SEC codes: CCD, CIE, PPD, TEL, WEB. For more details, refer to our ACH guide's [section](https://developers.newline53.com/docs/ach#standard-entry-class-sec-codes) on SEC code use.
+ * Standard Entry Class (SEC) code. Newline supports the following SEC codes: CCD, CIE, PPD, TEL, WEB, IAT. For more details, refer to our ACH guide's [section](https://developers.newline53.com/docs/ach#standard-entry-class-sec-codes) on SEC code use.
  *
  * @remarks
  */
@@ -657,9 +657,10 @@ export const GetTransactionsUidSecCode = {
   Ppd: "PPD",
   Tel: "TEL",
   Web: "WEB",
+  Iat: "IAT",
 } as const;
 /**
- * Standard Entry Class (SEC) code. Newline supports the following SEC codes: CCD, CIE, PPD, TEL, WEB. For more details, refer to our ACH guide's [section](https://developers.newline53.com/docs/ach#standard-entry-class-sec-codes) on SEC code use.
+ * Standard Entry Class (SEC) code. Newline supports the following SEC codes: CCD, CIE, PPD, TEL, WEB, IAT. For more details, refer to our ACH guide's [section](https://developers.newline53.com/docs/ach#standard-entry-class-sec-codes) on SEC code use.
  *
  * @remarks
  */
@@ -960,7 +961,7 @@ export type GetTransactionsUidAch = {
    */
   prenote?: boolean | undefined;
   /**
-   * Standard Entry Class (SEC) code. Newline supports the following SEC codes: CCD, CIE, PPD, TEL, WEB. For more details, refer to our ACH guide's [section](https://developers.newline53.com/docs/ach#standard-entry-class-sec-codes) on SEC code use.
+   * Standard Entry Class (SEC) code. Newline supports the following SEC codes: CCD, CIE, PPD, TEL, WEB, IAT. For more details, refer to our ACH guide's [section](https://developers.newline53.com/docs/ach#standard-entry-class-sec-codes) on SEC code use.
    *
    * @remarks
    */
@@ -996,6 +997,12 @@ export type GetTransactionsUidAch = {
    */
   idNumber?: string | undefined;
   /**
+   * Optional additional payment-related information, such as invoice numbers, originator/receiver information, payment instructions, etc. Up to 80 characters. Optional for all newline supported SEC codes other than TEL. Newline will reject the Transfer if an Addenda value is provided with SEC code TEL.
+   *
+   * @remarks
+   */
+  addenda?: string | undefined;
+  /**
    * ACH return code, pulled from the Return File
    */
   achReturnCode?: string | undefined;
@@ -1003,12 +1010,6 @@ export type GetTransactionsUidAch = {
    * ACH return reason, pulled from the Return File
    */
   achReturnReason?: string | undefined;
-  /**
-   * Optional additional payment-related information, such as invoice numbers, originator/receiver information, payment instructions, etc. Up to 80 characters. Optional for all newline supported SEC codes other than TEL. Newline will reject the Transfer if an Addenda value is provided with SEC code TEL.
-   *
-   * @remarks
-   */
-  addenda?: string | undefined;
   /**
    * Notification of Change (NOC) code, returned from the RDFI (Receiving Depository Financial Institution).
    *
@@ -1796,9 +1797,9 @@ export const GetTransactionsUidAch$inboundSchema: z.ZodMiniType<
     ),
     effective_entry_date: types.optional(types.string()),
     id_number: types.optional(types.string()),
+    addenda: types.optional(types.string()),
     ach_return_code: types.optional(types.string()),
     ach_return_reason: types.optional(types.string()),
-    addenda: types.optional(types.string()),
     noc_code: types.optional(types.string()),
     noc_corrected_data: types.optional(types.string()),
     noc_reason: types.optional(types.string()),

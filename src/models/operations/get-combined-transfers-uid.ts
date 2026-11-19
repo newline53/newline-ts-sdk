@@ -104,18 +104,843 @@ export type GetCombinedTransfersUidStatus = OpenEnum<
 >;
 
 /**
- * Parameters provided at time of creation. UID field will get populated once synthetic account has been successfully created, unless uid value was supplied at creation time.
+ * The name of the Synthetic Account Category associated with the Synthetic Account Type for this account. Refer to the Synthetic Account Type for details.
+ */
+export const GetCombinedTransfersUidSyntheticAccountCategory = {
+  General: "general",
+  AchExternal: "ach_external",
+  InstantPaymentExternal: "instant_payment_external",
+  WireExternal: "wire_external",
+} as const;
+/**
+ * The name of the Synthetic Account Category associated with the Synthetic Account Type for this account. Refer to the Synthetic Account Type for details.
+ */
+export type GetCombinedTransfersUidSyntheticAccountCategory = OpenEnum<
+  typeof GetCombinedTransfersUidSyntheticAccountCategory
+>;
+
+/**
+ * A value indicating the overall state of this Synthetic Account.
  *
  * @remarks
  */
-export type GetCombinedTransfersUidSyntheticAccount = {};
+export const GetCombinedTransfersUidSyntheticAccountStatus = {
+  Initiated: "initiated",
+  Active: "active",
+  Archived: "archived",
+  Failed: "failed",
+} as const;
+/**
+ * A value indicating the overall state of this Synthetic Account.
+ *
+ * @remarks
+ */
+export type GetCombinedTransfersUidSyntheticAccountStatus = OpenEnum<
+  typeof GetCombinedTransfersUidSyntheticAccountStatus
+>;
+
+export type GetCombinedTransfersUidAssetBalance = {
+  assetQuantity?: string | undefined;
+  assetType?: string | undefined;
+  currentUsdValue?: string | undefined;
+  custodialAccountUid?: string | undefined;
+  custodialAccountName?: string | undefined;
+  debit?: boolean | undefined;
+};
+
+/**
+ * The type of ACH account
+ */
+export const GetCombinedTransfersUidAccountType = {
+  Checking: "checking",
+  Savings: "savings",
+} as const;
+/**
+ * The type of ACH account
+ */
+export type GetCombinedTransfersUidAccountType = OpenEnum<
+  typeof GetCombinedTransfersUidAccountType
+>;
+
+/**
+ * Contains ACH-specific information. Only populated if the Synthetic Account is in the `ach_external` category.
+ *
+ * @remarks
+ */
+export type GetCombinedTransfersUidSyntheticAccountAch = {
+  /**
+   * The type of ACH account
+   */
+  accountType?: GetCombinedTransfersUidAccountType | undefined;
+  /**
+   * Name of the business or individual who owns the external account. Conditional maximum character length: for all newline supported SEC codes other than CIE, the counterparty_name can be 22 characters. For CIE SEC codes, the counterparty_name can be up to 15 characters.
+   *
+   * @remarks
+   */
+  counterpartyName?: string | undefined;
+};
+
+/**
+ * Address of the counterparty. If any address field is provided, street1, city, state, postal_code, and country are required. street_number and street2 are optional.
+ */
+export type GetCombinedTransfersUidInstantPaymentCounterpartyAddress = {
+  /**
+   * Building number for counterparty address. Alphanumeric only. Optional.
+   */
+  streetNumber?: string | null | undefined;
+  /**
+   * Street name for counterparty address
+   */
+  street1: string;
+  /**
+   * Optional second line of street
+   */
+  street2?: string | null | undefined;
+  /**
+   * Maximum 35 characters
+   */
+  city: string | null;
+  /**
+   * 2 characters. Must be a valid US state abbreviation.
+   */
+  state: string | null;
+  /**
+   * 5-digit string. ZIP+4 is allowed.
+   */
+  postalCode: string | null;
+  country: string | null;
+};
+
+export type GetCombinedTransfersUidSyntheticAccountInstantPayment = {
+  /**
+   * Address of the business or individual who owns the external account.
+   *
+   * @remarks
+   */
+  counterpartyAddress?:
+    | GetCombinedTransfersUidInstantPaymentCounterpartyAddress
+    | undefined;
+  /**
+   * Name of the business or individual who owns the counterparty Account.
+   *
+   * @remarks
+   */
+  counterpartyName?: string | undefined;
+  /**
+   * Email address of the counterparty
+   */
+  email?: string | null | undefined;
+  /**
+   * Exactly 10 digits long (no hyphens, parentheses, or spaces)
+   */
+  phone?: string | null | undefined;
+};
+
+/**
+ * Address of the business or individual who owns the external account. The accepted format on requests depends on your program's wire address configuration (`unstructured`, `structured`, or `both`). Responses always return all fields; fields not applicable to the stored format are `null`.
+ *
+ * @remarks
+ */
+export type GetCombinedTransfersUidWireCounterpartyAddress = {
+  /**
+   * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
+   */
+  line1?: string | null | undefined;
+  /**
+   * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
+   */
+  line2?: string | null | undefined;
+  /**
+   * Optional 32 characters. Note that this length is shorter than the other lines. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
+   */
+  line3?: string | null | undefined;
+  /**
+   * Parsed building or house number. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  buildingNumber?: string | null | undefined;
+  /**
+   * Parsed street name. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  streetName?: string | null | undefined;
+  /**
+   * City. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  city?: string | null | undefined;
+  /**
+   * State or province. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  state?: string | null | undefined;
+  /**
+   * US ZIP code (5-digit) or ZIP+4.
+   */
+  postalCode?: string | null | undefined;
+  country?: string | null | undefined;
+};
+
+/**
+ * Address of the financial institution where the external account is held.
+ *
+ * @remarks
+ */
+export type GetCombinedTransfersUidSyntheticAccountUnstructuredAddress = {
+  /**
+   * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
+   */
+  line1?: string | null | undefined;
+  /**
+   * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
+   */
+  line2?: string | null | undefined;
+  /**
+   * Optional 32 characters. Note that this length is shorter than the other lines. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
+   */
+  line3?: string | null | undefined;
+  country?: string | null | undefined;
+};
+
+/**
+ * Contains wire-specific information. Only populated if the Synthetic Account is in the `wire_external` category.
+ *
+ * @remarks
+ */
+export type GetCombinedTransfersUidSyntheticAccountWire = {
+  /**
+   * Address of the business or individual who owns the external account. The accepted format on requests depends on your program's wire address configuration (`unstructured`, `structured`, or `both`). Responses always return all fields; fields not applicable to the stored format are `null`.
+   *
+   * @remarks
+   */
+  counterpartyAddress?:
+    | GetCombinedTransfersUidWireCounterpartyAddress
+    | null
+    | undefined;
+  /**
+   * Name of the business or individual who owns the counterparty Account. Required for synthetic accounts in the wire_external category. Maximum 35 characters.
+   *
+   * @remarks
+   */
+  counterpartyName?: string | undefined;
+  /**
+   * Address of the financial institution where the external account is held.
+   *
+   * @remarks
+   */
+  counterpartyBankAddress?:
+    | GetCombinedTransfersUidSyntheticAccountUnstructuredAddress
+    | null
+    | undefined;
+  /**
+   * Name of the financial institution where the counterparty account is held.
+   *
+   * @remarks
+   */
+  counterpartyBankName?: string | null | undefined;
+};
+
+/**
+ * Parameters provided at time of creation. UID field will get populated once synthetic account has been successfully created,unless uid value was supplied at creation time.
+ *
+ * @remarks
+ */
+export type GetCombinedTransfersUidSyntheticAccount = {
+  /**
+   * Newline-generated unique id resource specific to the current endpoint
+   */
+  uid?: string | undefined;
+  /**
+   * A unique identifier the Client supplies. It must be unique within the resource type. If the same value is given, no new resource will be created.
+   *
+   * @remarks
+   */
+  externalUid?: string | undefined;
+  /**
+   * A unique name, per pool, to identify the resource
+   */
+  name?: string | undefined;
+  /**
+   * The unique id of the Synthetic Account's pool
+   */
+  poolUid?: string | undefined;
+  /**
+   * A unique id referring to the Synthetic Account's type.
+   *
+   * @remarks
+   */
+  syntheticAccountTypeUid?: string | undefined;
+  /**
+   * Array of unique ids of the Custodial Accounts this Synthetic Account is associated with.
+   *
+   * @remarks
+   */
+  custodialAccountUids?: Array<string> | undefined;
+  /**
+   * The name of the Synthetic Account Category associated with the Synthetic Account Type for this account. Refer to the Synthetic Account Type for details.
+   */
+  syntheticAccountCategory?:
+    | GetCombinedTransfersUidSyntheticAccountCategory
+    | undefined;
+  /**
+   * A value indicating the overall state of this Synthetic Account.
+   *
+   * @remarks
+   */
+  status?: GetCombinedTransfersUidSyntheticAccountStatus | undefined;
+  /**
+   * Liability or asset. Any Synthetic Account created via [POST /synthetic_accounts](/reference/post_synthetic-accounts) is a liability account, except for external accounts. Some asset Synthetic Accounts are automatically created by Newline during Customer onboarding for accounting purposes.
+   */
+  liability?: boolean | undefined;
+  /**
+   * The current settled balance of this account in US Dollars. This field will be null for synthetic_account_types in an external category (`ach_external`, `instant_payment_external`, `wire_external`).
+   */
+  netUsdBalance?: string | null | undefined;
+  /**
+   * The sum of all pending transactions for this account in US Dollars. This field will be null for Synthetic Account Types in an external category (`ach_external`, `instant_payment_external`, `wire_external`).
+   */
+  netUsdPendingBalance?: string | null | undefined;
+  /**
+   * The balance available to spend calculated as the settled balance less any pending withdrawals. Pending deposits are not included. This field will be null for Synthetic Account Types in an external category (`ach_external`, `instant_payment_external`, `wire_external`).
+   */
+  netUsdAvailableBalance?: string | null | undefined;
+  /**
+   * The settled balance for the account in US Dollars as of the date in net_usd_closing_balance_as_of. This field will be null for Synthetic Account Types in an external category (`ach_external`, `instant_payment_external`, `wire_external`).
+   */
+  netUsdClosingBalance?: string | null | undefined;
+  /**
+   * The date that net_usd_closing_balance was last calculated. This field will be null for Synthetic Account Types in an external category (`ach_external`, `instant_payment_external`, `wire_external`).
+   */
+  netUsdClosingBalanceAsOf?: string | undefined;
+  /**
+   * A list of balances for the various asset types held in Custodial Accounts associated with this Synthetic Account.
+   *
+   * @remarks
+   */
+  assetBalances?: Array<GetCombinedTransfersUidAssetBalance | null> | undefined;
+  /**
+   * Used to identify the Master Synthetic Accounts that exist for every Program Customer. Master Synthetic Accounts are the default accounts where any unknown custodial transactions will settle and cannot be archived while a Program Customer is still active.
+   *
+   * @remarks
+   */
+  masterAccount?: boolean | undefined;
+  /**
+   * The ABA routing number (if any) associated with this account. Some Synthetic Account Types require this field to be submitted along with the POST request. For example, any Synthetic Account Type from the `ach_external` or the `wire_external` category will require a `routing_number`. Submitting a `routing_number` with a Synthetic Account Type that does not require one will result in the routing number being ignored.
+   */
+  routingNumber?: string | null | undefined;
+  /**
+   * Last 4 digits of the Synthetic Account number
+   */
+  accountNumberLastFour?: string | null | undefined;
+  /**
+   * The DateTime at which this account was created
+   */
+  openedAt?: Date | undefined;
+  /**
+   * The DateTime at which this account was closed. This value will be present if the status is `archived` or `failed`.
+   *
+   * @remarks
+   */
+  closedAt?: Date | null | undefined;
+  /**
+   * The account number (if any) associated with this account. Some Synthetic Account Types require this field to be submitted along with the POST request. For example, any Synthetic Account Type from the `ach_external` or the `wire_external` category will require an `account_number`. Submitting an `account_number` with a Synthetic Account Type that does not require one will result in the account number being ignored.
+   */
+  accountNumber?: string | null | undefined;
+  /**
+   * Contains ACH-specific information. Only populated if the Synthetic Account is in the `ach_external` category.
+   *
+   * @remarks
+   */
+  ach?: GetCombinedTransfersUidSyntheticAccountAch | undefined;
+  instantPayment?:
+    | GetCombinedTransfersUidSyntheticAccountInstantPayment
+    | undefined;
+  /**
+   * Contains wire-specific information. Only populated if the Synthetic Account is in the `wire_external` category.
+   *
+   * @remarks
+   */
+  wire?: GetCombinedTransfersUidSyntheticAccountWire | undefined;
+};
+
+/**
+ * A value indicating the overall status of the Transfer.
+ *
+ * @remarks
+ */
+export const GetCombinedTransfersUidTransferStatus = {
+  Canceled: "canceled",
+  Queued: "queued",
+  Pending: "pending",
+  Settled: "settled",
+  Failed: "failed",
+} as const;
+/**
+ * A value indicating the overall status of the Transfer.
+ *
+ * @remarks
+ */
+export type GetCombinedTransfersUidTransferStatus = OpenEnum<
+  typeof GetCombinedTransfersUidTransferStatus
+>;
+
+/**
+ * The initiator_type declares the originator for the Transfer. If set to Customer, origination information is pulled from the supplied initiating_customer_uid. If set to Transmitter, origination information is required, provided in the transmitter object (see below). Defaults to Customer. Providing Transmitter information is the Client's responsibility, please review more details in our [Transfers guide](https://developers.newline53.com/docs/transfer#introduction-what-is-a-transfer).
+ *
+ * @remarks
+ */
+export const GetCombinedTransfersUidInitiatorType = {
+  Customer: "customer",
+  Transmitter: "transmitter",
+} as const;
+/**
+ * The initiator_type declares the originator for the Transfer. If set to Customer, origination information is pulled from the supplied initiating_customer_uid. If set to Transmitter, origination information is required, provided in the transmitter object (see below). Defaults to Customer. Providing Transmitter information is the Client's responsibility, please review more details in our [Transfers guide](https://developers.newline53.com/docs/transfer#introduction-what-is-a-transfer).
+ *
+ * @remarks
+ */
+export type GetCombinedTransfersUidInitiatorType = OpenEnum<
+  typeof GetCombinedTransfersUidInitiatorType
+>;
+
+/**
+ * Standard Entry Class (SEC) code. Newline supports the following SEC codes: CCD, CIE, PPD, TEL, WEB, IAT. For more details, refer to our ACH guide's [section](https://developers.newline53.com/docs/ach#standard-entry-class-sec-codes) on SEC code use.
+ *
+ * @remarks
+ */
+export const GetCombinedTransfersUidSecCode = {
+  Ccd: "CCD",
+  Cie: "CIE",
+  Ppd: "PPD",
+  Tel: "TEL",
+  Web: "WEB",
+  Iat: "IAT",
+} as const;
+/**
+ * Standard Entry Class (SEC) code. Newline supports the following SEC codes: CCD, CIE, PPD, TEL, WEB, IAT. For more details, refer to our ACH guide's [section](https://developers.newline53.com/docs/ach#standard-entry-class-sec-codes) on SEC code use.
+ *
+ * @remarks
+ */
+export type GetCombinedTransfersUidSecCode = OpenEnum<
+  typeof GetCombinedTransfersUidSecCode
+>;
+
+/**
+ * Recurring (R), single entry (S), or standing authorization entry (ST). If no value is provided, the default value populated in the NACHA file is for a single entry.
+ *
+ * @remarks
+ */
+export const GetCombinedTransfersUidPaymentType = {
+  R: "R",
+  S: "S",
+  St: "ST",
+} as const;
+/**
+ * Recurring (R), single entry (S), or standing authorization entry (ST). If no value is provided, the default value populated in the NACHA file is for a single entry.
+ *
+ * @remarks
+ */
+export type GetCombinedTransfersUidPaymentType = OpenEnum<
+  typeof GetCombinedTransfersUidPaymentType
+>;
+
+/**
+ * Requested service processing duration for the ACH transfer. Allowable values are: STANDARD or SAMEDAY
+ *
+ * @remarks
+ */
+export const GetCombinedTransfersUidServiceProcessing = {
+  Sameday: "SAMEDAY",
+  Standard: "STANDARD",
+} as const;
+/**
+ * Requested service processing duration for the ACH transfer. Allowable values are: STANDARD or SAMEDAY
+ *
+ * @remarks
+ */
+export type GetCombinedTransfersUidServiceProcessing = OpenEnum<
+  typeof GetCombinedTransfersUidServiceProcessing
+>;
+
+/**
+ * ACH information. Only present if the Transfer is an ACH.
+ *
+ * @remarks
+ */
+export type GetCombinedTransfersUidTransferAch = {
+  /**
+   * Individual or business originating the ACH transfer. 1 to 16 characters; letters, numbers, apostrophe, comma, period, dash allowed.
+   *
+   * @remarks
+   */
+  originatorName?: string | undefined;
+  /**
+   * ACH Company ID. 1 to 10 characters. Letters, numbers, apostrophe, comma, period, dash allowed. Optional for the majority of cases. Required if the general liability account is configured with multiple IDs. Whether optional or required, it will be validated if supplied.
+   *
+   * @remarks
+   */
+  companyId?: string | undefined;
+  /**
+   * An optional field to add customized information such as a customer code or internal reference number. 1 to 10 characters. Alphanumeric. Also allows '.', ',', or '-'.
+   *
+   * @remarks
+   */
+  companyDiscretionaryData?: string | undefined;
+  /**
+   * If prenote is 'true', the amount of the transfer must be $0.00. Newline will infer credit_prenote or debit_prenote based on the source and destination accounts. If prenote is 'true', then the resulting Transaction Type of the resulting transaction record is of type: 'ach'. If no value is provided, the default value will be 'false'.
+   *
+   * @remarks
+   */
+  prenote?: boolean | undefined;
+  /**
+   * Standard Entry Class (SEC) code. Newline supports the following SEC codes: CCD, CIE, PPD, TEL, WEB, IAT. For more details, refer to our ACH guide's [section](https://developers.newline53.com/docs/ach#standard-entry-class-sec-codes) on SEC code use.
+   *
+   * @remarks
+   */
+  secCode?: GetCombinedTransfersUidSecCode | undefined;
+  /**
+   * Recurring (R), single entry (S), or standing authorization entry (ST). If no value is provided, the default value populated in the NACHA file is for a single entry.
+   *
+   * @remarks
+   */
+  paymentType?: GetCombinedTransfersUidPaymentType | undefined;
+  /**
+   * Description value that will appear in the bank statement.
+   *
+   * @remarks
+   */
+  entryDescription?: string | undefined;
+  /**
+   * Requested service processing duration for the ACH transfer. Allowable values are: STANDARD or SAMEDAY
+   *
+   * @remarks
+   */
+  serviceProcessing?: GetCombinedTransfersUidServiceProcessing | undefined;
+  /**
+   * The effective date when the transaction is scheduled to be processed. Date values provided cannot be in the past or provided in the future beyond 30 days. For received returns, if the date provided by the originating financial institution does not match the Newline format, then the raw value will be returned. The Newline date format is YYYY-MM-DD
+   *
+   * @remarks
+   */
+  effectiveEntryDate?: string | undefined;
+  /**
+   * Unique identifier supplied by the originator of a transaction (e.g. invoice number). 1 to 22 characters depending on SEC code, alphanumeric. If the SEC value is anything other than CIE, then this is an optional field and can be up to 15 characters. If SEC value CIE is provided, then the ID number is mandatory, and the character length can be up to 22 characters.
+   *
+   * @remarks
+   */
+  idNumber?: string | undefined;
+  /**
+   * Optional additional payment-related information, such as invoice numbers, originator/receiver information, payment instructions, etc. Up to 80 characters. Optional for all newline supported SEC codes other than TEL. Newline will reject the Transfer if an Addenda value is provided with SEC code TEL.
+   *
+   * @remarks
+   */
+  addenda?: string | undefined;
+};
+
+/**
+ * Address of the Transmitter. Must be provided if the `initiator_type` is `transmitter`.
+ *
+ * @remarks
+ */
+export type GetCombinedTransfersUidInstantPaymentTransmitter = {
+  /**
+   * Name of the Transmitter.
+   *
+   * @remarks
+   */
+  name: string;
+  /**
+   * Up to 24 characters, and supplied by Transmitter. Alphanumeric only.
+   */
+  transmitterIdentifier: string;
+  /**
+   * Building number for Transmitter address. Alphanumeric only.
+   */
+  streetNumber: string;
+  /**
+   * Street name for Transmitter address
+   */
+  street1: string;
+  /**
+   * Maximum 35 characters
+   */
+  city: string | null;
+  /**
+   * 2 characters. Must be a valid US state abbreviation.
+   */
+  state: string | null;
+  /**
+   * 5-digit string. ZIP+4 is allowed.
+   */
+  postalCode: string | null;
+  country: string | null;
+};
+
+/**
+ * Instant payment information. Only present if the Transfer is an instant payment.
+ *
+ * @remarks
+ */
+export type GetCombinedTransfersUidTransferInstantPayment = {
+  instantPaymentTransmitter?:
+    | GetCombinedTransfersUidInstantPaymentTransmitter
+    | undefined;
+};
+
+/**
+ * Address of the intermediary bank. To be populated if an intermediary bank is required to execute the wire transfer.
+ *
+ * @remarks
+ */
+export type GetCombinedTransfersUidTransferUnstructuredAddress = {
+  /**
+   * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
+   */
+  line1?: string | null | undefined;
+  /**
+   * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
+   */
+  line2?: string | null | undefined;
+  /**
+   * Optional 32 characters. Note that this length is shorter than the other lines. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
+   */
+  line3?: string | null | undefined;
+  country?: string | null | undefined;
+};
+
+/**
+ * Information about the Transmitter. Must be provided if the `initiator_type` is `transmitter`. Includes the transmitter's name, identifier, and address. The address format on requests depends on your program's wire address configuration. Responses always return all address fields; fields not applicable to the stored format are `null`.
+ *
+ * @remarks
+ */
+export type GetCombinedTransfersUidWireTransmitter = {
+  /**
+   * Name of the Transmitter.
+   *
+   * @remarks
+   */
+  name: string;
+  /**
+   * Up to 24 digits, supplied by Transmitter. Numeric only.
+   */
+  transmitterIdentifier: string;
+  /**
+   * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
+   */
+  line1?: string | null | undefined;
+  /**
+   * Optional 35 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
+   */
+  line2?: string | null | undefined;
+  /**
+   * Optional 32 characters. Note that this length is shorter than the other lines. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   *
+   * @remarks
+   */
+  line3?: string | null | undefined;
+  /**
+   * Parsed building or house number. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  buildingNumber?: string | null | undefined;
+  /**
+   * Parsed street name. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  streetName?: string | null | undefined;
+  /**
+   * City. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  city?: string | null | undefined;
+  /**
+   * State or province. Optional 33 characters. Cannot contain \# @ $ ! " % & * ; < > { } [ ] _ ^ \ ~
+   */
+  state?: string | null | undefined;
+  /**
+   * US ZIP code (5-digit) or ZIP+4.
+   */
+  postalCode?: string | null | undefined;
+  country?: string | null | undefined;
+};
+
+export type GetCombinedTransfersUidTransferWire = {
+  /**
+   * Address of the intermediary bank. To be populated if an intermediary bank is required to execute the wire transfer.
+   *
+   * @remarks
+   */
+  intermediaryBankAddress?:
+    | GetCombinedTransfersUidTransferUnstructuredAddress
+    | undefined;
+  /**
+   * Name of the intermediary bank, when applicable. For wires only. Maximum 35 characters.
+   *
+   * @remarks
+   */
+  intermediaryBankName?: string | undefined;
+  /**
+   * The ABA routing number associated with the intermediary bank involved in the wire transfer
+   *
+   * @remarks
+   */
+  intermediaryBankRoutingNumber?: string | undefined;
+  /**
+   * Information about the Transmitter. Must be provided if the `initiator_type` is `transmitter`. Includes the transmitter's name, identifier, and address. The address format on requests depends on your program's wire address configuration. Responses always return all address fields; fields not applicable to the stored format are `null`.
+   *
+   * @remarks
+   */
+  wireTransmitter?: GetCombinedTransfersUidWireTransmitter | undefined;
+};
+
+export const GetCombinedTransfersUidCurrentCancellationStatus = {
+  PendingCancellation: "pending_cancellation",
+  SuccessfulCancellation: "successful_cancellation",
+  FailedCancellation: "failed_cancellation",
+} as const;
+export type GetCombinedTransfersUidCurrentCancellationStatus = OpenEnum<
+  typeof GetCombinedTransfersUidCurrentCancellationStatus
+>;
+
+/**
+ * Cancellation information. Only present if there has been an attempt at canceling the transfer.
+ *
+ * @remarks
+ */
+export type GetCombinedTransfersUidCancellation = {
+  /**
+   * Name of the authorized representative who wanted to cancel the transfer.
+   */
+  authorizedRepresentativeName?: string | undefined;
+  /**
+   * Reason for cancellation.
+   */
+  cancellationReason?: string | undefined;
+  currentCancellationStatus?:
+    | GetCombinedTransfersUidCurrentCancellationStatus
+    | undefined;
+  /**
+   * The DateTime at which a cancellation request was most recently received.
+   */
+  cancellationRequestedAt?: Date | undefined;
+  /**
+   * The DateTime at which a cancellation request succeeded. Only present if `current_cancellation_status` is `successful_cancellation`.
+   *
+   * @remarks
+   */
+  cancellationSucceededAt?: Date | undefined;
+  /**
+   * The DateTime at which a cancellation request last failed. Only present if `current_cancellation_status` is `failed_cancellation`.
+   *
+   * @remarks
+   */
+  cancellationFailedAt?: Date | undefined;
+};
 
 /**
  * Parameters provided at time of creation. UID field will get populated once transfer has been successfully initiated.
  *
  * @remarks
  */
-export type GetCombinedTransfersUidTransfer = {};
+export type GetCombinedTransfersUidTransfer = {
+  /**
+   * Synthetic Account where the assets should be debited. Must be an active liability or external-type account. Cannot be equal to `destination_synthetic_account_uid`.
+   */
+  sourceSyntheticAccountUid?: string | undefined;
+  /**
+   * Synthetic Account where the assets should be credited. Must be an active liability or external-type account. Cannot be equal to `source_synthetic_account_uid`.
+   */
+  destinationSyntheticAccountUid?: string | undefined;
+  /**
+   * Customer that initiated the Transfer, when `initiator_type` is `customer`. The Customer and Synthetic Accounts supplied in the Transfer request must relate to the same Pool for the Transfer to be accepted.
+   */
+  initiatingCustomerUid?: string | undefined;
+  /**
+   * Customer who is on the receiving end of the Transfer. The destination Customer must be provided for peer to peer Transfers and can be optional for all other Transfers. If not provided, the destination Customer will be the same as the initiating Customer by default.
+   */
+  destinationCustomerUid?: string | undefined;
+  /**
+   * A value indicating the overall status of the Transfer.
+   *
+   * @remarks
+   */
+  status?: GetCombinedTransfersUidTransferStatus | undefined;
+  /**
+   * The initiator_type declares the originator for the Transfer. If set to Customer, origination information is pulled from the supplied initiating_customer_uid. If set to Transmitter, origination information is required, provided in the transmitter object (see below). Defaults to Customer. Providing Transmitter information is the Client's responsibility, please review more details in our [Transfers guide](https://developers.newline53.com/docs/transfer#introduction-what-is-a-transfer).
+   *
+   * @remarks
+   */
+  initiatorType?: GetCombinedTransfersUidInitiatorType | undefined;
+  /**
+   * Timestamp of when the transfer request was received
+   */
+  createdAt?: Date | undefined;
+  /**
+   * Timestamp indicating when the transfer is scheduled to be processed. Only applicable when the program is configured to queue on the relevant payment rail. When queuing is configured, the value is equal to the configured queuing minutes added to the transfer creation time.
+   *
+   * @remarks
+   */
+  queuedUntil?: Date | undefined;
+  /**
+   * Newline-generated unique id resource specific to the current endpoint
+   */
+  uid?: string | undefined;
+  /**
+   * A unique identifier, optionally supplied by the Client when the Transfer was requested
+   *
+   * @remarks
+   */
+  externalUid?: string | undefined;
+  /**
+   * An array of Transaction UIDs that are associated with this Transfer.
+   *
+   * @remarks
+   */
+  transactionUids?: Array<string> | undefined;
+  /**
+   * The USD amount to transfer
+   *
+   * @remarks
+   */
+  usdTransferAmount?: string | undefined;
+  /**
+   * ACH information. Only present if the Transfer is an ACH.
+   *
+   * @remarks
+   */
+  ach?: GetCombinedTransfersUidTransferAch | undefined;
+  /**
+   * Instant payment information. Only present if the Transfer is an instant payment.
+   *
+   * @remarks
+   */
+  instantPayment?: GetCombinedTransfersUidTransferInstantPayment | undefined;
+  /**
+   * Wire-specific information. Only present if the Transfer is a wire.
+   *
+   * @remarks
+   */
+  wire?: GetCombinedTransfersUidTransferWire | undefined;
+  /**
+   * Cancellation information. Only present if there has been an attempt at canceling the transfer.
+   *
+   * @remarks
+   */
+  cancellation?: GetCombinedTransfersUidCancellation | undefined;
+};
 
 /**
  * A single Combined Transfer is returned
@@ -139,17 +964,7 @@ export type GetCombinedTransfersUidResponseBody = {
    * The combined transfer's status
    */
   status?: GetCombinedTransfersUidStatus | undefined;
-  /**
-   * Parameters provided at time of creation. UID field will get populated once synthetic account has been successfully created, unless uid value was supplied at creation time.
-   *
-   * @remarks
-   */
   syntheticAccount?: GetCombinedTransfersUidSyntheticAccount | undefined;
-  /**
-   * Parameters provided at time of creation. UID field will get populated once transfer has been successfully initiated.
-   *
-   * @remarks
-   */
   transfer?: GetCombinedTransfersUidTransfer | undefined;
   /**
    * Unique identifier for the Combined Transfer
@@ -281,9 +1096,334 @@ export const GetCombinedTransfersUidStatus$inboundSchema: z.ZodMiniType<
 > = openEnums.inboundSchema(GetCombinedTransfersUidStatus);
 
 /** @internal */
+export const GetCombinedTransfersUidSyntheticAccountCategory$inboundSchema:
+  z.ZodMiniType<GetCombinedTransfersUidSyntheticAccountCategory, unknown> =
+    openEnums.inboundSchema(GetCombinedTransfersUidSyntheticAccountCategory);
+
+/** @internal */
+export const GetCombinedTransfersUidSyntheticAccountStatus$inboundSchema:
+  z.ZodMiniType<GetCombinedTransfersUidSyntheticAccountStatus, unknown> =
+    openEnums.inboundSchema(GetCombinedTransfersUidSyntheticAccountStatus);
+
+/** @internal */
+export const GetCombinedTransfersUidAssetBalance$inboundSchema: z.ZodMiniType<
+  GetCombinedTransfersUidAssetBalance,
+  unknown
+> = z.pipe(
+  z.object({
+    asset_quantity: types.optional(types.string()),
+    asset_type: types.optional(types.string()),
+    current_usd_value: types.optional(types.string()),
+    custodial_account_uid: types.optional(types.string()),
+    custodial_account_name: types.optional(types.string()),
+    debit: types.optional(types.boolean()),
+  }),
+  z.transform((v) => {
+    return remap$(v, {
+      "asset_quantity": "assetQuantity",
+      "asset_type": "assetType",
+      "current_usd_value": "currentUsdValue",
+      "custodial_account_uid": "custodialAccountUid",
+      "custodial_account_name": "custodialAccountName",
+    });
+  }),
+);
+
+export function getCombinedTransfersUidAssetBalanceFromJSON(
+  jsonString: string,
+): SafeParseResult<GetCombinedTransfersUidAssetBalance, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      GetCombinedTransfersUidAssetBalance$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'GetCombinedTransfersUidAssetBalance' from JSON`,
+  );
+}
+
+/** @internal */
+export const GetCombinedTransfersUidAccountType$inboundSchema: z.ZodMiniType<
+  GetCombinedTransfersUidAccountType,
+  unknown
+> = openEnums.inboundSchema(GetCombinedTransfersUidAccountType);
+
+/** @internal */
+export const GetCombinedTransfersUidSyntheticAccountAch$inboundSchema:
+  z.ZodMiniType<GetCombinedTransfersUidSyntheticAccountAch, unknown> = z.pipe(
+    z.object({
+      account_type: types.optional(
+        GetCombinedTransfersUidAccountType$inboundSchema,
+      ),
+      counterparty_name: types.optional(types.string()),
+    }),
+    z.transform((v) => {
+      return remap$(v, {
+        "account_type": "accountType",
+        "counterparty_name": "counterpartyName",
+      });
+    }),
+  );
+
+export function getCombinedTransfersUidSyntheticAccountAchFromJSON(
+  jsonString: string,
+): SafeParseResult<
+  GetCombinedTransfersUidSyntheticAccountAch,
+  SDKValidationError
+> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      GetCombinedTransfersUidSyntheticAccountAch$inboundSchema.parse(
+        JSON.parse(x),
+      ),
+    `Failed to parse 'GetCombinedTransfersUidSyntheticAccountAch' from JSON`,
+  );
+}
+
+/** @internal */
+export const GetCombinedTransfersUidInstantPaymentCounterpartyAddress$inboundSchema:
+  z.ZodMiniType<
+    GetCombinedTransfersUidInstantPaymentCounterpartyAddress,
+    unknown
+  > = z.pipe(
+    z.object({
+      street_number: z.optional(z.nullable(types.string())),
+      street1: types.string(),
+      street2: z.optional(z.nullable(types.string())),
+      city: types.nullable(types.string()),
+      state: types.nullable(types.string()),
+      postal_code: types.nullable(types.string()),
+      country: types.nullable(types.string()),
+    }),
+    z.transform((v) => {
+      return remap$(v, {
+        "street_number": "streetNumber",
+        "postal_code": "postalCode",
+      });
+    }),
+  );
+
+export function getCombinedTransfersUidInstantPaymentCounterpartyAddressFromJSON(
+  jsonString: string,
+): SafeParseResult<
+  GetCombinedTransfersUidInstantPaymentCounterpartyAddress,
+  SDKValidationError
+> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      GetCombinedTransfersUidInstantPaymentCounterpartyAddress$inboundSchema
+        .parse(JSON.parse(x)),
+    `Failed to parse 'GetCombinedTransfersUidInstantPaymentCounterpartyAddress' from JSON`,
+  );
+}
+
+/** @internal */
+export const GetCombinedTransfersUidSyntheticAccountInstantPayment$inboundSchema:
+  z.ZodMiniType<
+    GetCombinedTransfersUidSyntheticAccountInstantPayment,
+    unknown
+  > = z.pipe(
+    z.object({
+      counterparty_address: types.optional(z.lazy(() =>
+        GetCombinedTransfersUidInstantPaymentCounterpartyAddress$inboundSchema
+      )),
+      counterparty_name: types.optional(types.string()),
+      email: z.optional(z.nullable(types.string())),
+      phone: z.optional(z.nullable(types.string())),
+    }),
+    z.transform((v) => {
+      return remap$(v, {
+        "counterparty_address": "counterpartyAddress",
+        "counterparty_name": "counterpartyName",
+      });
+    }),
+  );
+
+export function getCombinedTransfersUidSyntheticAccountInstantPaymentFromJSON(
+  jsonString: string,
+): SafeParseResult<
+  GetCombinedTransfersUidSyntheticAccountInstantPayment,
+  SDKValidationError
+> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      GetCombinedTransfersUidSyntheticAccountInstantPayment$inboundSchema.parse(
+        JSON.parse(x),
+      ),
+    `Failed to parse 'GetCombinedTransfersUidSyntheticAccountInstantPayment' from JSON`,
+  );
+}
+
+/** @internal */
+export const GetCombinedTransfersUidWireCounterpartyAddress$inboundSchema:
+  z.ZodMiniType<GetCombinedTransfersUidWireCounterpartyAddress, unknown> = z
+    .pipe(
+      z.object({
+        line1: z.optional(z.nullable(types.string())),
+        line2: z.optional(z.nullable(types.string())),
+        line3: z.optional(z.nullable(types.string())),
+        building_number: z.optional(z.nullable(types.string())),
+        street_name: z.optional(z.nullable(types.string())),
+        city: z.optional(z.nullable(types.string())),
+        state: z.optional(z.nullable(types.string())),
+        postal_code: z.optional(z.nullable(types.string())),
+        country: z.optional(z.nullable(types.string())),
+      }),
+      z.transform((v) => {
+        return remap$(v, {
+          "building_number": "buildingNumber",
+          "street_name": "streetName",
+          "postal_code": "postalCode",
+        });
+      }),
+    );
+
+export function getCombinedTransfersUidWireCounterpartyAddressFromJSON(
+  jsonString: string,
+): SafeParseResult<
+  GetCombinedTransfersUidWireCounterpartyAddress,
+  SDKValidationError
+> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      GetCombinedTransfersUidWireCounterpartyAddress$inboundSchema.parse(
+        JSON.parse(x),
+      ),
+    `Failed to parse 'GetCombinedTransfersUidWireCounterpartyAddress' from JSON`,
+  );
+}
+
+/** @internal */
+export const GetCombinedTransfersUidSyntheticAccountUnstructuredAddress$inboundSchema:
+  z.ZodMiniType<
+    GetCombinedTransfersUidSyntheticAccountUnstructuredAddress,
+    unknown
+  > = z.object({
+    line1: z.optional(z.nullable(types.string())),
+    line2: z.optional(z.nullable(types.string())),
+    line3: z.optional(z.nullable(types.string())),
+    country: z.optional(z.nullable(types.string())),
+  });
+
+export function getCombinedTransfersUidSyntheticAccountUnstructuredAddressFromJSON(
+  jsonString: string,
+): SafeParseResult<
+  GetCombinedTransfersUidSyntheticAccountUnstructuredAddress,
+  SDKValidationError
+> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      GetCombinedTransfersUidSyntheticAccountUnstructuredAddress$inboundSchema
+        .parse(JSON.parse(x)),
+    `Failed to parse 'GetCombinedTransfersUidSyntheticAccountUnstructuredAddress' from JSON`,
+  );
+}
+
+/** @internal */
+export const GetCombinedTransfersUidSyntheticAccountWire$inboundSchema:
+  z.ZodMiniType<GetCombinedTransfersUidSyntheticAccountWire, unknown> = z.pipe(
+    z.object({
+      counterparty_address: z.optional(z.nullable(z.lazy(() =>
+        GetCombinedTransfersUidWireCounterpartyAddress$inboundSchema
+      ))),
+      counterparty_name: types.optional(types.string()),
+      counterparty_bank_address: z.optional(z.nullable(z.lazy(() =>
+        GetCombinedTransfersUidSyntheticAccountUnstructuredAddress$inboundSchema
+      ))),
+      counterparty_bank_name: z.optional(z.nullable(types.string())),
+    }),
+    z.transform((v) => {
+      return remap$(v, {
+        "counterparty_address": "counterpartyAddress",
+        "counterparty_name": "counterpartyName",
+        "counterparty_bank_address": "counterpartyBankAddress",
+        "counterparty_bank_name": "counterpartyBankName",
+      });
+    }),
+  );
+
+export function getCombinedTransfersUidSyntheticAccountWireFromJSON(
+  jsonString: string,
+): SafeParseResult<
+  GetCombinedTransfersUidSyntheticAccountWire,
+  SDKValidationError
+> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      GetCombinedTransfersUidSyntheticAccountWire$inboundSchema.parse(
+        JSON.parse(x),
+      ),
+    `Failed to parse 'GetCombinedTransfersUidSyntheticAccountWire' from JSON`,
+  );
+}
+
+/** @internal */
 export const GetCombinedTransfersUidSyntheticAccount$inboundSchema:
-  z.ZodMiniType<GetCombinedTransfersUidSyntheticAccount, unknown> = z.object(
-    {},
+  z.ZodMiniType<GetCombinedTransfersUidSyntheticAccount, unknown> = z.pipe(
+    z.object({
+      uid: types.optional(types.string()),
+      external_uid: types.optional(types.string()),
+      name: types.optional(types.string()),
+      pool_uid: types.optional(types.string()),
+      synthetic_account_type_uid: types.optional(types.string()),
+      custodial_account_uids: types.optional(z.array(types.string())),
+      synthetic_account_category: types.optional(
+        GetCombinedTransfersUidSyntheticAccountCategory$inboundSchema,
+      ),
+      status: types.optional(
+        GetCombinedTransfersUidSyntheticAccountStatus$inboundSchema,
+      ),
+      liability: types.optional(types.boolean()),
+      net_usd_balance: z.optional(z.nullable(types.string())),
+      net_usd_pending_balance: z.optional(z.nullable(types.string())),
+      net_usd_available_balance: z.optional(z.nullable(types.string())),
+      net_usd_closing_balance: z.optional(z.nullable(types.string())),
+      net_usd_closing_balance_as_of: types.optional(types.string()),
+      asset_balances: types.optional(z.array(types.nullable(z.lazy(() =>
+        GetCombinedTransfersUidAssetBalance$inboundSchema
+      )))),
+      master_account: types.optional(types.boolean()),
+      routing_number: z.optional(z.nullable(types.string())),
+      account_number_last_four: z.optional(z.nullable(types.string())),
+      opened_at: types.optional(types.date()),
+      closed_at: z.optional(z.nullable(types.date())),
+      account_number: z.optional(z.nullable(types.string())),
+      ach: types.optional(z.lazy(() =>
+        GetCombinedTransfersUidSyntheticAccountAch$inboundSchema
+      )),
+      instant_payment: types.optional(z.lazy(() =>
+        GetCombinedTransfersUidSyntheticAccountInstantPayment$inboundSchema
+      )),
+      wire: types.optional(z.lazy(() =>
+        GetCombinedTransfersUidSyntheticAccountWire$inboundSchema
+      )),
+    }),
+    z.transform((v) => {
+      return remap$(v, {
+        "external_uid": "externalUid",
+        "pool_uid": "poolUid",
+        "synthetic_account_type_uid": "syntheticAccountTypeUid",
+        "custodial_account_uids": "custodialAccountUids",
+        "synthetic_account_category": "syntheticAccountCategory",
+        "net_usd_balance": "netUsdBalance",
+        "net_usd_pending_balance": "netUsdPendingBalance",
+        "net_usd_available_balance": "netUsdAvailableBalance",
+        "net_usd_closing_balance": "netUsdClosingBalance",
+        "net_usd_closing_balance_as_of": "netUsdClosingBalanceAsOf",
+        "asset_balances": "assetBalances",
+        "master_account": "masterAccount",
+        "routing_number": "routingNumber",
+        "account_number_last_four": "accountNumberLastFour",
+        "opened_at": "openedAt",
+        "closed_at": "closedAt",
+        "account_number": "accountNumber",
+        "instant_payment": "instantPayment",
+      });
+    }),
   );
 
 export function getCombinedTransfersUidSyntheticAccountFromJSON(
@@ -303,10 +1443,344 @@ export function getCombinedTransfersUidSyntheticAccountFromJSON(
 }
 
 /** @internal */
+export const GetCombinedTransfersUidTransferStatus$inboundSchema: z.ZodMiniType<
+  GetCombinedTransfersUidTransferStatus,
+  unknown
+> = openEnums.inboundSchema(GetCombinedTransfersUidTransferStatus);
+
+/** @internal */
+export const GetCombinedTransfersUidInitiatorType$inboundSchema: z.ZodMiniType<
+  GetCombinedTransfersUidInitiatorType,
+  unknown
+> = openEnums.inboundSchema(GetCombinedTransfersUidInitiatorType);
+
+/** @internal */
+export const GetCombinedTransfersUidSecCode$inboundSchema: z.ZodMiniType<
+  GetCombinedTransfersUidSecCode,
+  unknown
+> = openEnums.inboundSchema(GetCombinedTransfersUidSecCode);
+
+/** @internal */
+export const GetCombinedTransfersUidPaymentType$inboundSchema: z.ZodMiniType<
+  GetCombinedTransfersUidPaymentType,
+  unknown
+> = openEnums.inboundSchema(GetCombinedTransfersUidPaymentType);
+
+/** @internal */
+export const GetCombinedTransfersUidServiceProcessing$inboundSchema:
+  z.ZodMiniType<GetCombinedTransfersUidServiceProcessing, unknown> = openEnums
+    .inboundSchema(GetCombinedTransfersUidServiceProcessing);
+
+/** @internal */
+export const GetCombinedTransfersUidTransferAch$inboundSchema: z.ZodMiniType<
+  GetCombinedTransfersUidTransferAch,
+  unknown
+> = z.pipe(
+  z.object({
+    originator_name: types.optional(types.string()),
+    company_id: types.optional(types.string()),
+    company_discretionary_data: types.optional(types.string()),
+    prenote: types.optional(types.boolean()),
+    sec_code: types.optional(GetCombinedTransfersUidSecCode$inboundSchema),
+    payment_type: types.optional(
+      GetCombinedTransfersUidPaymentType$inboundSchema,
+    ),
+    entry_description: types.optional(types.string()),
+    service_processing: types.optional(
+      GetCombinedTransfersUidServiceProcessing$inboundSchema,
+    ),
+    effective_entry_date: types.optional(types.string()),
+    id_number: types.optional(types.string()),
+    addenda: types.optional(types.string()),
+  }),
+  z.transform((v) => {
+    return remap$(v, {
+      "originator_name": "originatorName",
+      "company_id": "companyId",
+      "company_discretionary_data": "companyDiscretionaryData",
+      "sec_code": "secCode",
+      "payment_type": "paymentType",
+      "entry_description": "entryDescription",
+      "service_processing": "serviceProcessing",
+      "effective_entry_date": "effectiveEntryDate",
+      "id_number": "idNumber",
+    });
+  }),
+);
+
+export function getCombinedTransfersUidTransferAchFromJSON(
+  jsonString: string,
+): SafeParseResult<GetCombinedTransfersUidTransferAch, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      GetCombinedTransfersUidTransferAch$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'GetCombinedTransfersUidTransferAch' from JSON`,
+  );
+}
+
+/** @internal */
+export const GetCombinedTransfersUidInstantPaymentTransmitter$inboundSchema:
+  z.ZodMiniType<GetCombinedTransfersUidInstantPaymentTransmitter, unknown> = z
+    .pipe(
+      z.object({
+        name: types.string(),
+        transmitter_identifier: types.string(),
+        street_number: types.string(),
+        street1: types.string(),
+        city: types.nullable(types.string()),
+        state: types.nullable(types.string()),
+        postal_code: types.nullable(types.string()),
+        country: types.nullable(types.string()),
+      }),
+      z.transform((v) => {
+        return remap$(v, {
+          "transmitter_identifier": "transmitterIdentifier",
+          "street_number": "streetNumber",
+          "postal_code": "postalCode",
+        });
+      }),
+    );
+
+export function getCombinedTransfersUidInstantPaymentTransmitterFromJSON(
+  jsonString: string,
+): SafeParseResult<
+  GetCombinedTransfersUidInstantPaymentTransmitter,
+  SDKValidationError
+> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      GetCombinedTransfersUidInstantPaymentTransmitter$inboundSchema.parse(
+        JSON.parse(x),
+      ),
+    `Failed to parse 'GetCombinedTransfersUidInstantPaymentTransmitter' from JSON`,
+  );
+}
+
+/** @internal */
+export const GetCombinedTransfersUidTransferInstantPayment$inboundSchema:
+  z.ZodMiniType<GetCombinedTransfersUidTransferInstantPayment, unknown> = z
+    .pipe(
+      z.object({
+        instant_payment_transmitter: types.optional(z.lazy(() =>
+          GetCombinedTransfersUidInstantPaymentTransmitter$inboundSchema
+        )),
+      }),
+      z.transform((v) => {
+        return remap$(v, {
+          "instant_payment_transmitter": "instantPaymentTransmitter",
+        });
+      }),
+    );
+
+export function getCombinedTransfersUidTransferInstantPaymentFromJSON(
+  jsonString: string,
+): SafeParseResult<
+  GetCombinedTransfersUidTransferInstantPayment,
+  SDKValidationError
+> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      GetCombinedTransfersUidTransferInstantPayment$inboundSchema.parse(
+        JSON.parse(x),
+      ),
+    `Failed to parse 'GetCombinedTransfersUidTransferInstantPayment' from JSON`,
+  );
+}
+
+/** @internal */
+export const GetCombinedTransfersUidTransferUnstructuredAddress$inboundSchema:
+  z.ZodMiniType<GetCombinedTransfersUidTransferUnstructuredAddress, unknown> = z
+    .object({
+      line1: z.optional(z.nullable(types.string())),
+      line2: z.optional(z.nullable(types.string())),
+      line3: z.optional(z.nullable(types.string())),
+      country: z.optional(z.nullable(types.string())),
+    });
+
+export function getCombinedTransfersUidTransferUnstructuredAddressFromJSON(
+  jsonString: string,
+): SafeParseResult<
+  GetCombinedTransfersUidTransferUnstructuredAddress,
+  SDKValidationError
+> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      GetCombinedTransfersUidTransferUnstructuredAddress$inboundSchema.parse(
+        JSON.parse(x),
+      ),
+    `Failed to parse 'GetCombinedTransfersUidTransferUnstructuredAddress' from JSON`,
+  );
+}
+
+/** @internal */
+export const GetCombinedTransfersUidWireTransmitter$inboundSchema:
+  z.ZodMiniType<GetCombinedTransfersUidWireTransmitter, unknown> = z.pipe(
+    z.object({
+      name: types.string(),
+      transmitter_identifier: types.string(),
+      line1: z.optional(z.nullable(types.string())),
+      line2: z.optional(z.nullable(types.string())),
+      line3: z.optional(z.nullable(types.string())),
+      building_number: z.optional(z.nullable(types.string())),
+      street_name: z.optional(z.nullable(types.string())),
+      city: z.optional(z.nullable(types.string())),
+      state: z.optional(z.nullable(types.string())),
+      postal_code: z.optional(z.nullable(types.string())),
+      country: z.optional(z.nullable(types.string())),
+    }),
+    z.transform((v) => {
+      return remap$(v, {
+        "transmitter_identifier": "transmitterIdentifier",
+        "building_number": "buildingNumber",
+        "street_name": "streetName",
+        "postal_code": "postalCode",
+      });
+    }),
+  );
+
+export function getCombinedTransfersUidWireTransmitterFromJSON(
+  jsonString: string,
+): SafeParseResult<GetCombinedTransfersUidWireTransmitter, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      GetCombinedTransfersUidWireTransmitter$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'GetCombinedTransfersUidWireTransmitter' from JSON`,
+  );
+}
+
+/** @internal */
+export const GetCombinedTransfersUidTransferWire$inboundSchema: z.ZodMiniType<
+  GetCombinedTransfersUidTransferWire,
+  unknown
+> = z.pipe(
+  z.object({
+    intermediary_bank_address: types.optional(z.lazy(() =>
+      GetCombinedTransfersUidTransferUnstructuredAddress$inboundSchema
+    )),
+    intermediary_bank_name: types.optional(types.string()),
+    intermediary_bank_routing_number: types.optional(types.string()),
+    wire_transmitter: types.optional(z.lazy(() =>
+      GetCombinedTransfersUidWireTransmitter$inboundSchema
+    )),
+  }),
+  z.transform((v) => {
+    return remap$(v, {
+      "intermediary_bank_address": "intermediaryBankAddress",
+      "intermediary_bank_name": "intermediaryBankName",
+      "intermediary_bank_routing_number": "intermediaryBankRoutingNumber",
+      "wire_transmitter": "wireTransmitter",
+    });
+  }),
+);
+
+export function getCombinedTransfersUidTransferWireFromJSON(
+  jsonString: string,
+): SafeParseResult<GetCombinedTransfersUidTransferWire, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      GetCombinedTransfersUidTransferWire$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'GetCombinedTransfersUidTransferWire' from JSON`,
+  );
+}
+
+/** @internal */
+export const GetCombinedTransfersUidCurrentCancellationStatus$inboundSchema:
+  z.ZodMiniType<GetCombinedTransfersUidCurrentCancellationStatus, unknown> =
+    openEnums.inboundSchema(GetCombinedTransfersUidCurrentCancellationStatus);
+
+/** @internal */
+export const GetCombinedTransfersUidCancellation$inboundSchema: z.ZodMiniType<
+  GetCombinedTransfersUidCancellation,
+  unknown
+> = z.pipe(
+  z.object({
+    authorized_representative_name: types.optional(types.string()),
+    cancellation_reason: types.optional(types.string()),
+    current_cancellation_status: types.optional(
+      GetCombinedTransfersUidCurrentCancellationStatus$inboundSchema,
+    ),
+    cancellation_requested_at: types.optional(types.date()),
+    cancellation_succeeded_at: types.optional(types.date()),
+    cancellation_failed_at: types.optional(types.date()),
+  }),
+  z.transform((v) => {
+    return remap$(v, {
+      "authorized_representative_name": "authorizedRepresentativeName",
+      "cancellation_reason": "cancellationReason",
+      "current_cancellation_status": "currentCancellationStatus",
+      "cancellation_requested_at": "cancellationRequestedAt",
+      "cancellation_succeeded_at": "cancellationSucceededAt",
+      "cancellation_failed_at": "cancellationFailedAt",
+    });
+  }),
+);
+
+export function getCombinedTransfersUidCancellationFromJSON(
+  jsonString: string,
+): SafeParseResult<GetCombinedTransfersUidCancellation, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) =>
+      GetCombinedTransfersUidCancellation$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'GetCombinedTransfersUidCancellation' from JSON`,
+  );
+}
+
+/** @internal */
 export const GetCombinedTransfersUidTransfer$inboundSchema: z.ZodMiniType<
   GetCombinedTransfersUidTransfer,
   unknown
-> = z.object({});
+> = z.pipe(
+  z.object({
+    source_synthetic_account_uid: types.optional(types.string()),
+    destination_synthetic_account_uid: types.optional(types.string()),
+    initiating_customer_uid: types.optional(types.string()),
+    destination_customer_uid: types.optional(types.string()),
+    status: types.optional(GetCombinedTransfersUidTransferStatus$inboundSchema),
+    initiator_type: types.optional(
+      GetCombinedTransfersUidInitiatorType$inboundSchema,
+    ),
+    created_at: types.optional(types.date()),
+    queued_until: types.optional(types.date()),
+    uid: types.optional(types.string()),
+    external_uid: types.optional(types.string()),
+    transaction_uids: types.optional(z.array(types.string())),
+    usd_transfer_amount: types.optional(types.string()),
+    ach: types.optional(
+      z.lazy(() => GetCombinedTransfersUidTransferAch$inboundSchema),
+    ),
+    instant_payment: types.optional(
+      z.lazy(() => GetCombinedTransfersUidTransferInstantPayment$inboundSchema),
+    ),
+    wire: types.optional(
+      z.lazy(() => GetCombinedTransfersUidTransferWire$inboundSchema),
+    ),
+    cancellation: types.optional(
+      z.lazy(() => GetCombinedTransfersUidCancellation$inboundSchema),
+    ),
+  }),
+  z.transform((v) => {
+    return remap$(v, {
+      "source_synthetic_account_uid": "sourceSyntheticAccountUid",
+      "destination_synthetic_account_uid": "destinationSyntheticAccountUid",
+      "initiating_customer_uid": "initiatingCustomerUid",
+      "destination_customer_uid": "destinationCustomerUid",
+      "initiator_type": "initiatorType",
+      "created_at": "createdAt",
+      "queued_until": "queuedUntil",
+      "external_uid": "externalUid",
+      "transaction_uids": "transactionUids",
+      "usd_transfer_amount": "usdTransferAmount",
+      "instant_payment": "instantPayment",
+    });
+  }),
+);
 
 export function getCombinedTransfersUidTransferFromJSON(
   jsonString: string,

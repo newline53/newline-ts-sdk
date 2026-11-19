@@ -1,6 +1,6 @@
 {
   "name": "newline-ts-sdk",
-  "version": "0.10.8",
+  "version": "0.10.9",
   "author": "Newline by Fifth Third",
   "type": "module",
   "main": "./esm/index.js",
